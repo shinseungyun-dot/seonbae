@@ -4,6 +4,7 @@ node_modules/
 
 # Next.js
 .next/
+.next-build/
 out/
 
 # Environment variables
@@ -22,6 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+dev-server*.log
 
 # Tests
 coverage/
