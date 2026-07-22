@@ -7,6 +7,16 @@ const nextConfig = {
     : process.env.NODE_ENV === "production"
       ? ".next-build"
       : ".next",
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          destination: "/index.html",
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;
