@@ -28,9 +28,9 @@
      lifting instead, so the hue stays identical everywhere on the site. */
   --red:#B3342E;
   --orange:#F07A3A;
-  --teal:#2F6F68;
-  --teal-deep:#245750;
-  --teal-soft:#78A49F;
+  --red-action:#C4514B;
+  --red-action-deep:#A83A35;
+  --red-action-soft:#DE837E;
   --red-ink:var(--red);
   --red-bright:var(--red);
   --red-lift:var(--red);
@@ -154,11 +154,11 @@ body::after{
 .hdr.is-stuck .hdr-in{height:62px}
 
 .mark{grid-column:1;justify-self:start;display:flex;align-items:center;gap:13px;min-width:0;transform:translateX(-8px)}
-.mark-symbol{position:relative;width:32px;height:32px;flex:none;border:1px solid rgba(47,111,104,.54);border-radius:50%;background:linear-gradient(145deg,rgba(120,164,159,.15),rgba(255,255,255,.28));box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
-.mark-symbol::before,.mark-symbol::after{content:"";position:absolute;top:15px;width:11px;height:1.5px;border-radius:2px;background:var(--teal)}
+.mark-symbol{position:relative;width:32px;height:32px;flex:none;border:1px solid rgba(196,81,75,.52);border-radius:50%;background:linear-gradient(145deg,rgba(222,131,126,.15),rgba(255,255,255,.28));box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+.mark-symbol::before,.mark-symbol::after{content:"";position:absolute;top:15px;width:11px;height:1.5px;border-radius:2px;background:var(--red-action)}
 .mark-symbol::before{left:6px;transform:rotate(-48deg)}
 .mark-symbol::after{right:6px;transform:rotate(48deg)}
-.mark-symbol i{position:absolute;left:50%;top:7px;width:4px;height:4px;border-radius:50%;background:var(--teal-deep);transform:translateX(-50%)}
+.mark-symbol i{position:absolute;left:50%;top:7px;width:4px;height:4px;border-radius:50%;background:var(--red-action-deep);transform:translateX(-50%)}
 .mark-ko{font-family:var(--kr-serif);font-weight:800;font-size:1.5rem;line-height:1;color:var(--blue);letter-spacing:.01em}
 .mark-rule{width:1px;height:22px;background:var(--line-2)}
 .mark-en{line-height:1.3}
@@ -199,9 +199,9 @@ body::after{
 .btn:active{transform:scale(.975)}
 /* every primary action is Penn Red — it keeps blue off the buttons
    and stops the page reading as blue on blue on blue */
-.btn-blue{background:var(--teal);color:#fff;box-shadow:0 10px 26px -16px rgba(20,72,67,.62)}
+.btn-blue{background:var(--red-action);color:#fff;box-shadow:0 10px 26px -16px rgba(121,33,29,.58)}
 .btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(255,255,255,.14);color:#fff}
-.btn-blue:hover{background:var(--teal-deep);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(20,72,67,.72)}
+.btn-blue:hover{background:var(--red-action-deep);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(121,33,29,.68)}
 .btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(255,255,255,.22)}
 .btn-paper{background:rgba(255,255,255,.74);color:var(--blue);border-color:var(--line-2);box-shadow:0 8px 24px -20px rgba(10,32,70,.65)}
 .btn-paper .arw{background:var(--paper-2);color:var(--blue)}
