@@ -27,6 +27,7 @@
   /* ONE red. It is never re-mixed for dark grounds — a soft glow does the
      lifting instead, so the hue stays identical everywhere on the site. */
   --red:#B3342E;
+  --orange:#F07A3A;
   --red-ink:var(--red);
   --red-bright:var(--red);
   --red-lift:var(--red);
@@ -176,16 +177,16 @@ body::after{
 .is-open .burger span:nth-child(3){transform:translateY(-4.5px) rotate(-45deg)}
 
 /* ─── buttons ─────────────────────────────────────────────── */
-.btn{font-family:var(--sans);position:relative;display:inline-flex;align-items:center;justify-content:center;gap:13px;padding:0 8px 0 21px;height:48px;border:1px solid transparent;border-radius:999px;font-size:.8125rem;font-weight:600;letter-spacing:.005em;white-space:nowrap;transition:transform .24s var(--ease),box-shadow .24s var(--ease),background-color .24s var(--ease),border-color .24s var(--ease),color .24s var(--ease)}
+.btn{font-family:var(--sans);position:relative;display:inline-flex;align-items:center;justify-content:center;gap:13px;padding:0 8px 0 21px;height:48px;border:1px solid transparent;border-radius:999px;font-size:.8125rem;font-weight:600;letter-spacing:.005em;white-space:nowrap;transition:transform .24s var(--ease),box-shadow .24s var(--ease),background-color .24s var(--ease),border-color .24s var(--ease),color .24s var(--ease),filter .24s var(--ease)}
 .btn .arw,.btn>span[aria-hidden="true"]{box-sizing:content-box;display:grid;place-items:center;flex:none;width:11px;height:11px;padding:8px;border-radius:50%;transition:transform .28s var(--ease),background-color .24s var(--ease),color .24s var(--ease)}
 .btn:hover .arw,.btn:hover>span[aria-hidden="true"]{transform:translate(1px,-1px)}
 .btn:active{transform:scale(.975)}
 /* every primary action is Penn Red — it keeps blue off the buttons
    and stops the page reading as blue on blue on blue */
-.btn-blue{background:var(--blue);color:#fff;box-shadow:0 10px 26px -16px rgba(6,22,48,.72)}
-.btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(255,255,255,.14);color:#fff}
-.btn-blue:hover{background:var(--blue-mid);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(6,22,48,.78)}
-.btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(255,255,255,.23)}
+.btn-blue{background:var(--orange);color:var(--blue-deep);box-shadow:0 10px 26px -16px rgba(10,32,70,.48)}
+.btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(6,22,48,.11);color:var(--blue-deep)}
+.btn-blue:hover{filter:brightness(.94);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(10,32,70,.58)}
+.btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(6,22,48,.18)}
 .btn-paper{background:rgba(255,255,255,.74);color:var(--blue);border-color:var(--line-2);box-shadow:0 8px 24px -20px rgba(10,32,70,.65)}
 .btn-paper .arw{background:var(--paper-2);color:var(--blue)}
 .btn-paper:hover{background:#fff;transform:translateY(-1px);border-color:rgba(10,32,70,.34);box-shadow:0 13px 28px -20px rgba(10,32,70,.72)}
