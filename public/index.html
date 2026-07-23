@@ -542,6 +542,15 @@ body::after{
 .founder .creds b{font-family:var(--mono);font-size:.75rem;color:var(--blue);font-weight:400}
 
 /* ═══ CONSULTATION ═══════════════════════════════════════ */
+.consult-benefit{padding:clamp(44px,5vw,76px) 0;background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.consult-benefit-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(30px,5vw,72px);align-items:center}
+.placeholder-chip{display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:26px;padding:0 10px;border:1px solid var(--red);border-radius:999px;font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.consult-benefit h2{margin-bottom:16px}
+.placeholder-copy{font-size:clamp(.95rem,1.1vw,1.08rem);line-height:1.7;color:var(--ink-2);max-width:56ch}
+.image-placeholder{min-height:clamp(210px,28vw,360px);display:grid;place-items:center;text-align:center;padding:24px;border:1px dashed rgba(10,32,70,.32);border-radius:var(--r-lg);background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(232,227,216,.66));box-shadow:var(--hl),var(--sh-1);color:var(--blue)}
+.image-placeholder span{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.image-placeholder b{font-family:var(--serif);font-weight:500;font-size:clamp(1rem,1.5vw,1.3rem)}
+.prose .image-placeholder{margin:clamp(22px,3vw,36px) 0;min-height:clamp(190px,24vw,300px)}
 .consult{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.9fr);gap:clamp(28px,4vw,58px);align-items:start}
 .form-card{border-radius:var(--r-lg);overflow:hidden;background:linear-gradient(180deg,var(--white),var(--card));border:1px solid var(--line);box-shadow:var(--hl),var(--sh-3)}
 .form-card-top{height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-soft) 60%,var(--red))}
@@ -590,7 +599,7 @@ body::after{
 /* ═══ FOOTER ═════════════════════════════════════════════ */
 .ftr{color:#fff;padding:clamp(52px,6vw,84px) 0 0;position:relative;overflow:hidden;
   background:var(--blue-field)}
-.ftr-top{display:flex;align-items:flex-end;gap:clamp(22px,3.6vw,48px);flex-wrap:wrap;padding-bottom:clamp(34px,4.2vw,54px);border-bottom:1px solid rgba(255,255,255,.16)}
+.ftr-top{display:grid;grid-template-columns:auto minmax(150px,.55fr) minmax(430px,1.2fr);align-items:start;gap:clamp(22px,3.6vw,48px);padding-bottom:clamp(34px,4.2vw,54px);border-bottom:1px solid rgba(255,255,255,.16)}
 .ftr-ko{font-family:var(--kr-serif);font-weight:800;font-size:clamp(3.4rem,7.4vw,6rem);line-height:.9;letter-spacing:.01em}
 .ftr-tag{font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,2.1vw,1.95rem);line-height:1.16;color:rgba(255,255,255,.80)}
 /* on navy, Penn Red reads as brown — lift it and float a faint light
@@ -598,7 +607,20 @@ body::after{
 .ftr-tag .one-stone{
   font-style:normal;color:var(--red);text-shadow:var(--red-glow);
 }
-.ftr-cta{margin-left:auto;margin-bottom:6px}
+.ftr-consult-form{width:100%;padding:clamp(20px,2.4vw,30px);border-radius:var(--r-lg);background:linear-gradient(180deg,#FFFFFF,#F8F5EE);border:1px solid rgba(255,255,255,.28);box-shadow:var(--hl),var(--sh-d2);color:var(--ink)}
+.ftr-form-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-bottom:13px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.ftr-form-head h3{font-family:var(--serif);font-size:1.24rem;font-weight:500;color:var(--blue)}
+.ftr-form-head span{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.ftr-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 15px}
+.ftr-field{display:flex;flex-direction:column;gap:6px}
+.ftr-field.full{grid-column:1/-1}
+.ftr-field label{font-size:.6rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.ftr-field input,.ftr-field select,.ftr-field textarea{width:100%;min-width:0;font-family:inherit;font-size:.82rem;color:var(--ink);background:#fff;border:1px solid var(--line-2);border-radius:var(--r-md);padding:9px 11px;outline:none}
+.ftr-field textarea{min-height:64px;resize:vertical;line-height:1.45}
+.ftr-field input:focus,.ftr-field select:focus,.ftr-field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,32,70,.12)}
+.ftr-form-submit{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin-top:2px}
+.ftr-form-submit .btn{flex:1;justify-content:space-between;height:48px}
+.ftr-form-submit small{max-width:18ch;font-size:.62rem;line-height:1.35;color:var(--ink-4)}
 .ftr-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);padding:clamp(32px,4vw,48px) 0}
 .ftr-col h4{font-size:.6875rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:16px}
 .ftr-col a,.ftr-col p{display:block;font-size:.875rem;color:rgba(255,255,255,.76);padding:5px 0;transition:color .3s var(--ease)}
@@ -618,9 +640,11 @@ h1.hl.in .ln > span{transform:none}
 @media (max-width:1080px){
   .hero-cols{grid-template-columns:1fr;gap:clamp(48px,7vw,72px)}
   .stack{min-height:400px;max-width:440px}
-  .split,.masthead-in,.story{grid-template-columns:1fr;align-items:start;gap:22px}
+  .split,.masthead-in,.story,.consult-benefit-grid{grid-template-columns:1fr;align-items:start;gap:22px}
   .facts{position:static;margin-top:8px}
   .consult{grid-template-columns:1fr;gap:38px}
+  .ftr-top{grid-template-columns:auto 1fr}
+  .ftr-consult-form{grid-column:1/-1}
   .grid-4,.steps-rail,.picker{grid-template-columns:repeat(2,1fr)}
   .nav{position:fixed;inset:auto 0 0 0;top:calc(36px + 64px);background:rgba(250,248,243,.98);backdrop-filter:blur(20px);
     flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 24px;border-bottom:1px solid var(--line);
@@ -662,7 +686,12 @@ h1.hl.in .ln > span{transform:none}
   .stack{min-height:520px;max-width:none}
   .cred-1,.cred-2,.cred-3,.stack:hover .cred-1,.stack:hover .cred-2,.stack:hover .cred-3{transform:none}
   .cred-2{top:172px}.cred-3{top:344px}
-  .ftr-cta{margin-left:0}
+  .ftr-top{grid-template-columns:1fr}
+  .ftr-consult-form{grid-column:auto}
+  .ftr-form-grid{grid-template-columns:1fr}
+  .ftr-field.full,.ftr-form-submit{grid-column:auto}
+  .ftr-form-submit{align-items:stretch;flex-direction:column}
+  .ftr-form-submit small{max-width:none}
   .ftr-cols{grid-template-columns:1fr}
   .ftr-base{flex-direction:column;align-items:flex-start;gap:10px}
   .filters .count{margin-left:0;width:100%}
@@ -708,7 +737,6 @@ h1.hl.in .ln > span{transform:none}
     <nav class="nav" id="nav">
       <a href="#/en/home" data-route="home" data-ko="홈">Home</a>
       <a href="#/en/tutors" data-route="tutors" data-ko="튜터 찾기">Find a Tutor</a>
-      <a href="#/en/verification" data-route="verification" data-ko="검증과 약속">Verification</a>
       <a href="#/en/about" data-route="about" data-ko="선배 소개">About Seonbae</a>
       <a href="#/en/consult" data-route="consult" data-ko="상담 신청">Consultation</a>
     </nav>
@@ -717,7 +745,7 @@ h1.hl.in .ln > span{transform:none}
         <a href="#/en/home" aria-current="true">EN</a>
         <a href="#/ko/home">KO</a>
       </div>
-      <a href="#/en/consult" class="btn btn-blue">
+      <a href="#/en/consult" class="btn btn-blue" data-scroll-footer>
         <span class="cta-long" data-ko="무료 상담">Free consultation</span><span class="cta-short" data-ko="상담">Consult</span>
         <svg class="arw" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1.5 9.5L9.5 1.5M9.5 1.5H3.2M9.5 1.5v6.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
       </a>
@@ -1307,27 +1335,26 @@ h1.hl.in .ln > span{transform:none}
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     PAGE · VERIFICATION
+     PAGE · ABOUT + VERIFICATION
      ══════════════════════════════════════════════════════ -->
-<div class="page" id="page-verification">
+<div class="page" id="page-about">
   <section class="masthead">
     <div class="wrap masthead-in">
       <div>
-        <p class="kicker label" data-rv data-ko="<span class=&quot;bar&quot;></span>No. 01 · 검증과 약속"><span class="bar"></span>No. 01 · Verification</p>
-        <h1 class="display d-xl" data-rv style="--i:1" data-ko="이 명부에<br>오르는 법">How a name<br>reaches the registry</h1>
+        <p class="kicker label" data-rv data-ko="<span class=&quot;bar&quot;></span>선배 소개"><span class="bar"></span>About Seonbae</p>
+        <h1 class="display d-xl" data-rv style="--i:1" data-ko="우리는 이 길을<br>직접 걸어온 세대입니다">We walked<br>this road ourselves</h1>
       </div>
       <p class="lede" data-rv style="--i:2">
-        All three stages must be cleared; failing any one of them means the name never
-        appears. Most platforms confirm that a tutor is who they say they are. We confirm
-        that they did what they say they did — which is the part a parent is actually
-        paying for.
+        Seonbae's founders were its first tutors and its first customers. We built the
+        thing we badly wanted when we were the students — and made verification part of
+        the company story from the beginning.
       </p>
     </div>
   </section>
 
   <section class="sec sec-blue">
     <div class="wrap">
-      <div class="sec-head" data-rv><span class="sec-idx">01</span><span class="label">The three gates</span></div>
+      <div class="sec-head" data-rv><span class="sec-idx">01</span><span class="label">Verification · the three gates</span></div>
 
       <div class="grid-3">
         <article class="card card-blue gate" data-tilt data-rv style="--i:0">
@@ -1429,38 +1456,27 @@ h1.hl.in .ln > span{transform:none}
       </div>
     </div>
   </section>
-</div>
-
-<!-- ══════════════════════════════════════════════════════
-     PAGE · ABOUT
-     ══════════════════════════════════════════════════════ -->
-<div class="page" id="page-about">
-  <section class="masthead">
-    <div class="wrap masthead-in">
-      <div>
-        <p class="kicker label" data-rv data-ko="<span class=&quot;bar&quot;></span>No. 01 · 선배 이야기"><span class="bar"></span>No. 01 · Our story</p>
-        <h1 class="display d-xl" data-rv style="--i:1" data-ko="우리는 이 길을<br>직접 걸어온 세대입니다">We walked<br>this road ourselves</h1>
-      </div>
-      <p class="lede" data-rv style="--i:2">
-        Seonbae's founders were its first tutors and its first customers. We built the
-        thing we badly wanted when we were the students.
-      </p>
-    </div>
-  </section>
 
   <section class="sec">
     <div class="wrap story">
       <div class="story-main">
+      <div class="sec-head" data-rv><span class="sec-idx">04</span><span class="label">Our story</span></div>
       <div class="prose" data-rv>
         <p>Seonbae began in a shared university dormitory room. Three people from
            overseas-Korean and international-school backgrounds — who had sat IB and SAT
            themselves and gone on to <strong>Seoul National, Korea University and Yonsei</strong> —
            decided to build what they had wanted most as students: the chance to learn from
            a verified senior who had already walked the same road.</p>
+        <div class="image-placeholder" role="img" aria-label="B1 story image placeholder">
+          <div><span>B1</span><b>Story image placeholder</b></div>
+        </div>
         <p>International curricula are difficult for a conventional Korean academy to handle.
            The SAT, AP and TOEFL have all moved to digital formats in recent years, and the
            generation that lived through that change teaches it most accurately.
            <strong>Every tutor at Seonbae belongs to that generation.</strong></p>
+        <div class="image-placeholder" role="img" aria-label="B2 story image placeholder">
+          <div><span>B2</span><b>Story image placeholder</b></div>
+        </div>
         <p>We start in Seoul, but lessons open online from anywhere in the world.
            The Korean communities in <strong>Hong Kong and the United States</strong> are next.</p>
       </div>
@@ -1475,8 +1491,7 @@ h1.hl.in .ln > span{transform:none}
         <div class="article-head"><span class="article-n">At a glance</span><span class="label">Seonbae</span></div>
         <dl>
           <div><dt>Founded</dt><dd>2026 · Seoul</dd></div>
-          <div><dt>Network</dt><dd>SNU · Korea · Yonsei</dd></div>
-          <div><dt>Recruitment</dt><dd>IKC · KUSMO · YIKU</dd></div>
+          <div><dt>Network</dt><dd>SNU · KU · YU</dd></div>
           <div><dt>Lessons</dt><dd>1:1 online, worldwide</dd></div>
           <div><dt>Verification</dt><dd>3 stages, all required</dd></div>
           <div><dt>Curricula</dt><dd>IB · AP · A-Level · IGCSE</dd></div>
@@ -1488,36 +1503,9 @@ h1.hl.in .ln > span{transform:none}
     </div>
   </section>
 
-  <section class="sec sec-alt">
-    <div class="wrap">
-      <div class="sec-head" data-rv><span class="sec-idx">02</span><span class="label">The network</span></div>
-      <div class="split">
-        <h2 class="display d-l" data-rv style="--i:0">Recruited through<br>the student societies.</h2>
-        <p class="lede" data-rv style="--i:1">
-          Tutors are selected directly through the overseas-Korean student societies of the
-          three universities — not through open applications from strangers.
-        </p>
-      </div>
-      <div class="orgs">
-        <article class="card org" data-tilt data-rv style="--i:0">
-          <div class="uni">Seoul National University</div><div class="soc">IKC</div>
-          <p>Overseas-Korean student community at Seoul National University.</p>
-        </article>
-        <article class="card org" data-tilt data-rv style="--i:1">
-          <div class="uni">Korea University</div><div class="soc">KUSMO</div>
-          <p>Overseas-Korean student society at Korea University.</p>
-        </article>
-        <article class="card org" data-tilt data-rv style="--i:2">
-          <div class="uni">Yonsei University</div><div class="soc">YIKU</div>
-          <p>Overseas-Korean student society at Yonsei University.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
   <section class="sec">
     <div class="wrap">
-      <div class="sec-head" data-rv><span class="sec-idx">03</span><span class="label">The founders</span></div>
+      <div class="sec-head" data-rv><span class="sec-idx">05</span><span class="label">The founders</span></div>
       <div class="split">
         <h2 class="display d-l" data-rv style="--i:0">We applied our own<br>standard to ourselves.</h2>
         <p class="lede" data-rv style="--i:1">
@@ -1588,9 +1576,22 @@ h1.hl.in .ln > span{transform:none}
     </div>
   </section>
 
+  <section class="consult-benefit">
+    <div class="wrap consult-benefit-grid">
+      <div data-rv>
+        <span class="placeholder-chip">A1</span>
+        <h2 class="display d-l">A1 · Student benefit headline placeholder</h2>
+        <p class="placeholder-copy">A2 · Add the final message explaining how a consultation helps the student clarify goals, identify gaps and choose the right tutor.</p>
+      </div>
+      <div class="image-placeholder" role="img" aria-label="A3 consultation image placeholder" data-rv style="--i:1">
+        <div><span>A3</span><b>Consultation image placeholder</b></div>
+      </div>
+    </div>
+  </section>
+
   <section class="sec">
     <div class="wrap consult">
-      <form class="form-card" data-rv id="consultForm" novalidate>
+      <form class="form-card consult-form" data-rv id="consultForm" novalidate>
         <div class="form-card-top"></div>
         <div class="form-body">
           <div class="form-head">
@@ -1668,16 +1669,40 @@ h1.hl.in .ln > span{transform:none}
     <div class="ftr-top">
       <span class="ftr-ko" aria-hidden="true">선배</span>
       <p class="ftr-tag" data-ko="두 마리 새,<br><span class=&quot;one-stone&quot;>하나의 돌.</span>">Two birds,<br><span class="one-stone">one stone.</span></p>
-      <a href="#/en/consult" class="btn btn-onblue ftr-cta">
-        Free consultation
-        <svg class="arw" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1.5 9.5L9.5 1.5M9.5 1.5H3.2M9.5 1.5v6.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
-      </a>
+      <form class="ftr-consult-form consult-form" id="footer-consultation" novalidate>
+        <div class="ftr-form-head"><span>Free consultation</span><h3>Tell us what the student needs.</h3></div>
+        <div class="ftr-form-grid">
+          <div class="ftr-field">
+            <label for="ff-name">Name</label>
+            <input id="ff-name" name="name" type="text" placeholder="Your name" autocomplete="name">
+          </div>
+          <div class="ftr-field">
+            <label for="ff-curr">Curriculum / exam</label>
+            <select id="ff-curr" name="curriculum">
+              <option>IB</option><option>AP</option><option>A-Level</option><option>IGCSE</option>
+              <option>SAT</option><option>ACT</option><option>TOEFL</option><option>IELTS</option>
+              <option>Other / undecided</option>
+            </select>
+          </div>
+          <div class="ftr-field full">
+            <label for="ff-subj">Subject</label>
+            <input id="ff-subj" name="subject" type="text" placeholder="e.g. Mathematics AA HL">
+          </div>
+          <div class="ftr-field full">
+            <label for="ff-goal">Goals and current situation</label>
+            <textarea id="ff-goal" name="goals" placeholder="Target score, current level and timeline…"></textarea>
+          </div>
+          <div class="ftr-form-submit">
+            <button type="submit" class="btn btn-blue">Request a free consultation <span aria-hidden="true">↗</span></button>
+            <small>No obligation. We reply within 24 hours.</small>
+          </div>
+        </div>
+      </form>
     </div>
     <div class="ftr-cols">
       <div class="ftr-col">
         <h4 data-ko="사이트">Site</h4>
         <a href="#/en/tutors">Find a Tutor</a>
-        <a href="#/en/verification">Verification</a>
         <a href="#/en/about">About Seonbae</a>
         <a href="#/en/consult">Consultation</a>
       </div>
@@ -1694,9 +1719,8 @@ h1.hl.in .ln > span{transform:none}
       </div>
       <div class="ftr-col">
         <h4 data-ko="네트워크">Network</h4>
-        <p>Seoul National University · IKC</p>
-        <p>Korea University · KUSMO</p>
-        <p>Yonsei University · YIKU</p>
+        <p>SNU · KU · YU</p>
+        <p>Verified SKY tutor network</p>
       </div>
     </div>
     <div class="ftr-base">
@@ -1710,7 +1734,7 @@ h1.hl.in .ln > span{transform:none}
 (function(){
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ROUTES = ['home','tutors','verification','about','consult'];
+  var ROUTES = ['home','tutors','about','consult'];
 
   /* ── reveal observer (shared across pages) ────────────── */
   var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
@@ -1765,6 +1789,7 @@ h1.hl.in .ln > span{transform:none}
   function routeFromHash(){
     var m = (location.hash || '').match(/#\/(?:[a-z]{2})\/([a-z]+)/i);
     var r = m ? m[1].toLowerCase() : 'home';
+    if (r === 'verification') r = 'about';
     return ROUTES.indexOf(r) === -1 ? 'home' : r;
   }
 
@@ -1801,10 +1826,10 @@ h1.hl.in .ln > span{transform:none}
     bindTilt(active);
     var titles = (document.documentElement.getAttribute('data-lang') === 'ko') ? {
       home:'선배 — 검증된 재외국민 SKY 튜터 네트워크', tutors:'튜터 명부 — 선배',
-      verification:'검증과 약속 — 선배', about:'선배 소개', consult:'상담 신청 — 선배'
+      about:'선배 소개', consult:'상담 신청 — 선배'
     } : {
       home:'Seonbae — A verified SKY tutor network', tutors:'The registry — Seonbae',
-      verification:'Verification — Seonbae', about:'About Seonbae', consult:'Consultation — Seonbae'
+      about:'About Seonbae', consult:'Consultation — Seonbae'
     };
     document.title = titles[route];
   }
@@ -1826,6 +1851,21 @@ h1.hl.in .ln > span{transform:none}
   burger.addEventListener('click', function(){
     var open = document.body.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('[data-scroll-footer]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      document.body.classList.remove('is-open');
+      burger.setAttribute('aria-expanded','false');
+      var footerForm = document.getElementById('footer-consultation');
+      if (!footerForm) return;
+      footerForm.scrollIntoView({behavior:reduce ? 'auto' : 'smooth', block:'center'});
+      setTimeout(function(){
+        var firstField = document.getElementById('ff-name');
+        if (firstField) firstField.focus({preventScroll:true});
+      }, reduce ? 0 : 700);
+    });
   });
 
   /* ── pointer-driven tilt (bound per page) ─────────────── */
@@ -1936,12 +1976,11 @@ h1.hl.in .ln > span{transform:none}
   window.addEventListener('hashchange', function(){ setTimeout(fillRef, 60); });
 
   /* ── form: front-end only, wire to your endpoint ──────── */
-  var form = document.getElementById('consultForm');
-  if (form) {
+  document.querySelectorAll('.consult-form').forEach(function(form){
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var btn = form.querySelector('button[type=submit]');
-      var name = form.querySelector('#f-name');
+      var name = form.querySelector('[name="name"]');
       if (!name.value.trim()) { name.focus(); return; }
       var original = btn.innerHTML;
       btn.innerHTML = 'Sending…';
@@ -1950,7 +1989,7 @@ h1.hl.in .ln > span{transform:none}
         setTimeout(function(){ btn.innerHTML = original; }, 3600);
       }, 700);
     });
-  }
+  });
 })();
 </script>
 </body>
