@@ -182,9 +182,9 @@ body::after{
 .btn:active{transform:scale(.975)}
 /* every primary action is Penn Red — it keeps blue off the buttons
    and stops the page reading as blue on blue on blue */
-.btn-blue{background:var(--red);color:#fff;box-shadow:0 10px 26px -16px rgba(112,24,24,.72)}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 10px 26px -16px rgba(6,22,48,.72)}
 .btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(255,255,255,.14);color:#fff}
-.btn-blue:hover{background:#982C28;transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(112,24,24,.78)}
+.btn-blue:hover{background:var(--blue-mid);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(6,22,48,.78)}
 .btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(255,255,255,.23)}
 .btn-paper{background:rgba(255,255,255,.74);color:var(--blue);border-color:var(--line-2);box-shadow:0 8px 24px -20px rgba(10,32,70,.65)}
 .btn-paper .arw{background:var(--paper-2);color:var(--blue)}
@@ -1696,7 +1696,9 @@ h1.hl.in .ln > span{transform:none}
             <textarea id="ff-goal" name="goals" placeholder="Target score, current level and timeline…"></textarea>
           </div>
           <div class="ftr-form-submit">
-            <button type="submit" class="btn btn-blue">Request a free consultation <span aria-hidden="true">↗</span></button>
+            <button type="submit" class="btn btn-blue">Request a free consultation
+              <svg class="arw" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1.5 9.5L9.5 1.5M9.5 1.5H3.2M9.5 1.5v6.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+            </button>
             <small>No obligation. We reply within 24 hours.</small>
           </div>
         </div>
