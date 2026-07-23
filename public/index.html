@@ -28,6 +28,9 @@
      lifting instead, so the hue stays identical everywhere on the site. */
   --red:#B3342E;
   --orange:#F07A3A;
+  --olive:#68713A;
+  --olive-deep:#50582B;
+  --olive-soft:#89935A;
   --red-ink:var(--red);
   --red-bright:var(--red);
   --red-lift:var(--red);
@@ -151,6 +154,11 @@ body::after{
 .hdr.is-stuck .hdr-in{height:62px}
 
 .mark{grid-column:1;justify-self:start;display:flex;align-items:center;gap:13px;min-width:0;transform:translateX(-8px)}
+.mark-symbol{position:relative;width:32px;height:32px;flex:none;border:1px solid rgba(104,113,58,.58);border-radius:50%;background:linear-gradient(145deg,rgba(137,147,90,.14),rgba(255,255,255,.28));box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+.mark-symbol::before,.mark-symbol::after{content:"";position:absolute;top:15px;width:11px;height:1.5px;border-radius:2px;background:var(--olive)}
+.mark-symbol::before{left:6px;transform:rotate(-48deg)}
+.mark-symbol::after{right:6px;transform:rotate(48deg)}
+.mark-symbol i{position:absolute;left:50%;top:7px;width:4px;height:4px;border-radius:50%;background:var(--olive-deep);transform:translateX(-50%)}
 .mark-ko{font-family:var(--kr-serif);font-weight:800;font-size:1.5rem;line-height:1;color:var(--blue);letter-spacing:.01em}
 .mark-rule{width:1px;height:22px;background:var(--line-2)}
 .mark-en{line-height:1.3}
@@ -191,10 +199,10 @@ body::after{
 .btn:active{transform:scale(.975)}
 /* every primary action is Penn Red — it keeps blue off the buttons
    and stops the page reading as blue on blue on blue */
-.btn-blue{background:var(--orange);color:var(--blue-deep);box-shadow:0 10px 26px -16px rgba(10,32,70,.48)}
-.btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(6,22,48,.11);color:var(--blue-deep)}
-.btn-blue:hover{filter:brightness(.94);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(10,32,70,.58)}
-.btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(6,22,48,.18)}
+.btn-blue{background:var(--olive);color:#fff;box-shadow:0 10px 26px -16px rgba(53,61,25,.62)}
+.btn-blue .arw,.btn-blue>span[aria-hidden="true"]{background:rgba(255,255,255,.14);color:#fff}
+.btn-blue:hover{background:var(--olive-deep);transform:translateY(-1px);box-shadow:0 14px 30px -15px rgba(53,61,25,.72)}
+.btn-blue:hover .arw,.btn-blue:hover>span[aria-hidden="true"]{background:rgba(255,255,255,.22)}
 .btn-paper{background:rgba(255,255,255,.74);color:var(--blue);border-color:var(--line-2);box-shadow:0 8px 24px -20px rgba(10,32,70,.65)}
 .btn-paper .arw{background:var(--paper-2);color:var(--blue)}
 .btn-paper:hover{background:#fff;transform:translateY(-1px);border-color:rgba(10,32,70,.34);box-shadow:0 13px 28px -20px rgba(10,32,70,.72)}
@@ -611,7 +619,9 @@ body::after{
 /* ═══ FOOTER ═════════════════════════════════════════════ */
 .ftr{color:#fff;padding:clamp(52px,6vw,84px) 0 0;position:relative;overflow:hidden;
   background:var(--blue-field)}
-.ftr-top{display:grid;grid-template-columns:auto minmax(150px,.55fr) minmax(430px,1.2fr);align-items:start;gap:clamp(22px,3.6vw,48px);padding-bottom:clamp(34px,4.2vw,54px);border-bottom:1px solid rgba(255,255,255,.16)}
+.ftr-top{display:grid;grid-template-columns:minmax(0,.88fr) minmax(470px,1.12fr);align-items:start;gap:clamp(34px,5vw,72px);padding-bottom:clamp(34px,4.2vw,54px);border-bottom:1px solid rgba(255,255,255,.16)}
+.ftr-left{display:flex;flex-direction:column;min-width:0}
+.ftr-brand{display:grid;grid-template-columns:auto minmax(150px,1fr);align-items:start;gap:clamp(22px,3vw,42px)}
 .ftr-ko{font-family:var(--kr-serif);font-weight:800;font-size:clamp(3.4rem,7.4vw,6rem);line-height:.9;letter-spacing:.01em}
 .ftr-tag{font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,2.1vw,1.95rem);line-height:1.16;color:rgba(255,255,255,.80)}
 /* on navy, Penn Red reads as brown — lift it and float a faint light
@@ -633,7 +643,7 @@ body::after{
 .ftr-form-submit{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin-top:2px}
 .ftr-form-submit .btn{flex:1;justify-content:space-between;height:48px}
 .ftr-form-submit small{max-width:18ch;font-size:.62rem;line-height:1.35;color:var(--ink-4)}
-.ftr-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);padding:clamp(32px,4vw,48px) 0}
+.ftr-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(22px,3vw,38px);margin-top:clamp(30px,4vw,54px);padding:clamp(24px,3vw,36px) 0 0;border-top:1px solid rgba(255,255,255,.12)}
 .ftr-col h4{font-size:.6875rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:16px}
 .ftr-col a,.ftr-col p{display:block;font-size:.875rem;color:rgba(255,255,255,.76);padding:5px 0;transition:color .3s var(--ease)}
 .ftr-col a:hover{color:#fff}
@@ -658,8 +668,8 @@ h1.hl.in .ln > span{transform:none}
   .split,.masthead-in,.story,.consult-benefit-grid{grid-template-columns:1fr;align-items:start;gap:22px}
   .facts{position:static;margin-top:8px}
   .consult{grid-template-columns:1fr;gap:38px}
-  .ftr-top{grid-template-columns:auto 1fr}
-  .ftr-consult-form{grid-column:1/-1}
+  .ftr-top{grid-template-columns:1fr}
+  .ftr-consult-form{grid-column:auto}
   .grid-4,.steps-rail,.picker{grid-template-columns:repeat(2,1fr)}
   .nav{position:fixed;inset:auto 0 0 0;top:calc(36px + 64px);background:rgba(250,248,243,.98);backdrop-filter:blur(20px);
     flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 24px;border-bottom:1px solid var(--line);
@@ -681,7 +691,7 @@ h1.hl.in .ln > span{transform:none}
   .stats{grid-template-columns:1fr 1fr}
   .stat:nth-child(1)::before,.stat:nth-child(3)::before{display:none}
   .stat:nth-child(3),.stat:nth-child(4){border-top:1px solid var(--line)}
-  .ftr-cols{grid-template-columns:1fr 1fr;gap:30px}
+  .ftr-cols{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
   .crests{opacity:.05;left:-14%;right:-14%}
 }
 @media (max-width:680px){
@@ -706,16 +716,24 @@ h1.hl.in .ln > span{transform:none}
   .cred-2{top:172px}.cred-3{top:344px}
   .ftr-top{grid-template-columns:1fr}
   .ftr-consult-form{grid-column:auto}
+  .ftr-brand{grid-template-columns:1fr;gap:18px}
   .ftr-form-grid{grid-template-columns:1fr}
   .ftr-field.full,.ftr-form-submit{grid-column:auto}
   .ftr-form-submit{align-items:stretch;flex-direction:column}
   .ftr-form-submit small{max-width:none}
-  .ftr-cols{grid-template-columns:1fr}
+  .ftr-cols{grid-template-columns:1fr 1fr}
   .ftr-base{flex-direction:column;align-items:flex-start;gap:10px}
   .filters .count{margin-left:0;width:100%}
   .key-items{grid-template-columns:1fr;gap:12px}
 }
-@media (max-width:430px){ .mark-en,.mark-rule{display:none} }
+@media (max-width:430px){
+  .mark-en,.mark-rule{display:none}
+  .mark{gap:9px}
+  .mark-symbol{width:28px;height:28px}
+  .mark-symbol::before,.mark-symbol::after{top:13px;width:9px}
+  .mark-symbol i{top:6px}
+  .ftr-cols{grid-template-columns:1fr}
+}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -739,6 +757,7 @@ h1.hl.in .ln > span{transform:none}
 <header class="hdr" id="hdr">
   <div class="wrap hdr-in">
     <a href="#/en/home" class="mark" aria-label="Seonbae, home">
+      <span class="mark-symbol" aria-hidden="true"><i></i></span>
       <span class="mark-ko">선배</span>
       <span class="mark-rule"></span>
       <span class="mark-en"><span>SEONBAE</span><small>EST. 2026</small></span>
@@ -1674,8 +1693,36 @@ h1.hl.in .ln > span{transform:none}
 <footer class="ftr">
   <div class="wrap">
     <div class="ftr-top">
-      <span class="ftr-ko" aria-hidden="true">선배</span>
-      <p class="ftr-tag" data-ko="튜터는 정당하게,<br><span class=&quot;one-stone&quot;>학생은 제대로.</span>">Two birds,<br><span class="one-stone">one stone.</span></p>
+      <div class="ftr-left">
+        <div class="ftr-brand">
+          <span class="ftr-ko" aria-hidden="true">선배</span>
+          <p class="ftr-tag" data-ko="튜터는 정당하게,<br><span class=&quot;one-stone&quot;>학생은 제대로.</span>">Two birds,<br><span class="one-stone">one stone.</span></p>
+        </div>
+        <div class="ftr-cols">
+          <div class="ftr-col">
+            <h4 data-ko="사이트">Site</h4>
+            <a href="#/en/tutors" data-ko="튜터 찾기">Find a Tutor</a>
+            <a href="#/en/about" data-ko="선배 소개">About Seonbae</a>
+            <a href="#/en/consult" data-ko="상담 신청">Consultation</a>
+          </div>
+          <div class="ftr-col">
+            <h4 data-ko="연락처">Contact</h4>
+            <a href="mailto:hello@seonbae.kr">hello@seonbae.kr</a>
+            <a href="#" data-ko="카카오톡 채널 ↗">KakaoTalk Channel ↗</a>
+            <a href="#/en/consult" data-ko="무료 시범 수업">Free trial lesson</a>
+          </div>
+          <div class="ftr-col">
+            <h4 data-ko="회사">Company</h4>
+            <a href="#/en/about" data-ko="팀 소개">Meet the team</a>
+            <a href="#" data-ko="튜터 지원 ↗">Apply as a tutor ↗</a>
+          </div>
+          <div class="ftr-col">
+            <h4 data-ko="네트워크">Network</h4>
+            <p>SNU · KU · YU</p>
+            <p data-ko="검증된 SKY 튜터 네트워크">Verified SKY tutor network</p>
+          </div>
+        </div>
+      </div>
       <form class="ftr-consult-form consult-form" id="footer-consultation" novalidate>
         <div class="ftr-form-head"><span data-ko="무료 상담">Free consultation</span><h3 data-ko="학생에게 필요한 수업을 알려 주세요.">Tell us what the student needs.</h3></div>
         <div class="ftr-form-grid">
@@ -1707,30 +1754,6 @@ h1.hl.in .ln > span{transform:none}
           </div>
         </div>
       </form>
-    </div>
-    <div class="ftr-cols">
-      <div class="ftr-col">
-        <h4 data-ko="사이트">Site</h4>
-        <a href="#/en/tutors" data-ko="튜터 찾기">Find a Tutor</a>
-        <a href="#/en/about" data-ko="선배 소개">About Seonbae</a>
-        <a href="#/en/consult" data-ko="상담 신청">Consultation</a>
-      </div>
-      <div class="ftr-col">
-        <h4 data-ko="연락처">Contact</h4>
-        <a href="mailto:hello@seonbae.kr">hello@seonbae.kr</a>
-        <a href="#" data-ko="카카오톡 채널 ↗">KakaoTalk Channel ↗</a>
-        <a href="#/en/consult" data-ko="무료 시범 수업">Free trial lesson</a>
-      </div>
-      <div class="ftr-col">
-        <h4 data-ko="회사">Company</h4>
-        <a href="#/en/about" data-ko="팀 소개">Meet the team</a>
-        <a href="#" data-ko="튜터 지원 ↗">Apply as a tutor ↗</a>
-      </div>
-      <div class="ftr-col">
-        <h4 data-ko="네트워크">Network</h4>
-        <p>SNU · KU · YU</p>
-        <p data-ko="검증된 SKY 튜터 네트워크">Verified SKY tutor network</p>
-      </div>
     </div>
     <div class="ftr-base">
       <span data-ko="© 2026 선배 · 서울, 대한민국">© 2026 Seonbae · Seoul, Republic of Korea</span>
