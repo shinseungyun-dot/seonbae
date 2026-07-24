@@ -36,32 +36,7 @@ function routeFromHash(): { view:View; language:Language } {
   return { view:views.includes(candidate) ? candidate : "home", language };
 }
 
-const tutors: Tutor[] = [
-  {id:"P-001",tier:"premium",name:"김OO",school:"서울대학교",major:"컴퓨터공학부",track:"IB",result:"44 / 45",subject:"IB Diploma",color:"yellow"},
-  {id:"P-002",tier:"premium",name:"이OO",school:"고려대학교",major:"국제학부",track:"IB",result:"7",subject:"Economics HL",color:"coral"},
-  {id:"P-003",tier:"premium",name:"박OO",school:"연세대학교",major:"생명공학과",track:"IB",result:"7",subject:"Biology HL",color:"mint"},
-  {id:"P-004",tier:"premium",name:"최OO",school:"서울대학교",major:"경제학부",track:"AP",result:"5",subject:"AP Calculus BC",color:"violet"},
-  {id:"P-005",tier:"premium",name:"정OO",school:"고려대학교",major:"경영학과",track:"AP",result:"5",subject:"AP Microeconomics",color:"yellow"},
-  {id:"P-006",tier:"premium",name:"강OO",school:"서울대학교",major:"전기정보공학부",track:"AP",result:"5",subject:"AP Computer Science A",color:"coral"},
-  {id:"P-007",tier:"premium",name:"조OO",school:"연세대학교",major:"수학과",track:"A-Level",result:"A*",subject:"Mathematics",color:"mint"},
-  {id:"P-008",tier:"premium",name:"윤OO",school:"고려대학교",major:"정치외교학과",track:"A-Level",result:"A*",subject:"Economics",color:"violet"},
-  {id:"P-009",tier:"premium",name:"장OO",school:"서울대학교",major:"화학부",track:"A-Level",result:"A*",subject:"Chemistry",color:"yellow"},
-  {id:"P-010",tier:"premium",name:"임OO",school:"연세대학교",major:"응용통계학과",track:"IGCSE",result:"A* (9)",subject:"Mathematics",color:"coral"},
-  {id:"P-011",tier:"premium",name:"한OO",school:"고려대학교",major:"영어영문학과",track:"IGCSE",result:"A* (9)",subject:"English First Lang.",color:"mint"},
-  {id:"P-012",tier:"premium",name:"서OO",school:"서울대학교",major:"자유전공학부",track:"SAT",result:"1580",subject:"SAT Total",color:"violet"},
-  {id:"P-013",tier:"premium",name:"오OO",school:"연세대학교",major:"언더우드국제대학",track:"SAT",result:"1560",subject:"SAT Total",color:"yellow"},
-  {id:"P-014",tier:"premium",name:"신OO",school:"고려대학교",major:"미디어학부",track:"ACT",result:"35 / 36",subject:"ACT Composite",color:"coral"},
-  {id:"P-015",tier:"premium",name:"권OO",school:"서울대학교",major:"물리천문학부",track:"IB",result:"7",subject:"Physics HL",color:"mint"},
-  {id:"P-016",tier:"premium",name:"황OO",school:"연세대학교",major:"화학공학과",track:"IB",result:"7",subject:"Chemistry HL",color:"violet"},
-  {id:"S-001",tier:"standard",name:"문OO",school:"고려대학교",major:"영어교육과",track:"TOEFL",result:"118",subject:"TOEFL iBT",color:"yellow"},
-  {id:"S-002",tier:"standard",name:"배OO",school:"연세대학교",major:"국제학부",track:"TOEFL",result:"114",subject:"TOEFL iBT",color:"coral"},
-  {id:"S-003",tier:"standard",name:"전OO",school:"서울대학교",major:"영어영문학과",track:"IELTS",result:"8.5",subject:"IELTS Overall",color:"mint"},
-  {id:"S-004",tier:"standard",name:"송OO",school:"고려대학교",major:"국제학부",track:"IELTS",result:"8.0",subject:"IELTS Overall",color:"violet"},
-  {id:"S-005",tier:"standard",name:"유OO",school:"연세대학교",major:"수학과",track:"내신",result:"A* (9)",subject:"IGCSE Mathematics",color:"yellow"},
-  {id:"S-006",tier:"standard",name:"남OO",school:"서울대학교",major:"사회과학대학",track:"학습코칭",result:"41 / 45",subject:"IB Diploma",color:"coral"},
-  {id:"S-007",tier:"standard",name:"홍OO",school:"고려대학교",major:"통계학과",track:"내신",result:"5",subject:"AP Calculus AB",color:"mint"},
-  {id:"S-008",tier:"standard",name:"고OO",school:"연세대학교",major:"경영학과",track:"TOEIC",result:"985",subject:"TOEIC",color:"violet"},
-];
+const initialTutors: Tutor[] = [];
 
 const filters = ["all","IB","AP","A-Level","IGCSE","SAT","ACT","TOEFL","IELTS","TOEIC","내신","학습코칭"];
 const premiumTracks = ["IB","AP","A-Level","IGCSE","SAT","ACT"];
@@ -93,11 +68,6 @@ const majorNames: Record<string,string> = {
   "영어교육과":"English Education",
   "사회과학대학":"College of Social Sciences",
   "통계학과":"Statistics",
-};
-
-const surnameInitials: Record<string,string> = {
-  김:"K", 이:"L", 박:"P", 최:"C", 정:"J", 강:"K", 조:"C", 윤:"Y", 장:"J", 임:"L", 한:"H", 서:"S",
-  오:"O", 신:"S", 권:"K", 황:"H", 문:"M", 배:"B", 전:"J", 송:"S", 유:"Y", 남:"N", 홍:"H", 고:"K",
 };
 
 const filterLabels: Record<Language,Record<string,string>> = {
@@ -180,6 +150,7 @@ export default function Page() {
   const [tier,setTier] = useState<Tier>("premium");
   const [filter,setFilter] = useState("all");
   const [query,setQuery] = useState("");
+  const [tutors,setTutors] = useState<Tutor[]>(initialTutors);
   const t = pageCopy[language];
   const localizedVerification = verificationByLanguage[language];
   const localizedFounders = foundersByLanguage[language];
@@ -188,7 +159,7 @@ export default function Page() {
   const tabHref = (next:View) => isEnglish ? `#/en/${next}` : `#/${next}`;
   const languageHref = isEnglish ? `#/${view}` : `#/en/${view}`;
   const displayTrack = (track:string) => isEnglish ? (filterLabels.en[track] || track) : track;
-  const displayTutorName = (tutor:Tutor) => isEnglish ? `${surnameInitials[tutor.name[0]] || "T"}**` : tutor.name;
+  const displayTutorName = (tutor:Tutor) => tutor.name;
   const displaySchool = (school:string) => isEnglish ? (schoolNames[school] || school) : school;
   const displayMajor = (major:string) => isEnglish ? (majorNames[major] || major) : major;
 
@@ -198,6 +169,39 @@ export default function Page() {
     const localizedHaystack = `${tutor.subject} ${tutor.track} ${displayTrack(tutor.track)} ${tutor.school} ${displaySchool(tutor.school)} ${tutor.major} ${displayMajor(tutor.major)}`.toLowerCase();
     return matchesTier && matchesFilter && localizedHaystack.includes(query.toLowerCase());
   }),[tier,filter,query,language]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/tutors", { cache:"no-store", signal:controller.signal })
+      .then(response => {
+        if (!response.ok) throw new Error("Tutor directory unavailable");
+        return response.json();
+      })
+      .then((rows:Array<{
+        registry_id:string;
+        name:string;
+        exam:string;
+        score:string;
+        tier:Tier;
+      }>) => {
+        const colors = ["yellow","coral","mint","violet"];
+        setTutors(rows.map((row,index) => ({
+          id:row.registry_id,
+          tier:row.tier,
+          name:row.name,
+          school:"",
+          major:"",
+          track:row.exam,
+          result:row.score,
+          subject:row.exam,
+          color:colors[index % colors.length],
+        })));
+      })
+      .catch(error => {
+        if (error instanceof Error && error.name !== "AbortError") setTutors([]);
+      });
+    return () => controller.abort();
+  },[]);
 
   useEffect(() => {
     const syncRoute = () => {
