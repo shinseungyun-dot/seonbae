@@ -62,7 +62,7 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
 
   async function signOut() {
     await createClient().auth.signOut();
-    router.replace("/login?mode=admin");
+    router.replace("/login");
     router.refresh();
   }
 
