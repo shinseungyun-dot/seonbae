@@ -6,6 +6,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const updateSession = async (request: NextRequest) => {
   let supabaseResponse = NextResponse.next({ request });
+  const remember = request.cookies.get("seonbae-remember")?.value !== "0";
 
   const supabase = createServerClient(supabaseUrl!, supabaseKey!, {
     cookies: {
@@ -19,9 +20,14 @@ export const updateSession = async (request: NextRequest) => {
 
         supabaseResponse = NextResponse.next({ request });
 
-        cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options),
-        );
+        cookiesToSet.forEach(({ name, value, options }) => {
+          const cookieOptions = { ...options };
+          if (!remember && cookieOptions.maxAge !== 0) {
+            delete cookieOptions.maxAge;
+            delete cookieOptions.expires;
+          }
+          supabaseResponse.cookies.set(name, value, cookieOptions);
+        });
       },
     },
   });

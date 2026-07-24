@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -7,7 +8,7 @@ const adminLoginId = "ssapgoadmin";
 const adminAuthEmail = "ssapgoadmin@seonbae.internal";
 
 export async function POST(request: NextRequest) {
-  let body: { identifier?: unknown; password?: unknown };
+  let body: { identifier?: unknown; password?: unknown; remember?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
   const identifier =
     typeof body.identifier === "string" ? body.identifier.trim().toLowerCase() : "";
   const password = typeof body.password === "string" ? body.password : "";
+  const remember = body.remember === true;
   const isAdminLogin = identifier === adminLoginId;
   const email = isAdminLogin ? adminAuthEmail : identifier;
 
@@ -27,7 +29,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabase = await createClient();
+  const supabase = await createClient({ remember });
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data.user) {
@@ -50,6 +52,16 @@ export async function POST(request: NextRequest) {
       { status: 403 },
     );
   }
+
+  const cookieStore = await cookies();
+  const rememberOptions = {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    ...(remember ? { maxAge: 400 * 24 * 60 * 60 } : {}),
+  };
+  cookieStore.set("seonbae-remember", remember ? "1" : "0", rememberOptions);
 
   return NextResponse.json({
     destination: profile?.role === "admin" ? "/admin" : "/portal",
