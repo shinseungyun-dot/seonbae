@@ -18,18 +18,42 @@ export async function GET() {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("tutors")
-    .select("registry_id,name,exam,score,category,tier,display_order")
+    .select(
+      "registry_id,name,exam,score,category,tier,university,university_en,photo_url,banner_url,display_order",
+    )
     .eq("active", true)
     .order("display_order", { ascending: true })
     .order("registry_id", { ascending: true });
 
   if (error) {
-    return NextResponse.json(
-      { error: "Tutor directory is temporarily unavailable." },
-      { status: 503, headers: { "Cache-Control": "no-store" } },
-    );
+    const fallback = await supabase
+      .from("tutors")
+      .select("registry_id,name,exam,score,category,tier,display_order")
+      .eq("active", true)
+      .order("display_order", { ascending: true })
+      .order("registry_id", { ascending: true });
+
+    if (fallback.error) {
+      return NextResponse.json(
+        { error: "Tutor directory is temporarily unavailable." },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
+    }
+
+    data = fallback.data?.map((row) => ({
+      ...row,
+      university: row.registry_id === "P-002" ? "서울대학교" : "고려대학교",
+      university_en:
+        row.registry_id === "P-002" ? "Seoul National University" : "Korea University",
+      photo_url: null,
+      banner_url:
+        row.registry_id === "P-002"
+          ? "/university-snu-banner.png"
+          : "/university-korea-banner.png",
+    })) as typeof data;
+    error = null;
   }
 
   return NextResponse.json(data ?? [], {
