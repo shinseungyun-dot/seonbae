@@ -133,11 +133,11 @@ const foundersByLanguage: Record<Language,Founder[]> = {
 
 const pageCopy = {
   ko:{
-    announcement:"첫 시범 수업 무료",network:"서울대 · 고려대 · 연세대 검증 튜터 네트워크",
+    announcement:"24시간 이내 상담 답변",network:"서울대 · 고려대 · 연세대 검증 튜터 네트워크",
     nav:{home:"홈",tutors:"튜터 찾기",verification:"검증과 약속",about:"선배 소개",consult:"상담 신청"},
     freeConsult:"무료 상담",heroKicker:"검증된 재외국민 SKY 튜터 네트워크",
     heroBody:"IB Physics HL 7점이 IB Physics를 가르치고, SAT 1580점이 SAT를 가르칩니다. 성적표 원본·재학증명서·1:1 면접으로 직접 검증합니다.",
-    findTutor:"튜터 찾아보기",trial:"무료 시범 수업",
+    findTutor:"튜터 찾아보기",trial:"상담 신청",
     manifestoBody:"모든 튜터는 성적표 원본, 재학증명서, 1:1 면접을 통과해야 합니다. 자기소개는 검증이 아닙니다.",
     principles:[["證","PROOF","확인 가능한 성적"],["路","PATH","같은 길을 걸은 선배"],["記","RECORD","기록이 남는 수업"]],
     stats:[["3","단계 검증 절차"],["SKY","서울대 · 고려대 · 연세대"],["24","전체 등재 튜터"],["1:1","전 세계 온라인 수업"]],
@@ -145,19 +145,19 @@ const pageCopy = {
     premium:"프리미엄",standard:"스탠다드",search:"과목 검색",searchPlaceholder:"예: Physics, Economics…",listed:"등재 튜터",people:"명",
     verified:"✓ VERIFIED",credentials:"성적표 · 재학증명 · 면접",requestConsult:"상담하기 ↗",noResults:"검색 조건에 맞는 튜터가 없습니다.",
     verificationBody:"누구도 자기소개만으로 등재될 수 없습니다. 세 단계를 모두 통과해야 명부에 이름이 오릅니다.",verificationNote:"※ 세 단계를 모두 통과한 튜터에게만 붉은 검증인이 찍힙니다.",
-    steps:[["I","조건 입력","커리큘럼, 과목, 현재 수준, 목표 시험과 지망 대학, 가능한 일정을 알려 주세요."],["II","선배 매칭","과목만 맞추지 않습니다. 같은 시험과 비슷한 진학 경로를 통과한 튜터를 연결합니다."],["III","무료 시범 수업 · 진단","첫 수업에서 AI 기반 진단으로 약점을 정확히 찾아냅니다. 확인한 뒤 결정하세요."],["IV","기록이 남는 수업","일정, 피드백, 진도, 숙제, 모의고사 결과를 기록해 학부모에게 전달합니다."]],
-    includedBody:"별도의 옵션이 아닙니다. 선배의 모든 수업이 지키는 기본 약속입니다.",included:[["01","AI 준비 교재","최신 AI 도구로 학생 맞춤 교재와 진단을 준비합니다."],["02","무료 시범 수업","첫 수업은 무료입니다. 확인한 뒤 결정하세요."],["03","학부모 진도 리포트","진도·숙제·모의고사 결과를 정기 리포트로 전달합니다."],["04","기록되는 플랫폼","일정과 수업 기록이 남아 언제든 확인할 수 있습니다."]],includedLabel:"포함",
+    steps:[["I","조건 입력","커리큘럼, 과목, 현재 수준, 목표 시험과 지망 대학, 가능한 일정을 알려 주세요."],["II","선배 매칭","과목만 맞추지 않습니다. 같은 시험과 비슷한 진학 경로를 통과한 튜터를 연결합니다."],["III","학습 진단과 계획 수립","현재 수준과 취약점을 정리해 우선순위가 분명한 학습 계획을 세웁니다."],["IV","기록이 남는 수업","일정, 피드백, 진도, 숙제, 모의고사 결과를 기록해 학부모에게 전달합니다."]],
+    includedBody:"별도의 옵션이 아닙니다. 선배의 모든 수업이 지키는 기본 약속입니다.",included:[["01","AI 준비 교재","최신 AI 도구로 학생 맞춤 교재와 진단을 준비합니다."],["02","개인별 학습 진단","현재 수준과 취약점을 파악해 학습 우선순위를 구체적으로 제안합니다."],["03","학부모 진도 리포트","진도·숙제·모의고사 결과를 정기 리포트로 전달합니다."],["04","기록되는 플랫폼","일정과 수업 기록이 남아 언제든 확인할 수 있습니다."]],includedLabel:"포함",
     storyP1:"선배는 같은 기숙사 방에서 시작됐습니다. 재외국민·국제학교 출신으로 IB와 SAT를 직접 치르고 SKY에 진학한 세 사람이 학생일 때 간절히 원했던 것을 만들기로 했습니다.",storyP2:"서울에서 시작하지만 수업은 전 세계 어디서나 열립니다. 홍콩과 미국의 한인 커뮤니티가 다음 목적지입니다.",networkLine:"네트워크 — 고려대 KUSMO · 연세대 YIKU · 서울대 IKC",foundersHeading:"창업팀도 같은 형식으로\n검증을 공개합니다.",mottoBody:"튜터는 정당하게 벌고, 학생은 제대로 배웁니다.\n하나의 신뢰할 수 있는 네트워크 안에서.",
-    consultBody:"어느 방법이든 24시간 이내에 답변드립니다.\n첫 시범 수업과 진단은 무료입니다.",fastest:"가장 빠른 방법",kakao:"카카오톡으로 바로 상담 ↗",details:"자세한 문의",
-    name:"성함",curriculum:"커리큘럼 / 시험",subject:"과목",subjectPlaceholder:"예: Mathematics AA HL",situation:"목표와 현재 상황",situationPlaceholder:"목표 점수, 지망 대학, 현재 수준 등을 자유롭게 적어 주세요.",apply:"무료 시범 수업 신청",emailNotice:"신청하면 이메일이 열립니다. 24시간 이내에 답변드립니다.",other:"기타 / 미정",internationalGrades:"국제학교 내신",
+    consultBody:"어느 방법이든 24시간 이내에 답변드립니다.",fastest:"가장 빠른 방법",kakao:"카카오톡으로 바로 상담 ↗",details:"자세한 문의",
+    name:"성함",curriculum:"커리큘럼 / 시험",subject:"과목",subjectPlaceholder:"예: Mathematics AA HL",situation:"목표와 현재 상황",situationPlaceholder:"목표 점수, 지망 대학, 현재 수준 등을 자유롭게 적어 주세요.",apply:"상담 신청",emailNotice:"신청하면 이메일이 열립니다. 24시간 이내에 답변드립니다.",other:"기타 / 미정",internationalGrades:"국제학교 내신",
     site:"Site",contact:"Contact",company:"Company",team:"팀 소개",applyTutor:"튜터 지원하기 ↗",footerNetwork:"서울대 · 고려대 · 연세대 재외국민 네트워크",quickConsult:"빠른 상담 신청",
   },
   en:{
-    announcement:"YOUR FIRST TRIAL LESSON IS FREE",network:"VERIFIED SNU · KOREA · YONSEI TUTOR NETWORK",
+    announcement:"CONSULTATION REPLIES WITHIN 24 HOURS",network:"VERIFIED SNU · KOREA · YONSEI TUTOR NETWORK",
     nav:{home:"Home",tutors:"Find a Tutor",verification:"Verification",about:"About Seonbae",consult:"Consultation"},
     freeConsult:"Free consultation",heroKicker:"A VERIFIED SKY TUTOR NETWORK FOR GLOBAL KOREAN STUDENTS",
     heroBody:"An IB Physics HL 7 teaches IB Physics. An SAT 1580 teaches the SAT. Every tutor is directly verified through original score reports, enrollment documents, and a one-to-one interview.",
-    findTutor:"Find your tutor",trial:"Free trial lesson",
+    findTutor:"Find your tutor",trial:"Request a consultation",
     manifestoBody:"Every tutor must pass our original-score-report review, enrollment verification, and one-to-one interview. A profile alone is not proof.",
     principles:[["證","PROOF","Scores you can verify"],["路","PATH","A mentor who walked your path"],["記","RECORD","Lessons with a record"]],
     stats:[["3","verification stages"],["SKY","SNU · Korea · Yonsei"],["24","verified tutors"],["1:1","online lessons worldwide"]],
@@ -165,11 +165,11 @@ const pageCopy = {
     premium:"Premium",standard:"Standard",search:"Search by subject",searchPlaceholder:"e.g. Physics, Economics…",listed:"Verified tutors",people:"",
     verified:"✓ VERIFIED",credentials:"Score · enrollment · interview",requestConsult:"Consult ↗",noResults:"No tutors match these search criteria.",
     verificationBody:"No one enters this registry through self-description alone. A tutor’s name appears only after all three stages are complete.",verificationNote:"※ The red verification seal is reserved for tutors who pass every stage.",
-    steps:[["I","Tell us your goals","Share the curriculum, subject, current level, target exam or university, and available schedule."],["II","Seonbae matching","We match more than a subject. We connect students with tutors who passed the same exam and followed a similar admissions path."],["III","Free trial · diagnosis","The first lesson uses an AI-assisted diagnostic to locate the student’s exact gaps. Decide only after you see the fit."],["IV","Lessons on record","Schedules, feedback, progress, homework, and mock-exam results are documented and shared with parents."]],
-    includedBody:"These are not upgrades. They are the standard commitments included in every Seonbae lesson.",included:[["01","AI-prepared materials","Current AI tools help us prepare student-specific materials and diagnostics."],["02","Free trial lesson","Your first lesson is free. Experience the match before deciding."],["03","Parent progress reports","Progress, homework, and mock-exam results are delivered in regular reports."],["04","A documented platform","Schedules and lesson records remain accessible whenever you need them."]],includedLabel:"INCLUDED",
+    steps:[["I","Tell us your goals","Share the curriculum, subject, current level, target exam or university, and available schedule."],["II","Seonbae matching","We match more than a subject. We connect students with tutors who passed the same exam and followed a similar admissions path."],["III","Diagnostic and study plan","We map the student’s current level and gaps into a study plan with clear priorities."],["IV","Lessons on record","Schedules, feedback, progress, homework, and mock-exam results are documented and shared with parents."]],
+    includedBody:"These are not upgrades. They are the standard commitments included in every Seonbae lesson.",included:[["01","AI-prepared materials","Current AI tools help us prepare student-specific materials and diagnostics."],["02","Student-specific diagnostic","We identify the student’s current level and gaps, then recommend practical priorities."],["03","Parent progress reports","Progress, homework, and mock-exam results are delivered in regular reports."],["04","A documented platform","Schedules and lesson records remain accessible whenever you need them."]],includedLabel:"INCLUDED",
     storyP1:"Seonbae began in a shared dorm room. Three overseas-Korean and international-school graduates—each of whom sat the IB or SAT and entered a SKY university—decided to build what they had wanted most as students.",storyP2:"We began in Seoul, but lessons open from anywhere in the world. Korean communities in Hong Kong and the United States are next.",networkLine:"NETWORK — KOREA KUSMO · YONSEI YIKU · SNU IKC",foundersHeading:"Our founders publish their own\ncredentials in the same format.",mottoBody:"Tutors earn fairly. Students learn properly.\nOne trusted network makes both possible.",
-    consultBody:"Whichever route you choose, we respond within 24 hours.\nYour first trial lesson and diagnostic are free.",fastest:"FASTEST ROUTE",kakao:"Consult on KakaoTalk ↗",details:"DETAILED ENQUIRIES",
-    name:"Name",curriculum:"Curriculum / exam",subject:"Subject",subjectPlaceholder:"e.g. Mathematics AA HL",situation:"Goals and current level",situationPlaceholder:"Tell us the target score, preferred universities, current level, and anything else we should know.",apply:"Request a free trial lesson",emailNotice:"Submitting opens your email client. We respond within 24 hours.",other:"Other / undecided",internationalGrades:"International-school grades",
+    consultBody:"Whichever route you choose, we respond within 24 hours.",fastest:"FASTEST ROUTE",kakao:"Consult on KakaoTalk ↗",details:"DETAILED ENQUIRIES",
+    name:"Name",curriculum:"Curriculum / exam",subject:"Subject",subjectPlaceholder:"e.g. Mathematics AA HL",situation:"Goals and current level",situationPlaceholder:"Tell us the target score, preferred universities, current level, and anything else we should know.",apply:"Request a consultation",emailNotice:"Submitting opens your email client. We respond within 24 hours.",other:"Other / undecided",internationalGrades:"International-school grades",
     site:"Site",contact:"Contact",company:"Company",team:"Meet the team",applyTutor:"Apply as a tutor ↗",footerNetwork:"OVERSEAS-KOREAN NETWORK · SNU · KOREA · YONSEI",quickConsult:"Quick consultation",
   },
 };
@@ -233,8 +233,8 @@ export default function Page() {
     const body = isEnglish
       ? `Name: ${data.get("name")}\nCurriculum: ${data.get("curriculum")}\nSubject: ${data.get("subject")}\nGoals and current level: ${data.get("message")}`
       : `성함: ${data.get("name")}\n커리큘럼: ${data.get("curriculum")}\n과목: ${data.get("subject")}\n목표와 현재 상황: ${data.get("message")}`;
-    const subject = isEnglish ? "Free trial lesson request" : "무료 시범 수업 신청";
-    window.location.href = `mailto:hello@seonbae.kr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const subject = isEnglish ? "Consultation request" : "상담 신청";
+    window.location.href = `mailto:admissions@seonbae.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   const curriculumOptions = ["IB","AP","A-Level","IGCSE","SAT","ACT","TOEFL","IELTS","TOEIC",t.internationalGrades,t.other];
@@ -292,9 +292,9 @@ export default function Page() {
       <div className="motto"><span>Two birds, one stone.</span><p>{t.mottoBody}</p></div>
     </section>
 
-    <section className="consultation" id="consult"><div className="consultCopy"><div className="sectionKicker"><span>07</span><p>BEGIN HERE</p></div><h2>{isEnglish ? <>Consultation ·<br/>trial lesson.</> : <>상담 · 시범<br/>수업 신청.</>}</h2><p>{t.consultBody}</p><div className="directContact"><a href="https://pf.kakao.com/_seonbae"><span>{t.fastest}</span><b>{t.kakao}</b></a><a href="mailto:hello@seonbae.kr"><span>{t.details}</span><b>hello@seonbae.kr ↗</b></a></div></div><ConsultForm copy={t} onSubmit={submitConsultation} options={curriculumOptions} /></section>
+    <section className="consultation" id="consult"><div className="consultCopy"><div className="sectionKicker"><span>07</span><p>BEGIN HERE</p></div><h2>{isEnglish ? <>Consultation<br/>request.</> : <>상담<br/>신청.</>}</h2><p>{t.consultBody}</p><div className="directContact"><a href="https://pf.kakao.com/_seonbae"><span>{t.fastest}</span><b>{t.kakao}</b></a><a href="mailto:admissions@seonbae.com"><span>{t.details}</span><b>admissions@seonbae.com ↗</b></a></div></div><ConsultForm copy={t} onSubmit={submitConsultation} options={curriculumOptions} /></section>
 
-    <footer><div className="footerBrand"><a href={tabHref("home")}>선배</a><p>Two birds,<br/>one stone.</p></div><div className="footerGrid"><div><b>{t.site}</b><a href={tabHref("tutors")}>{t.nav.tutors}</a><a href={tabHref("verification")}>{t.nav.verification}</a><a href={tabHref("about")}>{t.nav.about}</a></div><div><b>{t.contact}</b><a href="mailto:hello@seonbae.kr">hello@seonbae.kr</a><a href="https://pf.kakao.com/_seonbae">KakaoTalk Channel ↗</a></div><div><b>{t.company}</b><a href={tabHref("about")}>{t.team}</a><a href={`mailto:hello@seonbae.kr?subject=${encodeURIComponent(isEnglish?"Tutor application":"튜터 지원")}`}>{t.applyTutor}</a></div></div><div className="footerBottom"><span>© 2026 SEONBAE · SEOUL, REPUBLIC OF KOREA</span><span>{t.footerNetwork}</span></div></footer>
+    <footer><div className="footerBrand"><a href={tabHref("home")}>선배</a><p>Two birds,<br/>one stone.</p></div><div className="footerGrid"><div><b>{t.site}</b><a href={tabHref("tutors")}>{t.nav.tutors}</a><a href={tabHref("verification")}>{t.nav.verification}</a><a href={tabHref("about")}>{t.nav.about}</a></div><div><b>{t.contact}</b><a href="mailto:admissions@seonbae.com">admissions@seonbae.com</a><a href="https://pf.kakao.com/_seonbae">KakaoTalk Channel ↗</a></div><div><b>{t.company}</b><a href={tabHref("about")}>{t.team}</a><a href={`mailto:admissions@seonbae.com?subject=${encodeURIComponent(isEnglish?"Tutor application":"튜터 지원")}`}>{t.applyTutor}</a></div></div><div className="footerBottom"><span>© 2026 SEONBAE · SEOUL, REPUBLIC OF KOREA</span><span>{t.footerNetwork}</span></div></footer>
     <ConsultForm compact copy={t} onSubmit={submitConsultation} options={curriculumOptions} />
   </main>;
 }
