@@ -67,6 +67,7 @@ export default function LoginPage() {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
     });
+    window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }), 160);
   }
 
   return (
