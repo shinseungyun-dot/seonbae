@@ -55,6 +55,9 @@ export default function LoginPage() {
   }
 
   function switchAction(nextAction: AuthAction) {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     setAction(nextAction);
     setFullName("");
     setIdentifier("");
