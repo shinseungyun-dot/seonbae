@@ -471,7 +471,7 @@ body::after{
 
 .tutor{padding:0;display:flex;flex-direction:column;min-height:400px}
 .tutor-visual{position:relative;min-height:188px;padding:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;background-color:var(--blue);background-size:cover;background-position:center;color:#fff;isolation:isolate}
-.tutor-visual::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,23,71,.04),rgba(6,23,71,.48))}
+.tutor-visual::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.38))}
 .tutor-profile{display:flex;align-items:flex-end;gap:13px;min-width:0}
 .tutor-photo{width:72px;height:88px;flex:none;overflow:hidden;border-radius:var(--r-md);display:grid;place-items:center;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.38);box-shadow:0 12px 28px -18px rgba(0,0,0,.6)}
 .tutor-photo img{width:100%;height:100%;object-fit:cover}
@@ -1902,6 +1902,11 @@ h1.hl.in .ln > span{transform:none}
     var banner = allowedBanners.indexOf(row.banner_url) > -1
       ? row.banner_url
       : '/university-korea-banner.png';
+    var bannerOverlay = banner === '/university-korea-banner.png'
+      ? 'linear-gradient(90deg,rgba(86,0,32,.66),rgba(122,0,37,.14))'
+      : banner === '/university-snu-banner.png'
+        ? 'linear-gradient(90deg,rgba(2,27,83,.70),rgba(0,51,126,.18))'
+        : 'linear-gradient(90deg,rgba(1,34,91,.68),rgba(10,63,138,.16))';
     var photo = typeof row.photo_url === 'string' && (
       /^\/[a-zA-Z0-9/_\-.]+$/.test(row.photo_url) ||
       /^https:\/\/[^\s"'()]+$/.test(row.photo_url)
@@ -1913,7 +1918,7 @@ h1.hl.in .ln > span{transform:none}
       ? '<img src="' + photo + '" alt="' + name + '">'
       : '<span><b>' + ref + '</b>' + photoLabel + '</span>';
     return '<article class="card tutor" data-curr="' + category + '">' +
-      '<div class="tutor-visual" style="background-image:linear-gradient(90deg,rgba(6,23,71,.72),rgba(6,23,71,.22)),url(&quot;' + banner + '&quot;)">' +
+      '<div class="tutor-visual" style="background-image:' + bannerOverlay + ',url(&quot;' + banner + '&quot;)">' +
         '<div class="tutor-profile"><div class="tutor-photo">' + photoMarkup + '</div><div><div class="tutor-id">' + ref + '</div><div class="tutor-name">' + name + '</div><div class="tutor-uni">' + university + '</div></div></div>' +
         '<span class="verified">' + verified + '</span>' +
       '</div>' +

@@ -107,7 +107,7 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
 
           {selected ? (
             <div className={styles.editor}>
-              <div className={styles.cardPreview} style={selected.banner_url ? { backgroundImage: `linear-gradient(90deg,rgba(8,24,54,.8),rgba(8,24,54,.36)),url("${selected.banner_url}")` } : undefined}>
+              <div className={styles.cardPreview} style={selected.banner_url ? { backgroundImage: `${bannerOverlay(selected.banner_url)},url("${selected.banner_url}")` } : undefined}>
                 <span className={styles.previewPhoto}>{selected.photo_url ? <img src={selected.photo_url} alt={`${selected.name} 튜터`} /> : <b>{initials(selected.name)}<small>사진 준비 중</small></b>}</span>
                 <div><p>{selected.registry_id} · {selected.tier.toUpperCase()}</p><h2>{selected.name}</h2><span>{selected.university || "대학교 미입력"}</span></div>
                 <strong>{selected.score}<small>{selected.exam}</small></strong>
@@ -144,4 +144,14 @@ function initials(value: string) {
   const clean = value.trim();
   if (!clean) return "선";
   return /^[가-힣]/.test(clean) ? clean.slice(-2) : clean.split(/\s+/).map((word) => word[0]).slice(0, 2).join("").toUpperCase();
+}
+
+function bannerOverlay(bannerUrl: string | null) {
+  if (bannerUrl === "/university-korea-banner.png") {
+    return "linear-gradient(90deg,rgba(86,0,32,.72),rgba(122,0,37,.22))";
+  }
+  if (bannerUrl === "/university-snu-banner.png") {
+    return "linear-gradient(90deg,rgba(2,27,83,.76),rgba(0,51,126,.24))";
+  }
+  return "linear-gradient(90deg,rgba(1,34,91,.72),rgba(10,63,138,.22))";
 }
