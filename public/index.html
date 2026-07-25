@@ -779,7 +779,7 @@ h1.hl.in .ln > span{transform:none}
         <a href="#/en/home" data-lang-option="en">EN</a>
         <a href="#/ko/home" data-lang-option="ko" aria-current="true">한국어</a>
       </div>
-      <a class="btn btn-login" href="/login"><span data-ko="로그인">Log in</span></a>
+      <a class="btn btn-login" id="accountPortalLink" href="/login"><span data-ko="로그인">Log in</span></a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -1800,6 +1800,49 @@ h1.hl.in .ln > span{transform:none}
   sync(true);
 
   /* ── header ───────────────────────────────────────────── */
+  var accountPortalLink = document.getElementById('accountPortalLink');
+  function updateAccountPortalLink(){
+    if (!accountPortalLink) return;
+    fetch('/api/auth/session', {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json' }
+    })
+      .then(function(response){ return response.ok ? response.json() : null; })
+      .then(function(session){
+        if (!session || !session.authenticated) {
+          accountPortalLink.href = '/login';
+          accountPortalLink.removeAttribute('data-authenticated');
+          var signedOutLabel = accountPortalLink.querySelector('span');
+          if (signedOutLabel) {
+            signedOutLabel._en = 'Log in';
+            signedOutLabel.dataset.ko = '로그인';
+            signedOutLabel.innerHTML = document.documentElement.getAttribute('data-lang') === 'ko'
+              ? '로그인'
+              : 'Log in';
+          }
+          return;
+        }
+
+        accountPortalLink.href = session.destination || '/portal';
+        accountPortalLink.setAttribute('data-authenticated', 'true');
+        var portalLabel = accountPortalLink.querySelector('span');
+        if (portalLabel) {
+          portalLabel._en = 'Portal';
+          portalLabel.dataset.ko = '포털';
+          portalLabel.innerHTML = document.documentElement.getAttribute('data-lang') === 'ko'
+            ? '포털'
+            : 'Portal';
+        }
+      })
+      .catch(function(){});
+  }
+  updateAccountPortalLink();
+  window.addEventListener('pageshow', updateAccountPortalLink);
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) updateAccountPortalLink();
+  });
+
   var hdr = document.getElementById('hdr');
   var onScroll = function(){ hdr.classList.toggle('is-stuck', window.scrollY > 20); };
   onScroll();

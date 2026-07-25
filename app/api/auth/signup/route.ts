@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -28,25 +29,70 @@ export async function POST(request: NextRequest) {
     password,
     options: {
       data: { full_name: fullName },
-      emailRedirectTo: `${request.nextUrl.origin}/portal`,
+      emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=/portal`,
     },
   });
 
   if (error) {
-    const duplicate = error.message.toLowerCase().includes("already");
+    const errorMessage = error.message.toLowerCase();
+    const duplicate =
+      errorMessage.includes("already") ||
+      errorMessage.includes("registered") ||
+      errorMessage.includes("exists");
+    const rateLimited = errorMessage.includes("rate limit");
+    const invalidEmail = errorMessage.includes("invalid") && errorMessage.includes("email");
+
     return NextResponse.json(
-      { error: duplicate ? "이미 가입된 이메일입니다. 로그인해 주세요." : "회원가입을 완료하지 못했습니다. 입력한 정보를 다시 확인해 주세요." },
+      {
+        error: duplicate
+          ? "이미 가입된 이메일입니다. 로그인해 주세요."
+          : rateLimited
+            ? "가입 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
+            : invalidEmail
+              ? "사용할 수 없는 이메일 주소입니다. 다른 이메일을 입력해 주세요."
+              : "회원가입을 완료하지 못했습니다. 입력한 정보를 다시 확인해 주세요.",
+      },
       { status: 400 },
     );
   }
 
-  if (data.session) {
-    return NextResponse.json({ destination: "/portal" });
+  if (!data.user) {
+    return NextResponse.json(
+      { error: "계정을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요." },
+      { status: 500 },
+    );
   }
 
-  return NextResponse.json({
-    message: "가입 확인 메일을 보냈습니다. 이메일 인증을 마치면 로그인할 수 있습니다.",
+  if (!data.session) {
+    return NextResponse.json({
+      message: "인증 메일을 보냈습니다. 메일의 인증 링크를 누른 뒤 포털에 로그인해 주세요.",
+    });
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profileError || !profile) {
+    await supabase.auth.signOut();
+    return NextResponse.json(
+      { error: "계정 정보를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요." },
+      { status: 500 },
+    );
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set("seonbae-remember", "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 400 * 24 * 60 * 60,
   });
+
+  return NextResponse.json({ destination: "/portal" });
 }
 
 function isEmail(value: string) {

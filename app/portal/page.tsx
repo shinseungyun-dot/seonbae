@@ -24,6 +24,8 @@ export default async function PortalPage() {
       .order("starts_at", { ascending: true }),
   ]);
 
+  if (profile?.role === "admin") redirect("/admin");
+
   const sessions: PortalSession[] = (sessionRows ?? []).map((row) => {
     const tutor = Array.isArray(row.tutors) ? row.tutors[0] : row.tutors;
     return {
