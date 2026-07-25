@@ -681,6 +681,9 @@ body::after{
 .ftr-col a:hover{color:#fff}
 .ftr-base{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:20px 0 28px;border-top:1px solid rgba(255,255,255,.16)}
 .ftr-base span{font-family:var(--mono);font-size:.625rem;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.50)}
+.ftr-legal{display:flex;align-items:center;gap:14px}
+.ftr-legal a{font-family:var(--mono);font-size:.625rem;letter-spacing:.06em;color:rgba(255,255,255,.72);text-decoration:underline;text-underline-offset:4px}
+.ftr-legal a:hover{color:#fff}
 
 /* ═══ REVEAL ═════════════════════════════════════════════ */
 [data-rv]{opacity:0;transform:translateY(24px);filter:blur(4px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease);transition-delay:calc(var(--i,0) * 80ms)}
@@ -1657,6 +1660,10 @@ h1.hl.in .ln > span{transform:none}
     </div>
     <div class="ftr-base">
       <span data-ko="© 2026 선배 · 서울, 대한민국">© 2026 Seonbae · Seoul, Republic of Korea</span>
+      <div class="ftr-legal">
+        <a href="/privacy" data-ko="개인정보 처리방침">Privacy Policy</a>
+        <a href="/terms" data-ko="이용약관">Terms of Service</a>
+      </div>
       <span data-ko="서울대 · 고려대 · 연세대 재외국민 네트워크에서 시작되었습니다">Begun in the SKY overseas-Korean network</span>
     </div>
   </div>

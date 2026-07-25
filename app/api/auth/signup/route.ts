@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
+import { getPasswordPolicyError } from "../../../../utils/auth/password";
+import { normalizePhone } from "../../../../utils/auth/phone";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  let body: { fullName?: unknown; email?: unknown; password?: unknown };
+  let body: {
+    fullName?: unknown;
+    email?: unknown;
+    phone?: unknown;
+    password?: unknown;
+    privacyAgreed?: unknown;
+    termsAgreed?: unknown;
+    ageConfirmed?: unknown;
+  };
   try {
     body = await request.json();
   } catch {
@@ -14,11 +25,32 @@ export async function POST(request: NextRequest) {
 
   const fullName = typeof body.fullName === "string" ? body.fullName.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const phoneInput = typeof body.phone === "string" ? body.phone : "";
+  const phone = normalizePhone(phoneInput);
   const password = typeof body.password === "string" ? body.password : "";
+  const passwordError = getPasswordPolicyError(password);
+  const privacyAgreed = body.privacyAgreed === true;
+  const termsAgreed = body.termsAgreed === true;
+  const ageConfirmed = body.ageConfirmed === true;
 
-  if (!fullName || !isEmail(email) || password.length < 8) {
+  if (fullName.length < 2 || fullName.length > 80 || !isEmail(email)) {
     return NextResponse.json(
-      { error: "이름과 이메일을 확인하고 비밀번호를 8자 이상 입력해 주세요." },
+      { error: "이름과 이메일 주소를 다시 확인해 주세요." },
+      { status: 400 },
+    );
+  }
+  if (!phone) {
+    return NextResponse.json(
+      { error: "휴대전화번호를 국가번호와 함께 올바르게 입력해 주세요." },
+      { status: 400 },
+    );
+  }
+  if (passwordError) {
+    return NextResponse.json({ error: passwordError }, { status: 400 });
+  }
+  if (!privacyAgreed || !termsAgreed || !ageConfirmed) {
+    return NextResponse.json(
+      { error: "회원가입에 필요한 필수 약관과 개인정보 수집·이용에 동의해 주세요." },
       { status: 400 },
     );
   }
@@ -28,7 +60,15 @@ export async function POST(request: NextRequest) {
     email,
     password,
     options: {
-      data: { full_name: fullName },
+      data: {
+        full_name: fullName,
+        phone,
+        privacy_agreed: true,
+        privacy_consent_version: PRIVACY_POLICY_VERSION,
+        terms_agreed: true,
+        terms_version: TERMS_VERSION,
+        age_confirmed: true,
+      },
       emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=/portal`,
     },
   });
@@ -96,5 +136,5 @@ export async function POST(request: NextRequest) {
 }
 
 function isEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
