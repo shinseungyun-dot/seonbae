@@ -222,7 +222,20 @@ export default function LoginPage() {
 
         <div className={styles.loginSurface}>
           <div className={styles.formHeading}>
-            <h2>{actionCopy[action].title}</h2>
+            <div className={styles.formHeadingTop}>
+              {action !== "signin" && (
+                <button
+                  type="button"
+                  className={styles.formBack}
+                  onClick={() => switchAction("signin")}
+                  aria-label="로그인으로 돌아가기"
+                  title="로그인으로 돌아가기"
+                >
+                  <span aria-hidden="true">←</span>
+                </button>
+              )}
+              <h2>{actionCopy[action].title}</h2>
+            </div>
             <span>{actionCopy[action].description}</span>
           </div>
 

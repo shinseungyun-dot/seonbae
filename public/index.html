@@ -179,6 +179,18 @@ body::after{
 .nav a:hover{color:var(--blue)}
 .nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1)}
 .nav a[aria-current]{color:var(--blue);font-weight:600}
+.nav-drop{position:relative;display:flex;align-items:center}
+.nav-drop-menu{
+  position:absolute;left:50%;top:calc(100% + 8px);width:190px;padding:8px;
+  border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.97);
+  box-shadow:0 18px 46px -24px rgba(10,32,70,.52);
+  opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-6px);
+  transition:opacity .22s var(--ease),transform .22s var(--ease),visibility .22s;
+}
+.nav-drop:hover .nav-drop-menu,.nav-drop:focus-within .nav-drop-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)}
+.nav .nav-drop-menu a{display:block;padding:10px 12px;border-radius:9px;font-size:.76rem;color:var(--ink-2);white-space:nowrap}
+.nav .nav-drop-menu a::after{display:none}
+.nav .nav-drop-menu a:hover,.nav .nav-drop-menu a:focus-visible{color:var(--blue);background:var(--paper-2)}
 
 .hdr-end{grid-column:3;justify-self:end;display:flex;align-items:center;gap:18px;min-height:44px}
 .lang{display:flex;align-items:center;gap:14px;height:44px;padding:0;background:transparent}
@@ -202,6 +214,10 @@ body::after{
 .account-identity[hidden]{display:none}
 .account-identity small{font-size:.52rem;font-weight:600;letter-spacing:.08em;color:var(--ink-4);white-space:nowrap}
 .account-identity strong{margin-top:3px;font-size:.69rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-logout{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 13px;border:1px solid rgba(10,32,70,.2);border-radius:999px;background:rgba(255,255,255,.7);color:var(--blue);font-size:.65rem;font-weight:700;white-space:nowrap;transition:background-color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease)}
+.account-logout:hover{background:#fff;border-color:rgba(10,32,70,.42);transform:translateY(-1px)}
+.account-logout:disabled{opacity:.55;cursor:wait;transform:none}
+.account-logout[hidden]{display:none}
 @keyframes account-loading{to{background-position:-200% 0}}
 .cta-short{display:none}
 .burger{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.5);place-items:center;transition:background-color .25s var(--ease),border-color .25s var(--ease)}
@@ -621,6 +637,8 @@ body::after{
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230A2046' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:inset 0 1px 2px rgba(10,32,70,.05),0 0 0 3px rgba(10,32,70,.14)}
 .field input::placeholder,.field textarea::placeholder{color:var(--ink-4)}
+.tutor-picker{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:9px}
+.tutor-picker small{grid-column:1/-1;margin-top:-1px;font-size:.69rem;line-height:1.5;color:var(--ink-4)}
 .form-submit{margin-top:26px}
 .form-submit .btn{width:100%;justify-content:space-between;height:54px}
 .form-note{margin-top:13px;font-size:.75rem;color:var(--ink-4);text-align:center}
@@ -713,6 +731,9 @@ h1.hl.in .ln > span{transform:none}
   .is-open .nav{opacity:1;transform:none;pointer-events:auto}
   .nav a{padding:15px 0;border-bottom:1px solid var(--line);font-size:1rem}
   .nav a::after{display:none}
+  .nav-drop{display:block}
+  .nav-drop-menu{position:static;width:auto;padding:0 0 5px 18px;border:0;border-radius:0;background:transparent;box-shadow:none;opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  .nav .nav-drop-menu a{padding:11px 0;font-size:.86rem;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink-3)}
   .burger{display:grid}
 }
 @media (max-width:680px){
@@ -739,6 +760,7 @@ h1.hl.in .ln > span{transform:none}
   .account-identity{max-width:86px}
   .account-identity small{display:none}
   .account-identity strong{margin-top:0;font-size:.625rem}
+  .account-logout{height:36px;padding:0 9px;font-size:.58rem}
   .hdr-end{min-height:40px}
   .lang{gap:10px;height:40px}
   .lang a{height:40px;padding:1px 0 0}
@@ -760,6 +782,7 @@ h1.hl.in .ln > span{transform:none}
   .ftr-field.full,.ftr-form-submit{grid-column:auto}
   .ftr-form-submit{align-items:stretch;flex-direction:column}
   .ftr-form-submit small{max-width:none}
+  .tutor-picker{grid-template-columns:1fr}
   .ftr-cols{grid-template-columns:1fr 1fr}
   .ftr-base{flex-direction:column;align-items:flex-start;gap:10px}
   .filters .count{margin-left:0;width:100%}
@@ -802,7 +825,13 @@ h1.hl.in .ln > span{transform:none}
     </a>
     <nav class="nav" id="nav">
       <a href="#/en/home" data-route="home" data-ko="홈">Home</a>
-      <a href="#/en/tutors" data-route="tutors" data-ko="튜터 찾기">Find a Tutor</a>
+      <div class="nav-drop">
+        <a class="nav-drop-trigger" href="#/en/tutors" data-route="tutors" data-ko="튜터">Tutors</a>
+        <div class="nav-drop-menu" aria-label="Tutor menu">
+          <a href="#/en/tutors" data-ko="튜터 찾기">Find a Tutor</a>
+          <a href="/tutor-apply" data-ko="튜터 지원하기">Apply as a Tutor</a>
+        </div>
+      </div>
       <a href="#/en/about" data-route="about" data-ko="선배 소개">About Seonbae</a>
       <a href="#/en/consult" data-route="consult" data-ko="상담 신청">Consultation</a>
     </nav>
@@ -819,6 +848,7 @@ h1.hl.in .ln > span{transform:none}
           <small data-ko="로그인 계정">Signed in as</small>
           <strong id="accountIdentityName"></strong>
         </span>
+        <button class="account-logout" id="accountLogout" type="button" data-ko="로그아웃" hidden>Log out</button>
       </div>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -1454,7 +1484,7 @@ h1.hl.in .ln > span{transform:none}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="founders">
     <div class="wrap">
       <div class="sec-head" data-rv><span class="sec-idx">05</span><span class="label" data-ko="창업팀">The founders</span></div>
       <div class="split">
@@ -1542,7 +1572,13 @@ h1.hl.in .ln > span{transform:none}
             </div>
             <div class="field">
               <label for="f-ref" data-ko="희망 튜터 <span class=&quot;opt&quot;>선택</span>">Preferred tutor <span class="opt">optional</span></label>
-              <input id="f-ref" name="ref" type="text" placeholder="Registry no. — e.g. P-001" data-ko-placeholder="명부 번호 — 예: P-001">
+              <div class="tutor-picker">
+                <input id="f-tutor-search" type="search" placeholder="Search tutor name or number" data-ko-placeholder="튜터 이름 또는 명부 번호 검색" autocomplete="off">
+                <select id="f-ref" name="ref" aria-label="Preferred tutor">
+                  <option value="TEAM" data-ko="매니저와 상담">Consult with the team</option>
+                </select>
+                <small id="f-tutor-help" aria-live="polite" data-ko="커리큘럼을 선택하면 해당 튜터만 표시됩니다.">Choose a curriculum to see matching tutors.</small>
+              </div>
             </div>
             <div class="field full">
               <label for="f-subj" data-ko="과목">Subject</label>
@@ -1612,12 +1648,11 @@ h1.hl.in .ln > span{transform:none}
             <h4 data-ko="연락처">Contact</h4>
             <a href="mailto:admissions@seonbae.com">admissions@seonbae.com</a>
             <a href="#" data-ko="카카오톡 채널 ↗">KakaoTalk Channel ↗</a>
-            <a href="#/en/consult" data-ko="상담 신청">Request a consultation</a>
           </div>
           <div class="ftr-col">
             <h4 data-ko="회사">Company</h4>
-            <a href="#/en/about" data-ko="팀 소개">Meet the team</a>
-            <a href="#" data-ko="튜터 지원 ↗">Apply as a tutor ↗</a>
+            <a href="#/en/about/founders" data-ko="팀 소개">Meet the team</a>
+            <a href="/tutor-apply" data-ko="튜터 지원 ↗">Apply as a tutor ↗</a>
           </div>
           <div class="ftr-col">
             <h4 data-ko="네트워크">Network</h4>
@@ -1664,7 +1699,6 @@ h1.hl.in .ln > span{transform:none}
         <a href="/privacy" data-ko="개인정보 처리방침">Privacy Policy</a>
         <a href="/terms" data-ko="이용약관">Terms of Service</a>
       </div>
-      <span data-ko="서울대 · 고려대 · 연세대 재외국민 네트워크에서 시작되었습니다">Begun in the SKY overseas-Korean network</span>
     </div>
   </div>
 </footer>
@@ -1786,6 +1820,7 @@ h1.hl.in .ln > span{transform:none}
       if (l === lang) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
     });
     if (Array.isArray(tutorRows)) renderTutorCollections();
+    renderConsultTutorChoices();
   }
 
   function routeFromHash(){
@@ -1793,6 +1828,11 @@ h1.hl.in .ln > span{transform:none}
     var r = m ? m[1].toLowerCase() : 'home';
     if (r === 'verification') r = 'about';
     return ROUTES.indexOf(r) === -1 ? 'home' : r;
+  }
+
+  function subsectionFromHash(){
+    var m = (location.hash || '').match(/#\/(?:[a-z]{2})\/about\/([a-z0-9-]+)/i);
+    return m ? m[1].toLowerCase() : '';
   }
 
   function show(route, isInitial){
@@ -1826,6 +1866,12 @@ h1.hl.in .ln > span{transform:none}
     if (cio) active.querySelectorAll('[data-count]').forEach(function(el){ cio.observe(el); });
 
     bindTilt(active);
+    if (route === 'about' && subsectionFromHash() === 'founders') {
+      window.requestAnimationFrame(function(){
+        var founders = document.getElementById('founders');
+        if (founders) founders.scrollIntoView({behavior:reduce ? 'auto' : 'smooth', block:'start'});
+      });
+    }
     var titles = (document.documentElement.getAttribute('data-lang') === 'ko') ? {
       home:'선배 — 검증된 재외국민 SKY 튜터 네트워크', tutors:'튜터 명부 — 선배',
       about:'선배 소개', consult:'상담 신청 — 선배'
@@ -1847,6 +1893,7 @@ h1.hl.in .ln > span{transform:none}
   var accountPortalLink = document.getElementById('accountPortalLink');
   var accountIdentity = document.getElementById('accountIdentity');
   var accountIdentityName = document.getElementById('accountIdentityName');
+  var accountLogout = document.getElementById('accountLogout');
   function fetchAccountSession(){
     var earlyRequest = window.__seonbaeSessionPromise;
     window.__seonbaeSessionPromise = null;
@@ -1881,6 +1928,7 @@ h1.hl.in .ln > span{transform:none}
       setAccountLabel('Log in', '로그인');
       if (accountIdentity) accountIdentity.hidden = true;
       if (accountIdentityName) accountIdentityName.textContent = '';
+      if (accountLogout) accountLogout.hidden = true;
       return;
     }
 
@@ -1892,6 +1940,7 @@ h1.hl.in .ln > span{transform:none}
       accountIdentity.title = session.email || '';
       accountIdentity.hidden = false;
     }
+    if (accountLogout) accountLogout.hidden = false;
   }
   function updateAccountPortalLink(){
     if (!accountPortalLink) return;
@@ -1902,6 +1951,27 @@ h1.hl.in .ln > span{transform:none}
   document.addEventListener('visibilitychange', function(){
     if (!document.hidden) updateAccountPortalLink();
   });
+  if (accountLogout) {
+    accountLogout.addEventListener('click', function(){
+      if (accountLogout.disabled) return;
+      accountLogout.disabled = true;
+      fetch('/api/auth/logout', {
+        method:'POST',
+        cache:'no-store',
+        credentials:'same-origin',
+        headers:{'Accept':'application/json'}
+      }).then(function(response){
+        if (!response.ok) throw new Error('logout failed');
+        return response.json();
+      }).then(function(){
+        applyAccountSession({authenticated:false});
+      }).catch(function(){
+        updateAccountPortalLink();
+      }).finally(function(){
+        accountLogout.disabled = false;
+      });
+    });
+  }
 
   var hdr = document.getElementById('hdr');
   var onScroll = function(){ hdr.classList.toggle('is-stuck', window.scrollY > 20); };
@@ -1975,6 +2045,10 @@ h1.hl.in .ln > span{transform:none}
   var homeRegistry = document.getElementById('homeRegistry');
   var regCount = document.getElementById('regCount');
   var tutorStatCount = document.getElementById('tutorStatCount');
+  var consultCurriculum = document.getElementById('f-curr');
+  var consultTutorSearch = document.getElementById('f-tutor-search');
+  var consultTutorSelect = document.getElementById('f-ref');
+  var consultTutorHelp = document.getElementById('f-tutor-help');
   var tutorRows = null;
   var currentRegistryFilter = 'all';
 
@@ -1982,6 +2056,56 @@ h1.hl.in .ln > span{transform:none}
     var node = document.createElement('div');
     node.textContent = String(value == null ? '' : value);
     return node.innerHTML;
+  }
+
+  function renderConsultTutorChoices(){
+    if (!consultTutorSelect) return;
+    var ko = document.documentElement.getAttribute('data-lang') === 'ko';
+    var selected = consultTutorSelect.value || 'TEAM';
+    var curriculum = consultCurriculum ? consultCurriculum.value.trim().toLowerCase() : '';
+    var search = consultTutorSearch ? consultTutorSearch.value.trim().toLowerCase() : '';
+    var rows = Array.isArray(tutorRows) ? tutorRows.filter(function(row){
+      var curriculumMatch = String(row.exam || '').trim().toLowerCase() === curriculum;
+      var haystack = [
+        row.registry_id,row.name,row.exam,row.university,row.university_en
+      ].join(' ').toLowerCase();
+      return curriculumMatch && (!search || haystack.indexOf(search) > -1);
+    }) : [];
+
+    consultTutorSelect.innerHTML = '';
+    var manager = document.createElement('option');
+    manager.value = 'TEAM';
+    manager.textContent = ko ? '매니저와 상담' : 'Consult with the team';
+    consultTutorSelect.appendChild(manager);
+
+    rows.forEach(function(row){
+      var option = document.createElement('option');
+      option.value = String(row.registry_id || '');
+      option.textContent = [row.name,row.registry_id,row.university].filter(Boolean).join(' · ');
+      consultTutorSelect.appendChild(option);
+    });
+
+    if (!rows.length) {
+      var empty = document.createElement('option');
+      empty.value = '';
+      empty.disabled = true;
+      empty.textContent = Array.isArray(tutorRows)
+        ? (ko ? '선택한 커리큘럼의 등록 튜터가 없습니다' : 'No listed tutors for this curriculum')
+        : (ko ? '튜터 명부를 불러오는 중입니다' : 'Loading tutor directory');
+      consultTutorSelect.appendChild(empty);
+    }
+
+    if (selected !== 'TEAM' && rows.some(function(row){ return row.registry_id === selected; })) {
+      consultTutorSelect.value = selected;
+    } else {
+      consultTutorSelect.value = 'TEAM';
+    }
+
+    if (consultTutorHelp) {
+      consultTutorHelp.textContent = rows.length
+        ? (ko ? rows.length + '명의 튜터가 표시됩니다. 이름이나 명부 번호로 검색할 수 있습니다.' : rows.length + (rows.length === 1 ? ' tutor is' : ' tutors are') + ' available. Search by name or registry number.')
+        : (ko ? '매니저와 상담을 선택하면 팀이 가장 알맞은 튜터를 함께 찾아드립니다.' : 'Choose the team option and our manager will help select the best tutor.');
+    }
   }
 
   function tutorCardMarkup(row){
@@ -2068,6 +2192,7 @@ h1.hl.in .ln > span{transform:none}
     if (tutorStatCount) tutorStatCount.textContent = String(tutorRows.length);
     updateExamCounts();
     applyFilter(currentRegistryFilter);
+    renderConsultTutorChoices();
   }
 
   function loadTutorDirectory(){
@@ -2125,6 +2250,9 @@ h1.hl.in .ln > span{transform:none}
   updateExamCounts();
   applyFilter('all');
   loadTutorDirectory();
+  if (consultCurriculum) consultCurriculum.addEventListener('change', renderConsultTutorChoices);
+  if (consultTutorSearch) consultTutorSearch.addEventListener('input', renderConsultTutorChoices);
+  renderConsultTutorChoices();
 
   /* clicking a listing carries its registry number into the consultation */
   var pendingRef = null;
@@ -2142,10 +2270,13 @@ h1.hl.in .ln > span{transform:none}
 
   function fillRef(){
     if (!pendingRef) return;
-    var f = document.getElementById('f-ref');
-    if (f) {
-      f.value = pendingRef;
-      f.focus({preventScroll:true});
+    var tutor = Array.isArray(tutorRows) ? tutorRows.find(function(row){ return row.registry_id === pendingRef; }) : null;
+    if (tutor && consultCurriculum) consultCurriculum.value = tutor.exam;
+    if (consultTutorSearch) consultTutorSearch.value = '';
+    renderConsultTutorChoices();
+    if (consultTutorSelect) {
+      consultTutorSelect.value = pendingRef;
+      consultTutorSelect.focus({preventScroll:true});
     }
     pendingRef = null;
   }

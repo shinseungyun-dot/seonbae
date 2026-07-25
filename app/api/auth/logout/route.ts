@@ -1,0 +1,23 @@
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createClient } from "../../../../utils/supabase/server";
+
+export const dynamic = "force-dynamic";
+
+export async function POST() {
+  const supabase = await createClient();
+  await supabase.auth.signOut({ scope: "local" });
+
+  const cookieStore = await cookies();
+  cookieStore.delete("seonbae-remember");
+
+  return NextResponse.json(
+    { authenticated: false, destination: "/#/ko/home" },
+    {
+      headers: {
+        "Cache-Control": "private, no-store, max-age=0",
+        Vary: "Cookie",
+      },
+    },
+  );
+}
