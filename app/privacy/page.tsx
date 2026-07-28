@@ -138,8 +138,9 @@ export default function PrivacyPage() {
             <h2>6. 정보주체와 법정대리인의 권리</h2>
             <p>
               본인 또는 적법한 법정대리인은 개인정보의 열람, 정정·삭제, 처리정지,
-              동의 철회와 계정 삭제를 요청할 수 있습니다. 이메일로 요청하면 본인
-              확인 후 지체 없이 처리하고 결과를 안내합니다. 법령상 보존 의무가
+              동의 철회와 계정 삭제를 요청할 수 있습니다. 일반 회원은 마이페이지
+              설정에서 본인 인증 후 계정을 직접 삭제할 수 있고, 이메일로 요청하면
+              본인 확인 후 지체 없이 처리하고 결과를 안내합니다. 법령상 보존 의무가
               있는 정보는 삭제 요청이 제한될 수 있으며 그 사유를 알려드립니다.
             </p>
           </section>
@@ -242,10 +243,12 @@ export default function PrivacyPage() {
               <h3>Your rights, cookies and children</h3>
               <p>
                 You may request access, correction, deletion, restriction, or
-                withdrawal of consent by email. We use essential authentication
-                cookies, not advertising cookies. An account for a child under
-                14 must be created and managed by a legal guardian; any separate
-                collection from a child requires verifiable guardian consent.
+                withdrawal of consent by email. Standard members may also delete
+                their account directly from My Page after re-authentication. We
+                use essential authentication cookies, not advertising cookies.
+                An account for a child under 14 must be created and managed by a
+                legal guardian; any separate collection from a child requires
+                verifiable guardian consent.
               </p>
               <h3>Security and updates</h3>
               <p>

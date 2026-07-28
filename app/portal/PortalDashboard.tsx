@@ -60,8 +60,19 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
           <span><b>선배</b><small>LEARNING PORTAL</small></span>
         </Link>
         <div className={styles.account}>
-          <span className={styles.avatar}>{initials(user.name)}</span>
-          <span className={styles.accountMeta}><small>로그인 계정</small><b>{user.name}</b></span>
+          <details className={styles.profileMenu}>
+            <summary>
+              <span className={styles.avatar}>{initials(user.name)}</span>
+              <span className={styles.accountMeta}><small>로그인 계정</small><b>{user.name}</b></span>
+              <span className={styles.profileChevron} aria-hidden="true">⌄</span>
+            </summary>
+            <div>
+              <Link href="/my-page#info">내 정보</Link>
+              <Link href="/my-page#policies">정책</Link>
+              <Link href="/my-page#settings">설정</Link>
+              <button type="button" onClick={signOut}>로그아웃</button>
+            </div>
+          </details>
           {user.role === "admin" && <Link className={styles.adminLink} href="/admin">명부 관리</Link>}
           <button type="button" onClick={signOut}>로그아웃</button>
         </div>

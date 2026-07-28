@@ -7,5 +7,17 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ko"><body>{children}</body></html>;
+  return (
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{document.documentElement.dataset.theme=localStorage.getItem('seonbae-theme')==='dark'?'dark':'light'}catch(e){}",
+          }}
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
 }

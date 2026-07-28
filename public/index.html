@@ -10,6 +10,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Noto+Serif+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
+try {
+  document.documentElement.dataset.theme =
+    localStorage.getItem('seonbae-theme') === 'dark' ? 'dark' : 'light';
+} catch (e) {}
 window.__seonbaeSessionPromise = fetch('/api/auth/session', {
   cache: 'no-store',
   credentials: 'same-origin',
@@ -210,10 +214,19 @@ body::after{
   background:linear-gradient(90deg,rgba(255,255,255,.20),rgba(255,255,255,.72),rgba(255,255,255,.20));
   background-size:200% 100%;animation:account-loading 1.1s linear infinite;
 }
-.account-identity{display:flex;flex-direction:column;justify-content:center;min-width:0;max-width:138px;line-height:1.2;color:var(--blue)}
-.account-identity[hidden]{display:none}
+.account-profile{position:relative}
+.account-profile[hidden]{display:none}
+.account-identity{display:flex;flex-direction:column;justify-content:center;min-width:0;max-width:138px;padding:5px 18px 5px 10px;line-height:1.2;color:var(--blue);text-align:left;border:1px solid transparent;border-radius:10px;transition:background-color .2s var(--ease),border-color .2s var(--ease)}
+.account-identity::after{content:"⌄";position:absolute;right:5px;top:50%;font-size:.65rem;color:var(--ink-4);transform:translateY(-55%);transition:transform .2s var(--ease)}
+.account-identity[aria-expanded="true"]::after{transform:translateY(-45%) rotate(180deg)}
+.account-identity:hover,.account-identity[aria-expanded="true"]{background:rgba(255,255,255,.72);border-color:var(--line)}
 .account-identity small{font-size:.52rem;font-weight:600;letter-spacing:.08em;color:var(--ink-4);white-space:nowrap}
 .account-identity strong{margin-top:3px;font-size:.69rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-menu{position:absolute;right:0;top:calc(100% + 10px);z-index:80;width:178px;padding:7px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 20px 50px -24px rgba(10,32,70,.56)}
+.account-menu[hidden]{display:none}
+.account-menu a,.account-menu button{width:100%;min-height:39px;padding:0 11px;display:flex;align-items:center;border:0;border-radius:9px;color:var(--blue);font-size:.72rem;font-weight:700;text-align:left}
+.account-menu a:hover,.account-menu button:hover{background:var(--paper-2)}
+.account-menu hr{height:1px;margin:6px 5px;border:0;background:var(--line)}
 .account-logout{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 13px;border:1px solid rgba(10,32,70,.2);border-radius:999px;background:rgba(255,255,255,.7);color:var(--blue);font-size:.65rem;font-weight:700;white-space:nowrap;transition:background-color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease)}
 .account-logout:hover{background:#fff;border-color:rgba(10,32,70,.42);transform:translateY(-1px)}
 .account-logout:disabled{opacity:.55;cursor:wait;transform:none}
@@ -637,8 +650,19 @@ body::after{
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230A2046' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:inset 0 1px 2px rgba(10,32,70,.05),0 0 0 3px rgba(10,32,70,.14)}
 .field input::placeholder,.field textarea::placeholder{color:var(--ink-4)}
-.tutor-picker{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:9px}
-.tutor-picker small{grid-column:1/-1;margin-top:-1px;font-size:.69rem;line-height:1.5;color:var(--ink-4)}
+.tutor-picker{position:relative}
+.field .tutor-picker>input[type="search"]{padding-right:38px;background-image:linear-gradient(45deg,transparent 50%,var(--blue) 50%),linear-gradient(135deg,var(--blue) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.tutor-picker-list{position:absolute;left:0;right:0;top:calc(100% - 23px);z-index:35;max-height:290px;overflow:auto;padding:7px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--white);box-shadow:var(--sh-3)}
+.tutor-picker-list[hidden]{display:none}
+.tutor-choice{width:100%;min-height:64px;padding:11px 12px;display:grid;grid-template-columns:minmax(125px,1.2fr) minmax(115px,1fr) minmax(72px,.65fr);gap:12px;align-items:center;border-radius:8px;text-align:left;color:var(--ink-2);transition:background-color .18s var(--ease),color .18s var(--ease)}
+.tutor-choice:hover,.tutor-choice.is-active{background:var(--paper-2);color:var(--blue)}
+.tutor-choice[aria-selected="true"]{box-shadow:inset 3px 0 var(--red);background:rgba(179,52,46,.06)}
+.tutor-choice strong{display:block;color:var(--blue);font-size:.86rem}
+.tutor-choice small{display:block;margin-top:3px;color:var(--ink-4);font-family:var(--mono);font-size:.56rem;letter-spacing:.06em}
+.tutor-choice span,.tutor-choice em{font-size:.72rem;font-style:normal;color:var(--ink-3)}
+.tutor-choice em{text-align:right;color:var(--red);font-weight:600}
+.tutor-picker-empty{padding:18px 12px;color:var(--ink-4);font-size:.75rem;text-align:center}
+.tutor-picker>small{display:block;margin-top:7px;font-size:.69rem;line-height:1.5;color:var(--ink-4)}
 .form-submit{margin-top:26px}
 .form-submit .btn{width:100%;justify-content:space-between;height:54px}
 .form-note{margin-top:13px;font-size:.75rem;color:var(--ink-4);text-align:center}
@@ -782,7 +806,6 @@ h1.hl.in .ln > span{transform:none}
   .ftr-field.full,.ftr-form-submit{grid-column:auto}
   .ftr-form-submit{align-items:stretch;flex-direction:column}
   .ftr-form-submit small{max-width:none}
-  .tutor-picker{grid-template-columns:1fr}
   .ftr-cols{grid-template-columns:1fr 1fr}
   .ftr-base{flex-direction:column;align-items:flex-start;gap:10px}
   .filters .count{margin-left:0;width:100%}
@@ -795,6 +818,45 @@ h1.hl.in .ln > span{transform:none}
   .account-identity{max-width:62px}
   .ftr-cols{grid-template-columns:1fr}
 }
+
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="dark"]{
+  --paper:#101827;
+  --paper-2:#172235;
+  --paper-3:#243147;
+  --white:#172235;
+  --card:#152033;
+  --ink:#EDF2FA;
+  --ink-2:#C5CFDD;
+  --ink-3:#9AA8BC;
+  --ink-4:#7F8CA0;
+  --line:rgba(226,234,245,.10);
+  --line-2:rgba(226,234,245,.18);
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .hdr,
+html[data-theme="dark"] .nav{
+  background-color:var(--paper);
+}
+html[data-theme="dark"] .hdr{background:rgba(16,24,39,.94)}
+html[data-theme="dark"] .nav-drop-menu,
+html[data-theme="dark"] .account-menu,
+html[data-theme="dark"] .tutor-picker-list,
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] .form-card,
+html[data-theme="dark"] .card:not(.card-blue){
+  background:var(--card);
+  color:var(--ink);
+}
+html[data-theme="dark"] .account-identity:hover,
+html[data-theme="dark"] .account-identity[aria-expanded="true"],
+html[data-theme="dark"] .account-logout{
+  background:var(--card);
+}
+html[data-theme="dark"] .closer,
+html[data-theme="dark"] .marquee{background:var(--paper-2)}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -844,10 +906,19 @@ h1.hl.in .ln > span{transform:none}
         <a class="btn btn-login is-auth-loading" id="accountPortalLink" href="/login" aria-busy="true">
           <span data-ko="계정 확인 중">Checking account</span>
         </a>
-        <span class="account-identity" id="accountIdentity" hidden>
-          <small data-ko="로그인 계정">Signed in as</small>
-          <strong id="accountIdentityName"></strong>
-        </span>
+        <div class="account-profile" id="accountProfile" hidden>
+          <button class="account-identity" id="accountIdentity" type="button" aria-expanded="false" aria-controls="accountMenu">
+            <small data-ko="로그인 계정">Signed in as</small>
+            <strong id="accountIdentityName"></strong>
+          </button>
+          <div class="account-menu" id="accountMenu" role="menu" hidden>
+            <a href="/my-page#info" role="menuitem" data-ko="내 정보">My info</a>
+            <a href="/my-page#policies" role="menuitem" data-ko="정책">Policies</a>
+            <a href="/my-page#settings" role="menuitem" data-ko="설정">Settings</a>
+            <hr>
+            <button id="accountMenuLogout" type="button" role="menuitem" data-ko="로그아웃">Log out</button>
+          </div>
+        </div>
         <button class="account-logout" id="accountLogout" type="button" data-ko="로그아웃" hidden>Log out</button>
       </div>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -1571,12 +1642,11 @@ h1.hl.in .ln > span{transform:none}
               </select>
             </div>
             <div class="field">
-              <label for="f-ref" data-ko="희망 튜터 <span class=&quot;opt&quot;>선택</span>">Preferred tutor <span class="opt">optional</span></label>
-              <div class="tutor-picker">
-                <input id="f-tutor-search" type="search" placeholder="Search tutor name or number" data-ko-placeholder="튜터 이름 또는 명부 번호 검색" autocomplete="off">
-                <select id="f-ref" name="ref" aria-label="Preferred tutor">
-                  <option value="TEAM" data-ko="매니저와 상담">Consult with the team</option>
-                </select>
+              <label for="f-tutor-search" data-ko="희망 튜터 <span class=&quot;opt&quot;>선택</span>">Preferred tutor <span class="opt">optional</span></label>
+              <div class="tutor-picker" id="consultTutorPicker">
+                <input id="f-tutor-search" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="f-tutor-list" aria-activedescendant="" placeholder="Search tutor name, university or registry number" data-ko-placeholder="튜터 이름, 대학교 또는 명부 번호 검색" autocomplete="off">
+                <input id="f-ref" name="ref" type="hidden" value="TEAM">
+                <div class="tutor-picker-list" id="f-tutor-list" role="listbox" aria-label="Preferred tutor" hidden></div>
                 <small id="f-tutor-help" aria-live="polite" data-ko="커리큘럼을 선택하면 해당 튜터만 표시됩니다.">Choose a curriculum to see matching tutors.</small>
               </div>
             </div>
@@ -1821,6 +1891,9 @@ h1.hl.in .ln > span{transform:none}
     });
     if (Array.isArray(tutorRows)) renderTutorCollections();
     renderConsultTutorChoices();
+    if (consultTutorSearch && consultTutorSelect) {
+      consultTutorSearch.value = consultTutorLabel(consultTutorSelect.value || 'TEAM');
+    }
   }
 
   function routeFromHash(){
@@ -1891,8 +1964,11 @@ h1.hl.in .ln > span{transform:none}
 
   /* ── header ───────────────────────────────────────────── */
   var accountPortalLink = document.getElementById('accountPortalLink');
+  var accountProfile = document.getElementById('accountProfile');
   var accountIdentity = document.getElementById('accountIdentity');
   var accountIdentityName = document.getElementById('accountIdentityName');
+  var accountMenu = document.getElementById('accountMenu');
+  var accountMenuLogout = document.getElementById('accountMenuLogout');
   var accountLogout = document.getElementById('accountLogout');
   function fetchAccountSession(){
     var earlyRequest = window.__seonbaeSessionPromise;
@@ -1926,8 +2002,10 @@ h1.hl.in .ln > span{transform:none}
       accountPortalLink.href = '/login';
       accountPortalLink.removeAttribute('data-authenticated');
       setAccountLabel('Log in', '로그인');
-      if (accountIdentity) accountIdentity.hidden = true;
+      if (accountProfile) accountProfile.hidden = true;
+      if (accountIdentity) accountIdentity.setAttribute('aria-expanded','false');
       if (accountIdentityName) accountIdentityName.textContent = '';
+      if (accountMenu) accountMenu.hidden = true;
       if (accountLogout) accountLogout.hidden = true;
       return;
     }
@@ -1938,7 +2016,7 @@ h1.hl.in .ln > span{transform:none}
     if (accountIdentity && accountIdentityName) {
       accountIdentityName.textContent = session.displayName || session.email || '사용자';
       accountIdentity.title = session.email || '';
-      accountIdentity.hidden = false;
+      if (accountProfile) accountProfile.hidden = false;
     }
     if (accountLogout) accountLogout.hidden = false;
   }
@@ -1951,10 +2029,9 @@ h1.hl.in .ln > span{transform:none}
   document.addEventListener('visibilitychange', function(){
     if (!document.hidden) updateAccountPortalLink();
   });
-  if (accountLogout) {
-    accountLogout.addEventListener('click', function(){
-      if (accountLogout.disabled) return;
-      accountLogout.disabled = true;
+  function runAccountLogout(trigger){
+      if (!trigger || trigger.disabled) return;
+      trigger.disabled = true;
       fetch('/api/auth/logout', {
         method:'POST',
         cache:'no-store',
@@ -1968,9 +2045,32 @@ h1.hl.in .ln > span{transform:none}
       }).catch(function(){
         updateAccountPortalLink();
       }).finally(function(){
-        accountLogout.disabled = false;
+        trigger.disabled = false;
       });
+  }
+  if (accountIdentity && accountMenu) {
+    accountIdentity.addEventListener('click', function(){
+      var open = accountMenu.hidden;
+      accountMenu.hidden = !open;
+      accountIdentity.setAttribute('aria-expanded',open ? 'true' : 'false');
     });
+    document.addEventListener('click', function(event){
+      if (!accountProfile || accountProfile.hidden || accountProfile.contains(event.target)) return;
+      accountMenu.hidden = true;
+      accountIdentity.setAttribute('aria-expanded','false');
+    });
+    document.addEventListener('keydown', function(event){
+      if (event.key !== 'Escape' || accountMenu.hidden) return;
+      accountMenu.hidden = true;
+      accountIdentity.setAttribute('aria-expanded','false');
+      accountIdentity.focus();
+    });
+  }
+  if (accountLogout) {
+    accountLogout.addEventListener('click', function(){ runAccountLogout(accountLogout); });
+  }
+  if (accountMenuLogout) {
+    accountMenuLogout.addEventListener('click', function(){ runAccountLogout(accountMenuLogout); });
   }
 
   var hdr = document.getElementById('hdr');
@@ -2046,11 +2146,15 @@ h1.hl.in .ln > span{transform:none}
   var regCount = document.getElementById('regCount');
   var tutorStatCount = document.getElementById('tutorStatCount');
   var consultCurriculum = document.getElementById('f-curr');
+  var consultTutorPicker = document.getElementById('consultTutorPicker');
   var consultTutorSearch = document.getElementById('f-tutor-search');
   var consultTutorSelect = document.getElementById('f-ref');
+  var consultTutorList = document.getElementById('f-tutor-list');
   var consultTutorHelp = document.getElementById('f-tutor-help');
   var tutorRows = null;
   var currentRegistryFilter = 'all';
+  var consultTutorQuery = '';
+  var consultTutorActiveIndex = -1;
 
   function escapeRegistryText(value){
     var node = document.createElement('div');
@@ -2059,11 +2163,11 @@ h1.hl.in .ln > span{transform:none}
   }
 
   function renderConsultTutorChoices(){
-    if (!consultTutorSelect) return;
+    if (!consultTutorSelect || !consultTutorList) return;
     var ko = document.documentElement.getAttribute('data-lang') === 'ko';
     var selected = consultTutorSelect.value || 'TEAM';
     var curriculum = consultCurriculum ? consultCurriculum.value.trim().toLowerCase() : '';
-    var search = consultTutorSearch ? consultTutorSearch.value.trim().toLowerCase() : '';
+    var search = consultTutorQuery.trim().toLowerCase();
     var rows = Array.isArray(tutorRows) ? tutorRows.filter(function(row){
       var curriculumMatch = String(row.exam || '').trim().toLowerCase() === curriculum;
       var haystack = [
@@ -2072,40 +2176,107 @@ h1.hl.in .ln > span{transform:none}
       return curriculumMatch && (!search || haystack.indexOf(search) > -1);
     }) : [];
 
-    consultTutorSelect.innerHTML = '';
-    var manager = document.createElement('option');
-    manager.value = 'TEAM';
-    manager.textContent = ko ? '매니저와 상담' : 'Consult with the team';
-    consultTutorSelect.appendChild(manager);
-
+    consultTutorList.innerHTML = '';
+    var manager = document.createElement('button');
+    manager.type = 'button';
+    manager.className = 'tutor-choice';
+    manager.id = 'consult-tutor-option-team';
+    manager.dataset.ref = 'TEAM';
+    manager.setAttribute('role','option');
+    manager.setAttribute('aria-selected',selected === 'TEAM' ? 'true' : 'false');
+    manager.innerHTML =
+      '<span><strong>' + (ko ? '매니저와 상담' : 'Consult with the team') + '</strong>' +
+      '<small>SEONBAE TEAM</small></span>' +
+      '<span>' + (ko ? '선배 상담팀' : 'Seonbae manager') + '</span>' +
+      '<em>' + (ko ? '전체 커리큘럼' : 'All curricula') + '</em>';
+    consultTutorList.appendChild(manager);
     rows.forEach(function(row){
-      var option = document.createElement('option');
-      option.value = String(row.registry_id || '');
-      option.textContent = [row.name,row.registry_id,row.university].filter(Boolean).join(' · ');
-      consultTutorSelect.appendChild(option);
+      var option = document.createElement('button');
+      var ref = String(row.registry_id || '');
+      var university = ko
+        ? (row.university || row.university_en || '')
+        : (row.university_en || row.university || '');
+      option.type = 'button';
+      option.className = 'tutor-choice';
+      option.id = 'consult-tutor-option-' + ref.replace(/[^a-zA-Z0-9_-]/g,'');
+      option.dataset.ref = ref;
+      option.setAttribute('role','option');
+      option.setAttribute('aria-selected',selected === ref ? 'true' : 'false');
+      option.innerHTML =
+        '<span><strong>' + escapeRegistryText(row.name) + '</strong>' +
+        '<small>' + escapeRegistryText(ref) + '</small></span>' +
+        '<span>' + escapeRegistryText(university) + '</span>' +
+        '<em>' + escapeRegistryText(row.exam) + '</em>';
+      consultTutorList.appendChild(option);
     });
 
     if (!rows.length) {
-      var empty = document.createElement('option');
-      empty.value = '';
-      empty.disabled = true;
+      var empty = document.createElement('p');
+      empty.className = 'tutor-picker-empty';
       empty.textContent = Array.isArray(tutorRows)
         ? (ko ? '선택한 커리큘럼의 등록 튜터가 없습니다' : 'No listed tutors for this curriculum')
         : (ko ? '튜터 명부를 불러오는 중입니다' : 'Loading tutor directory');
-      consultTutorSelect.appendChild(empty);
+      consultTutorList.appendChild(empty);
     }
 
-    if (selected !== 'TEAM' && rows.some(function(row){ return row.registry_id === selected; })) {
-      consultTutorSelect.value = selected;
-    } else {
-      consultTutorSelect.value = 'TEAM';
-    }
-
+    consultTutorActiveIndex = -1;
+    if (consultTutorSearch) consultTutorSearch.setAttribute('aria-activedescendant','');
     if (consultTutorHelp) {
       consultTutorHelp.textContent = rows.length
         ? (ko ? rows.length + '명의 튜터가 표시됩니다. 이름이나 명부 번호로 검색할 수 있습니다.' : rows.length + (rows.length === 1 ? ' tutor is' : ' tutors are') + ' available. Search by name or registry number.')
         : (ko ? '매니저와 상담을 선택하면 팀이 가장 알맞은 튜터를 함께 찾아드립니다.' : 'Choose the team option and our manager will help select the best tutor.');
     }
+  }
+
+  function consultTutorLabel(ref){
+    var ko = document.documentElement.getAttribute('data-lang') === 'ko';
+    if (ref === 'TEAM') return ko ? '매니저와 상담' : 'Consult with the team';
+    var row = Array.isArray(tutorRows)
+      ? tutorRows.find(function(item){ return item.registry_id === ref; })
+      : null;
+    if (!row) return '';
+    var university = ko
+      ? (row.university || row.university_en || '')
+      : (row.university_en || row.university || '');
+    return [row.name,university,row.exam].filter(Boolean).join(' · ');
+  }
+
+  function selectConsultTutor(ref, closeList){
+    if (!consultTutorSelect || !consultTutorSearch) return;
+    consultTutorSelect.value = ref || 'TEAM';
+    consultTutorQuery = '';
+    consultTutorSearch.value = consultTutorLabel(consultTutorSelect.value);
+    renderConsultTutorChoices();
+    if (closeList) closeConsultTutorList();
+  }
+
+  function openConsultTutorList(){
+    if (!consultTutorList || !consultTutorSearch) return;
+    consultTutorQuery = '';
+    renderConsultTutorChoices();
+    consultTutorList.hidden = false;
+    consultTutorSearch.setAttribute('aria-expanded','true');
+    consultTutorSearch.select();
+  }
+
+  function closeConsultTutorList(){
+    if (!consultTutorList || !consultTutorSearch) return;
+    consultTutorList.hidden = true;
+    consultTutorSearch.setAttribute('aria-expanded','false');
+    consultTutorSearch.setAttribute('aria-activedescendant','');
+    consultTutorActiveIndex = -1;
+    consultTutorSearch.value = consultTutorLabel(consultTutorSelect ? consultTutorSelect.value : 'TEAM');
+  }
+
+  function moveConsultTutorActive(direction){
+    if (!consultTutorList || consultTutorList.hidden || !consultTutorSearch) return;
+    var choices = Array.from(consultTutorList.querySelectorAll('.tutor-choice'));
+    if (!choices.length) return;
+    consultTutorActiveIndex = (consultTutorActiveIndex + direction + choices.length) % choices.length;
+    choices.forEach(function(choice,index){ choice.classList.toggle('is-active',index === consultTutorActiveIndex); });
+    var active = choices[consultTutorActiveIndex];
+    consultTutorSearch.setAttribute('aria-activedescendant',active.id);
+    active.scrollIntoView({block:'nearest'});
   }
 
   function tutorCardMarkup(row){
@@ -2250,8 +2421,54 @@ h1.hl.in .ln > span{transform:none}
   updateExamCounts();
   applyFilter('all');
   loadTutorDirectory();
-  if (consultCurriculum) consultCurriculum.addEventListener('change', renderConsultTutorChoices);
-  if (consultTutorSearch) consultTutorSearch.addEventListener('input', renderConsultTutorChoices);
+  if (consultCurriculum) {
+    consultCurriculum.addEventListener('change', function(){
+      selectConsultTutor('TEAM',false);
+      renderConsultTutorChoices();
+    });
+  }
+  if (consultTutorSearch) {
+    consultTutorSearch.addEventListener('click', openConsultTutorList);
+    consultTutorSearch.addEventListener('focus', openConsultTutorList);
+    consultTutorSearch.addEventListener('input', function(){
+      consultTutorQuery = consultTutorSearch.value;
+      if (consultTutorSelect) consultTutorSelect.value = 'TEAM';
+      if (consultTutorList) consultTutorList.hidden = false;
+      consultTutorSearch.setAttribute('aria-expanded','true');
+      renderConsultTutorChoices();
+    });
+    consultTutorSearch.addEventListener('keydown', function(event){
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        if (consultTutorList && consultTutorList.hidden) openConsultTutorList();
+        moveConsultTutorActive(1);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (consultTutorList && consultTutorList.hidden) openConsultTutorList();
+        moveConsultTutorActive(-1);
+      } else if (event.key === 'Enter' && consultTutorActiveIndex > -1 && consultTutorList) {
+        event.preventDefault();
+        var active = consultTutorList.querySelectorAll('.tutor-choice')[consultTutorActiveIndex];
+        if (active) active.click();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeConsultTutorList();
+      }
+    });
+  }
+  if (consultTutorList) {
+    consultTutorList.addEventListener('click', function(event){
+      var choice = event.target.closest ? event.target.closest('.tutor-choice') : null;
+      if (!choice) return;
+      selectConsultTutor(choice.dataset.ref || 'TEAM',true);
+      if (consultTutorSearch) consultTutorSearch.focus({preventScroll:true});
+    });
+  }
+  document.addEventListener('click', function(event){
+    if (!consultTutorPicker || consultTutorPicker.contains(event.target)) return;
+    closeConsultTutorList();
+  });
+  selectConsultTutor('TEAM',false);
   renderConsultTutorChoices();
 
   /* clicking a listing carries its registry number into the consultation */
@@ -2272,12 +2489,9 @@ h1.hl.in .ln > span{transform:none}
     if (!pendingRef) return;
     var tutor = Array.isArray(tutorRows) ? tutorRows.find(function(row){ return row.registry_id === pendingRef; }) : null;
     if (tutor && consultCurriculum) consultCurriculum.value = tutor.exam;
-    if (consultTutorSearch) consultTutorSearch.value = '';
     renderConsultTutorChoices();
-    if (consultTutorSelect) {
-      consultTutorSelect.value = pendingRef;
-      consultTutorSelect.focus({preventScroll:true});
-    }
+    if (consultTutorSearch) consultTutorSearch.focus({preventScroll:true});
+    selectConsultTutor(pendingRef,true);
     pendingRef = null;
   }
   window.addEventListener('hashchange', function(){ setTimeout(fillRef, 60); });
