@@ -97,10 +97,10 @@ export default function ResetPasswordForm() {
             <li data-valid={checks.symbol}>특수문자</li>
             <li data-valid={checks.allowed}>공백 없이 허용된 문자만 사용</li>
           </ul>
-          <details>
-            <summary>허용 특수문자 보기</summary>
+          <div className={styles.allowedSymbols}>
+            <span>허용 특수문자</span>
             <code>{PASSWORD_ALLOWED_SYMBOLS}</code>
-          </details>
+          </div>
           <label>
             <span>새 비밀번호 확인</span>
             <input

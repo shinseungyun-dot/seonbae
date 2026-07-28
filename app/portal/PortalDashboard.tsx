@@ -28,22 +28,35 @@ type PortalUser = {
 
 export default function PortalDashboard({ user, sessions }: { user: PortalUser; sessions: PortalSession[] }) {
   const router = useRouter();
-  const [weekOffset, setWeekOffset] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(() => todayKey());
+  const [visibleMonth, setVisibleMonth] = useState(() => initialVisibleMonth());
+  const [selectedDate, setSelectedDate] = useState(() => initialDateKey());
 
-  const week = useMemo(() => getWeek(weekOffset), [weekOffset]);
-  const weekSessions = sessions.filter((session) => week.some((day) => day.key === session.sessionDate));
-  const selectedSessions = weekSessions.filter((session) => session.sessionDate === selectedDate);
+  const calendarDays = useMemo(() => getCalendarDays(visibleMonth), [visibleMonth]);
+  const monthPrefix = `${visibleMonth.getFullYear()}-${String(visibleMonth.getMonth() + 1).padStart(2, "0")}`;
+  const monthSessions = sessions.filter((session) => session.sessionDate.startsWith(monthPrefix));
+  const selectedSessions = sessions.filter((session) => session.sessionDate === selectedDate);
   const selected = selectedSessions[0] ?? null;
   const nextSession = sessions.find((session) => sessionDateTime(session).getTime() >= Date.now()) ?? null;
-  const totalHours = weekSessions.reduce((sum, session) => sum + session.durationMinutes, 0) / 60;
-  const tutorCount = new Set(weekSessions.map((session) => session.tutorRegistryId).filter(Boolean)).size;
+  const totalHours = monthSessions.reduce((sum, session) => sum + session.durationMinutes, 0) / 60;
+  const tutorCount = new Set(monthSessions.map((session) => session.tutorRegistryId).filter(Boolean)).size;
 
-  function moveWeek(direction: number) {
-    const nextOffset = weekOffset + direction;
-    const nextWeek = getWeek(nextOffset);
-    setWeekOffset(nextOffset);
-    setSelectedDate(nextWeek[0].key);
+  function moveMonth(direction: number) {
+    const nextMonth = new Date(
+      visibleMonth.getFullYear(),
+      visibleMonth.getMonth() + direction,
+      1,
+    );
+    if (nextMonth < MINIMUM_PORTAL_MONTH) return;
+    setVisibleMonth(nextMonth);
+    setSelectedDate(localDateKey(nextMonth));
+  }
+
+  function selectCalendarDate(date: Date) {
+    if (date < MINIMUM_PORTAL_MONTH) return;
+    setSelectedDate(localDateKey(date));
+    if (!sameMonth(date, visibleMonth)) {
+      setVisibleMonth(startOfMonth(date));
+    }
   }
 
   async function signOut() {
@@ -86,7 +99,7 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
             <span>수업 일정과 담당 튜터 정보를 한곳에서 확인하세요.</span>
           </div>
           <div className={styles.stats}>
-            <article><b>{weekSessions.length}</b><span>이번 주 수업</span></article>
+            <article><b>{monthSessions.length}</b><span>이번 달 수업</span></article>
             <article><b>{tutorCount}</b><span>담당 튜터</span></article>
             <article><b>{formatHours(totalHours)}</b><span>예정 시간</span></article>
           </div>
@@ -101,25 +114,48 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
         <div className={styles.dashboard}>
           <section className={styles.panel}>
             <div className={styles.panelHeading}>
-              <div><p>YOUR WEEK</p><h2>주간 수업 일정</h2></div>
-              <div className={styles.weekNav}>
-                <button type="button" onClick={() => moveWeek(-1)} aria-label="이전 주">←</button>
-                <span>{week[0].month}월 {week[0].day}일 – {week[4].month}월 {week[4].day}일</span>
-                <button type="button" onClick={() => moveWeek(1)} aria-label="다음 주">→</button>
+              <div><p>YOUR CALENDAR</p><h2>월간 수업 일정</h2></div>
+              <div className={styles.monthNav}>
+                <button
+                  type="button"
+                  onClick={() => moveMonth(-1)}
+                  aria-label="이전 달"
+                  disabled={sameMonth(visibleMonth, MINIMUM_PORTAL_MONTH)}
+                >
+                  ←
+                </button>
+                <span>{formatMonth(visibleMonth)}</span>
+                <button type="button" onClick={() => moveMonth(1)} aria-label="다음 달">→</button>
               </div>
             </div>
 
-            <div className={styles.days}>
-              {week.map((day) => {
-                const count = weekSessions.filter((session) => session.sessionDate === day.key).length;
+            <div className={styles.calendarWeekdays} aria-hidden="true">
+              {["일", "월", "화", "수", "목", "금", "토"].map((weekday) => (
+                <span key={weekday}>{weekday}</span>
+              ))}
+            </div>
+            <div className={styles.calendarGrid}>
+              {calendarDays.map((date) => {
+                const key = localDateKey(date);
+                const count = sessions.filter((session) => session.sessionDate === key).length;
+                const beforeMinimum = date < MINIMUM_PORTAL_MONTH;
+                const className = [
+                  !sameMonth(date, visibleMonth) ? styles.outsideMonth : "",
+                  selectedDate === key ? styles.selectedDay : "",
+                  key === localDateKey(new Date()) ? styles.today : "",
+                ].filter(Boolean).join(" ");
                 return (
                   <button
                     type="button"
-                    className={selectedDate === day.key ? styles.selectedDay : ""}
-                    onClick={() => setSelectedDate(day.key)}
-                    key={day.key}
+                    className={className}
+                    onClick={() => selectCalendarDate(date)}
+                    key={key}
+                    disabled={beforeMinimum}
+                    aria-pressed={selectedDate === key}
+                    aria-label={`${formatDate(key)}${count ? `, 수업 ${count}개` : ", 수업 없음"}`}
                   >
-                    <small>{day.weekday}</small><b>{day.day}</b>{count > 0 && <span>{count}</span>}
+                    <span className={styles.calendarNumber}>{date.getDate()}</span>
+                    {count > 0 && <em>{count}회</em>}
                   </button>
                 );
               })}
@@ -175,30 +211,35 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
   );
 }
 
-function getWeek(offset: number) {
+const MINIMUM_PORTAL_MONTH = new Date(2026, 0, 1);
+
+function initialVisibleMonth() {
   const now = new Date();
-  const day = now.getDay() || 7;
-  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + 1 + offset * 7);
-  return Array.from({ length: 5 }, (_, index) => {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + index);
-    return {
-      key: localDateKey(date),
-      weekday: ["월", "화", "수", "목", "금"][index],
-      month: date.getMonth() + 1,
-      day: date.getDate(),
-    };
+  return now < MINIMUM_PORTAL_MONTH ? MINIMUM_PORTAL_MONTH : startOfMonth(now);
+}
+
+function initialDateKey() {
+  const now = new Date();
+  return localDateKey(now < MINIMUM_PORTAL_MONTH ? MINIMUM_PORTAL_MONTH : now);
+}
+
+function getCalendarDays(month: Date) {
+  const firstVisibleDate = new Date(month.getFullYear(), month.getMonth(), 1);
+  firstVisibleDate.setDate(firstVisibleDate.getDate() - firstVisibleDate.getDay());
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(firstVisibleDate);
+    date.setDate(firstVisibleDate.getDate() + index);
+    return date;
   });
 }
 
-function todayKey() {
-  const now = new Date();
-  const day = now.getDay();
-  if (day === 0 || day === 6) {
-    const week = getWeek(0);
-    return week[0].key;
-  }
-  return localDateKey(now);
+function startOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function sameMonth(left: Date, right: Date) {
+  return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth();
 }
 
 function localDateKey(date: Date) {
@@ -214,6 +255,10 @@ function sessionDateTime(session: PortalSession) {
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", weekday: "short" }).format(new Date(`${value}T00:00:00`));
+}
+
+function formatMonth(value: Date) {
+  return new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long" }).format(value);
 }
 
 function formatHours(value: number) {

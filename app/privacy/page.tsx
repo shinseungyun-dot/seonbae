@@ -60,7 +60,7 @@ export default function PrivacyPage() {
               <table>
                 <thead><tr><th>구분</th><th>처리 항목</th><th>목적</th><th>보유 기간</th></tr></thead>
                 <tbody>
-                  <tr><td>회원가입·계정</td><td>이름, 이메일, 휴대전화번호, 비밀번호 해시, 이메일 인증 상태, 가입·동의 일시와 정책 버전</td><td>회원 식별, 로그인, 포털 제공, 아이디 확인, 비밀번호 재설정, 부정 이용 방지</td><td>회원 탈퇴 또는 계정 삭제 완료 시까지. 법령상 보존 의무가 있으면 해당 기간까지</td></tr>
+                  <tr><td>회원가입·계정</td><td>이름, 이메일, 휴대전화번호, 비밀번호 해시, 이메일 인증 상태, 가입·동의 일시와 정책 버전</td><td>회원 식별, 로그인, 포털 제공, 등록 이메일을 통한 안전한 계정 복구, 비밀번호 재설정, 부정 이용 방지</td><td>회원 탈퇴 또는 계정 삭제 완료 시까지. 법령상 보존 의무가 있으면 해당 기간까지</td></tr>
                   <tr><td>학습 포털</td><td>수업 일정, 과목, 담당 튜터, 수업 방식·장소, 전달 사항</td><td>수업 운영, 일정 안내, 학습 지원</td><td>서비스 이용 기간 및 수업 관계 종료 후 1년. 분쟁이 진행 중이면 해결 시까지</td></tr>
                   <tr><td>상담·문의</td><td>문의자가 제공한 이름, 이메일 또는 메신저 계정, 커리큘럼·과목, 목표와 상담 내용</td><td>상담 응대, 튜터 매칭, 민원 처리</td><td>상담 종료 후 1년. 계약으로 이어지는 경우 계약 관계 및 법정 보존기간까지</td></tr>
                   <tr><td>자동 생성 정보</td><td>필수 인증 쿠키, 접속 시각, IP 주소, 브라우저·기기 정보, 오류·보안 로그</td><td>로그인 유지, 서비스 보안, 장애 대응</td><td>인증 쿠키는 세션 또는 로그인 유지기간까지. 보안 로그는 원칙적으로 90일 이내 또는 제공자 설정·법령상 기간까지</td></tr>
@@ -221,8 +221,8 @@ export default function PrivacyPage() {
               <h3>Purposes and retention</h3>
               <p>
                 We use data for authentication, account and portal delivery,
-                masked ID lookup, email password reset, lesson administration,
-                security, and customer support. Account data is retained until
+                secure email-based ID recovery and password reset, lesson
+                administration, security, and customer support. Account data is retained until
                 account deletion, subject to legal retention duties. Lesson
                 data is normally retained for the service period and one year
                 afterward; security logs are normally retained for no more than

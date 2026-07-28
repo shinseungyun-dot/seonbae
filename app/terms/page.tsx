@@ -79,9 +79,10 @@ export default function TermsPage() {
             </p>
             <p>
               계정과 비밀번호 관리 책임은 이용자에게 있습니다. 무단 사용이 의심되면
-              즉시 비밀번호를 변경하고 선배에 알려야 합니다. 아이디 찾기는 가입
-              이메일을 일부 가린 형태로만 제공하며, 비밀번호 재설정은 등록 정보가
-              일치할 때 가입 이메일로 링크를 보내는 방식으로 진행합니다.
+              즉시 비밀번호를 변경하고 선배에 알려야 합니다. 아이디 찾기와 비밀번호
+              재설정은 등록 정보가 일치할 때 가입 이메일로 보안 링크를 보내는
+              방식으로 진행하며, 화면에는 계정 존재 여부나 이메일 주소를 노출하지
+              않습니다.
             </p>
           </section>
 
@@ -189,9 +190,10 @@ export default function TermsPage() {
                 your credentials secure, and promptly report suspected misuse.
                 New passwords must be at least 12 characters and include
                 lowercase and uppercase letters, a number, and an allowed
-                symbol. ID recovery only reveals a masked email; password reset
-                links are sent to the registered email after the submitted
-                account details match.
+                symbol. ID recovery and password-reset links are sent to the
+                registered email after the submitted account details match.
+                The recovery screen does not disclose whether an account exists
+                or reveal its email address.
               </p>
               <h3>Minors, lessons and outcomes</h3>
               <p>

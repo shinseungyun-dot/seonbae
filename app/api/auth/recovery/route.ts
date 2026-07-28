@@ -44,13 +44,13 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient();
 
   if (action === "find-id") {
-    const { data, error } = await supabase.rpc("find_account_hint", {
+    const { error } = await supabase.rpc("request_account_id_email", {
       p_full_name: fullName,
       p_phone: phone,
     });
 
     if (error) {
-      console.error("find_account_hint RPC failed", {
+      console.error("request_account_id_email RPC failed", {
         code: error.code,
         message: error.message,
       });
@@ -63,15 +63,10 @@ export async function POST(request: NextRequest) {
 
     return responseAfterDelay(
       startedAt,
-      typeof data === "string" && data
-        ? {
-            message: "입력한 정보와 일치하는 계정입니다.",
-            maskedEmail: data,
-          }
-        : {
-            message:
-              "일치하는 계정을 찾지 못했습니다. 가입 정보를 확인하거나 admissions@seonbae.com으로 문의해 주세요.",
-          },
+      {
+        message:
+          "입력한 정보가 가입 기록과 일치하면 등록된 이메일로 계정 접속 링크를 보내드립니다. 받은편지함과 스팸함을 확인해 주세요.",
+      },
     );
   }
 

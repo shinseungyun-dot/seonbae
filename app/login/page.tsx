@@ -8,7 +8,7 @@ import {
   getPasswordPolicyError,
   PASSWORD_ALLOWED_SYMBOLS,
 } from "../../utils/auth/password";
-import { normalizePhone } from "../../utils/auth/phone";
+import { formatPhoneInput, normalizePhone } from "../../utils/auth/phone";
 import styles from "./login.module.css";
 
 type AuthAction = "signin" | "signup" | "find-id" | "reset-password";
@@ -29,8 +29,8 @@ const actionCopy: Record<
   },
   "find-id": {
     title: "아이디 찾기",
-    description: "가입할 때 입력한 이름과 휴대전화번호로 계정을 확인합니다.",
-    submit: "아이디 확인",
+    description: "가입 정보가 일치하면 등록된 이메일로 안전한 계정 접속 링크를 보내드립니다.",
+    submit: "계정 접속 메일 받기",
   },
   "reset-password": {
     title: "비밀번호 재설정",
@@ -52,16 +52,15 @@ export default function LoginPage() {
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [message, setMessage] = useState("");
-  const [maskedEmail, setMaskedEmail] = useState("");
   const [busy, setBusy] = useState(false);
 
   const passwordChecks = useMemo(() => getPasswordChecks(password), [password]);
+  const allRequiredAgreed = privacyAgreed && termsAgreed && ageConfirmed;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setMessage("");
-    setMaskedEmail("");
 
     if (action === "signup") {
       const passwordError = getPasswordPolicyError(password);
@@ -134,7 +133,6 @@ export default function LoginPage() {
       }
 
       setMessage(result.message || "가입 확인 메일을 보냈습니다.");
-      setMaskedEmail(result.maskedEmail || "");
     } catch {
       setMessage("요청을 처리하지 못했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.");
     } finally {
@@ -156,7 +154,6 @@ export default function LoginPage() {
     setTermsAgreed(false);
     setAgeConfirmed(false);
     setMessage("");
-    setMaskedEmail("");
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() =>
         window.scrollTo({ top: 0, left: 0, behavior: "auto" }),
@@ -166,6 +163,12 @@ export default function LoginPage() {
 
   const isSignup = action === "signup";
   const isRecovery = action === "find-id" || action === "reset-password";
+
+  function setAllRequiredAgreements(checked: boolean) {
+    setPrivacyAgreed(checked);
+    setTermsAgreed(checked);
+    setAgeConfirmed(checked);
+  }
 
   return (
     <main className={styles.page}>
@@ -199,8 +202,8 @@ export default function LoginPage() {
             <article>
               <span>01</span>
               <div>
-                <b>주간 수업 일정</b>
-                <p>이번 주 수업과 변경 사항을 날짜별로 확인합니다.</p>
+                <b>월간 수업 일정</b>
+                <p>한 달 전체 수업과 변경 사항을 달력에서 확인합니다.</p>
               </div>
             </article>
             <article>
@@ -277,7 +280,7 @@ export default function LoginPage() {
                 <input
                   type="tel"
                   value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
+                  onChange={(event) => setPhone(formatPhoneInput(event.target.value))}
                   autoComplete="tel"
                   inputMode="tel"
                   placeholder="010-1234-5678"
@@ -285,7 +288,9 @@ export default function LoginPage() {
                   required
                 />
                 <small className={styles.fieldNote}>
-                  아이디 확인과 비밀번호 재설정에 사용합니다. 해외 번호는 +국가번호를 입력해 주세요.
+                  {action === "find-id"
+                    ? "가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다."
+                    : "아이디 확인과 비밀번호 재설정에 사용합니다. 해외 번호는 +국가번호를 입력해 주세요."}
                 </small>
               </label>
             )}
@@ -318,10 +323,10 @@ export default function LoginPage() {
                     <li data-valid={passwordChecks.symbol}>특수문자</li>
                     <li data-valid={passwordChecks.allowed}>공백 없이 허용된 문자만 사용</li>
                   </ul>
-                  <details>
-                    <summary>허용 특수문자 보기</summary>
+                  <div className={styles.allowedSymbols}>
+                    <span>허용 특수문자</span>
                     <code>{PASSWORD_ALLOWED_SYMBOLS}</code>
-                  </details>
+                  </div>
                 </div>
                 <label>
                   <span>비밀번호 확인</span>
@@ -344,7 +349,7 @@ export default function LoginPage() {
                     </div>
                     <div>
                       <dt>이용 목적</dt>
-                      <dd>회원 관리, 포털 제공, 아이디 확인, 비밀번호 재설정</dd>
+                      <dd>회원 관리, 포털 제공, 등록 이메일을 통한 계정 복구, 비밀번호 재설정</dd>
                     </div>
                     <div>
                       <dt>보유 기간</dt>
@@ -356,6 +361,19 @@ export default function LoginPage() {
                   </p>
                 </div>
                 <div className={styles.consentList}>
+                  <div className={styles.consentAll}>
+                    <input
+                      id="all-required-consent"
+                      type="checkbox"
+                      checked={allRequiredAgreed}
+                      onChange={(event) => setAllRequiredAgreements(event.target.checked)}
+                      aria-controls="privacy-consent terms-consent age-confirmation"
+                    />
+                    <label htmlFor="all-required-consent">
+                      <b>전체 동의</b>
+                      <span>필수 약관과 개인정보 수집·이용에 모두 동의합니다.</span>
+                    </label>
+                  </div>
                   <div className={styles.consentRow}>
                     <input
                       id="privacy-consent"
@@ -412,7 +430,6 @@ export default function LoginPage() {
             {message && (
               <p className={styles.formMessage} role="status">
                 {message}
-                {maskedEmail && <strong>{maskedEmail}</strong>}
               </p>
             )}
             <button className={styles.submit} type="submit" disabled={busy}>
