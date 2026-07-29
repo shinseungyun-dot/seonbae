@@ -23,39 +23,8 @@ export function normalizePhone(value: string) {
   return e164Pattern.test(normalized) ? normalized : null;
 }
 
-export function formatPhoneInput(value: string) {
-  const input = value.trim();
+export function sanitizePhoneInput(value: string) {
+  const input = value.trimStart();
   const digits = input.replace(/\D/g, "").slice(0, 15);
-
-  if (!digits) return input.startsWith("+") ? "+" : "";
-
-  if (input.startsWith("+") || digits.startsWith("82")) {
-    const countryDigits = digits.startsWith("82") ? digits.slice(2) : "";
-    if (digits.startsWith("82") && countryDigits.startsWith("10")) {
-      return joinPhoneGroups("+82", countryDigits.slice(0, 2), countryDigits.slice(2, 6), countryDigits.slice(6, 10));
-    }
-    return input.startsWith("+") ? `+${digits}` : digits;
-  }
-
-  if (digits.startsWith("02")) {
-    return joinPhoneGroups(
-      digits.slice(0, 2),
-      digits.length <= 9 ? digits.slice(2, 5) : digits.slice(2, 6),
-      digits.length <= 9 ? digits.slice(5, 9) : digits.slice(6, 10),
-    );
-  }
-
-  if (digits.startsWith("0")) {
-    return joinPhoneGroups(
-      digits.slice(0, 3),
-      digits.length <= 10 ? digits.slice(3, 6) : digits.slice(3, 7),
-      digits.length <= 10 ? digits.slice(6, 10) : digits.slice(7, 11),
-    );
-  }
-
-  return digits;
-}
-
-function joinPhoneGroups(...groups: string[]) {
-  return groups.filter(Boolean).join("-");
+  return input.startsWith("+") ? `+${digits}` : digits;
 }

@@ -8,7 +8,7 @@ import {
   getPasswordPolicyError,
   PASSWORD_ALLOWED_SYMBOLS,
 } from "../../utils/auth/password";
-import { formatPhoneInput, normalizePhone } from "../../utils/auth/phone";
+import { normalizePhone, sanitizePhoneInput } from "../../utils/auth/phone";
 import styles from "./login.module.css";
 
 type AuthAction = "signin" | "signup" | "find-id" | "reset-password";
@@ -280,10 +280,10 @@ export default function LoginPage() {
                 <input
                   type="tel"
                   value={phone}
-                  onChange={(event) => setPhone(formatPhoneInput(event.target.value))}
+                  onChange={(event) => setPhone(sanitizePhoneInput(event.target.value))}
                   autoComplete="tel"
                   inputMode="tel"
-                  placeholder="010-1234-5678"
+                  placeholder="01012345678"
                   maxLength={24}
                   required
                 />

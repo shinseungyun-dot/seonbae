@@ -311,7 +311,7 @@ function formatDate(value: string | null) {
 function formatPhone(value: string | null) {
   if (!value) return "등록되지 않음";
   if (value.startsWith("+8210") && value.length === 13) {
-    return `010-${value.slice(5, 9)}-${value.slice(9, 13)}`;
+    return `0${value.slice(3)}`;
   }
-  return value;
+  return value.replace(/-/g, "");
 }

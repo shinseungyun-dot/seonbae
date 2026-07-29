@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { sanitizePhoneInput } from "../../utils/auth/phone";
 import styles from "./tutor-apply.module.css";
 
 export default function TutorApplicationForm() {
@@ -50,7 +51,11 @@ export default function TutorApplicationForm() {
             name="phone"
             type="tel"
             autoComplete="tel"
-            placeholder="010-1234-5678"
+            inputMode="tel"
+            placeholder="01012345678"
+            onInput={(event) => {
+              event.currentTarget.value = sanitizePhoneInput(event.currentTarget.value);
+            }}
             required
           />
         </label>

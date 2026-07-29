@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+  <body style="margin:0;padding:0;background:#eeeae2;color:#16213a;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+      선배 포털 회원가입을 마무리하려면 이메일을 인증해 주세요.
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#eeeae2;">
+      <tr>
+        <td align="center" style="padding:36px 16px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#fcfaf5;border:1px solid #d8d1c5;border-radius:22px;overflow:hidden;">
+            <tr>
+              <td align="center" style="background:#0c1d3c;padding:13px 24px;color:#c9c1b3;font:700 11px Arial,sans-serif;letter-spacing:2px;">
+                EDUCATION TO THE WORLD — SEONBAE 2026
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:38px 42px 18px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td width="54" valign="middle">
+                      <img src="https://www.seonbaetutor.com/seonbae-logo-antique.png" width="46" height="46" alt="선배" style="display:block;border:0;border-radius:50%;">
+                    </td>
+                    <td valign="middle" style="border-left:1px solid #cfc7bb;padding-left:16px;">
+                      <div style="color:#102a59;font:700 23px Georgia,'Times New Roman',serif;">선배</div>
+                      <div style="margin-top:3px;color:#777e8b;font:700 10px Arial,sans-serif;letter-spacing:2px;">SEONBAE · EST. 2026</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 42px 42px;">
+                <div style="width:34px;height:3px;background:#c23a32;margin-bottom:22px;"></div>
+                <div style="color:#c23a32;font:700 11px Arial,sans-serif;letter-spacing:2px;">EMAIL VERIFICATION</div>
+                <h1 style="margin:13px 0 16px;color:#102a59;font:700 32px/1.35 Georgia,'Times New Roman',serif;letter-spacing:-1px;">회원가입을<br>마무리해 주세요.</h1>
+                <p style="margin:0;color:#596070;font:15px/1.8 Arial,'Apple SD Gothic Neo',sans-serif;">
+                  <strong style="color:#16213a;">{{ .Email }}</strong> 주소로 선배 포털 가입 요청이 접수되었습니다.
+                  아래 버튼을 눌러 이메일 인증을 완료하면 포털에 로그인할 수 있습니다.
+                </p>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:28px 0 24px;">
+                  <tr>
+                    <td bgcolor="#c23a32" style="border-radius:999px;">
+                      <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:16px 26px;color:#ffffff;text-decoration:none;font:700 14px Arial,'Apple SD Gothic Neo',sans-serif;">이메일 인증하기 &nbsp;↗</a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:0;padding-top:20px;border-top:1px solid #ded8ce;color:#7b818e;font:12px/1.7 Arial,'Apple SD Gothic Neo',sans-serif;">
+                  본인이 요청하지 않았다면 이 메일을 무시해 주세요. 버튼이 열리지 않으면 아래 링크를 브라우저에 붙여 넣으세요.<br>
+                  <a href="{{ .ConfirmationURL }}" style="color:#102a59;word-break:break-all;">{{ .ConfirmationURL }}</a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#f2eee7;padding:20px 42px;color:#777e8b;font:11px/1.7 Arial,sans-serif;">
+                SEONBAE · admissions@seonbae.com<br>
+                <a href="https://www.seonbaetutor.com/privacy" style="color:#596070;">개인정보 처리방침</a>
+                &nbsp;·&nbsp;
+                <a href="https://www.seonbaetutor.com/terms" style="color:#596070;">이용약관</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
