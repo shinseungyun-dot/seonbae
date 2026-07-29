@@ -14,6 +14,81 @@ type JoinResponse = {
   error?: string;
 };
 
+type ZoomEmbeddedClient = {
+  init(options: Record<string, unknown>): Promise<void>;
+  join(options: Record<string, unknown>): Promise<void>;
+};
+
+type ZoomEmbeddedSdk = {
+  createClient(): ZoomEmbeddedClient;
+};
+
+declare global {
+  interface Window {
+    ZoomMtgEmbedded?: ZoomEmbeddedSdk;
+    __seonbaeZoomSdkPromise?: Promise<ZoomEmbeddedSdk>;
+  }
+}
+
+const ZOOM_SDK_VERSION = "6.2.0";
+const ZOOM_SDK_SCRIPTS = [
+  `https://source.zoom.us/${ZOOM_SDK_VERSION}/lib/vendor/react.min.js`,
+  `https://source.zoom.us/${ZOOM_SDK_VERSION}/lib/vendor/react-dom.min.js`,
+  `https://source.zoom.us/${ZOOM_SDK_VERSION}/lib/vendor/redux.min.js`,
+  `https://source.zoom.us/${ZOOM_SDK_VERSION}/lib/vendor/redux-thunk.min.js`,
+  `https://source.zoom.us/${ZOOM_SDK_VERSION}/lib/vendor/lodash.min.js`,
+  `https://source.zoom.us/zoom-meeting-embedded-${ZOOM_SDK_VERSION}.min.js`,
+];
+
+function loadScript(src: string) {
+  return new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${src}"]`,
+    );
+    if (existing?.dataset.loaded === "true") {
+      resolve();
+      return;
+    }
+
+    const script = existing ?? document.createElement("script");
+    const handleLoad = () => {
+      script.dataset.loaded = "true";
+      resolve();
+    };
+    const handleError = () => reject(new Error("Zoom 수업 화면을 불러오지 못했습니다."));
+
+    script.addEventListener("load", handleLoad, { once: true });
+    script.addEventListener("error", handleError, { once: true });
+    if (!existing) {
+      script.src = src;
+      script.async = false;
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+    }
+  });
+}
+
+function loadZoomEmbeddedSdk() {
+  if (window.ZoomMtgEmbedded) {
+    return Promise.resolve(window.ZoomMtgEmbedded);
+  }
+  if (!window.__seonbaeZoomSdkPromise) {
+    window.__seonbaeZoomSdkPromise = (async () => {
+      for (const src of ZOOM_SDK_SCRIPTS) {
+        await loadScript(src);
+      }
+      if (!window.ZoomMtgEmbedded) {
+        throw new Error("Zoom 수업 화면을 초기화하지 못했습니다.");
+      }
+      return window.ZoomMtgEmbedded;
+    })().catch((error) => {
+      delete window.__seonbaeZoomSdkPromise;
+      throw error;
+    });
+  }
+  return window.__seonbaeZoomSdkPromise;
+}
+
 export default function ZoomMeetingRoom({
   sessionId,
   meetingReady,
@@ -48,7 +123,7 @@ export default function ZoomMeetingRoom({
         throw new Error(join.error || "수업 입장 정보를 받지 못했습니다.");
       }
 
-      const { default: ZoomMtgEmbedded } = await import("@zoom/meetingsdk/embedded");
+      const ZoomMtgEmbedded = await loadZoomEmbeddedSdk();
       const client = ZoomMtgEmbedded.createClient();
       await client.init({
         zoomAppRoot: rootRef.current,
