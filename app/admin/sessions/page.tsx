@@ -6,6 +6,11 @@ import AdminSessionManager, {
   type AdminStudent,
   type AdminZoomTutor,
 } from "./AdminSessionManager";
+import type {
+  AdminConsultation,
+  AdminFamilyLink,
+  AdminParent,
+} from "./AdminConsultationPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -23,12 +28,24 @@ export default async function AdminSessionsPage() {
     .single();
   if (profile?.role !== "admin") redirect("/portal");
 
-  const [{ data: students }, { data: tutors }, { data: lessons }] =
+  const [
+    { data: students },
+    { data: parents },
+    { data: tutors },
+    { data: lessons },
+    { data: consultations },
+    { data: familyLinks },
+  ] =
     await Promise.all([
       supabase
         .from("profiles")
         .select("id,full_name,email")
         .eq("role", "user")
+        .order("full_name", { ascending: true }),
+      supabase
+        .from("profiles")
+        .select("id,full_name,email")
+        .eq("role", "parent")
         .order("full_name", { ascending: true }),
       supabase
         .from("tutors")
@@ -42,6 +59,17 @@ export default async function AdminSessionsPage() {
         .order("session_date", { ascending: false })
         .order("starts_at", { ascending: false })
         .limit(100),
+      supabase
+        .from("consultation_sessions")
+        .select(
+          "id,parent_id,session_date,starts_at,duration_minutes,actual_minutes,topic,title,notes,zoom_meeting_number,zoom_status",
+        )
+        .order("session_date", { ascending: false })
+        .order("starts_at", { ascending: false })
+        .limit(100),
+      supabase
+        .from("parent_student_links")
+        .select("parent_id,student_id"),
     ]);
 
   return (
@@ -50,6 +78,9 @@ export default async function AdminSessionsPage() {
       initialStudents={(students ?? []) as AdminStudent[]}
       initialTutors={(tutors ?? []) as AdminZoomTutor[]}
       initialLessons={(lessons ?? []) as AdminLesson[]}
+      initialParents={(parents ?? []) as AdminParent[]}
+      initialFamilyLinks={(familyLinks ?? []) as AdminFamilyLink[]}
+      initialConsultations={(consultations ?? []) as AdminConsultation[]}
       zoomConfigured={zoomConfigurationStatus().configured}
     />
   );

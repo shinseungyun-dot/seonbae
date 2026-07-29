@@ -22,7 +22,14 @@ export async function GET() {
     .eq("id", user.id)
     .single();
 
-  const role = profile?.role === "admin" ? "admin" : "user";
+  const role =
+    profile?.role === "admin"
+      ? "admin"
+      : profile?.role === "tutor"
+        ? "tutor"
+        : profile?.role === "parent"
+          ? "parent"
+          : "user";
   const metadataName =
     typeof user.user_metadata?.full_name === "string"
       ? user.user_metadata.full_name.trim()
@@ -40,7 +47,12 @@ export async function GET() {
       role,
       displayName,
       email: profile?.email || user.email || null,
-      destination: role === "admin" ? "/admin" : "/portal",
+      destination:
+        role === "admin"
+          ? "/admin"
+          : role === "tutor"
+            ? "/portal/tutor"
+            : "/portal",
     },
     {
       headers: {

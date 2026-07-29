@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../utils/supabase/server";
-import PortalDashboard, { type PortalSession } from "./PortalDashboard";
+import PortalDashboard, {
+  type PortalConsultation,
+  type PortalSession,
+} from "./PortalDashboard";
+import type { PortalChatThread } from "./ChatPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -19,29 +23,61 @@ export default async function PortalPage() {
     .single();
 
   if (profile?.role === "admin") redirect("/admin");
+  if (profile?.role === "tutor") redirect("/portal/tutor");
 
-  let sessionQuery = supabase
-    .from("portal_sessions")
-    .select(
-      "id,session_date,starts_at,duration_minutes,subject,title,session_type,location,notes,tutor_registry_id,zoom_meeting_number,zoom_status,tutors(name,university,photo_url)",
+  const isParent = profile?.role === "parent";
+  let studentIds = [user.id];
+  const studentNames = new Map<string, string>();
+
+  if (isParent) {
+    const { data: links } = await supabase
+      .from("parent_student_links")
+      .select("student_id")
+      .eq("parent_id", user.id);
+    studentIds = (links ?? []).map((link) => link.student_id);
+
+    if (studentIds.length) {
+      const { data: students } = await supabase
+        .from("profiles")
+        .select("id,full_name,email")
+        .in("id", studentIds);
+      for (const student of students ?? []) {
+        studentNames.set(
+          student.id,
+          student.full_name || student.email || "학생",
+        );
+      }
+    }
+  } else {
+    studentNames.set(
+      user.id,
+      profile?.full_name
+        || user.user_metadata?.full_name
+        || user.email?.split("@")[0]
+        || "학생",
     );
+  }
 
-  sessionQuery =
-    profile?.role === "tutor" && profile.tutor_registry_id
-      ? sessionQuery.eq("tutor_registry_id", profile.tutor_registry_id)
-      : sessionQuery.eq("user_id", user.id);
-
-  const { data: sessionRows } = await sessionQuery
-    .order("session_date", { ascending: true })
-    .order("starts_at", { ascending: true });
+  const sessionSelect =
+    "id,user_id,session_date,starts_at,duration_minutes,actual_minutes,subject,title,session_type,location,notes,tutor_registry_id,zoom_meeting_number,zoom_status,tutors(name,university,photo_url)";
+  const { data: sessionRows } = studentIds.length
+    ? await supabase
+        .from("portal_sessions")
+        .select(sessionSelect)
+        .in("user_id", studentIds)
+        .order("session_date", { ascending: true })
+        .order("starts_at", { ascending: true })
+    : { data: [] };
 
   const sessions: PortalSession[] = (sessionRows ?? []).map((row) => {
     const tutor = Array.isArray(row.tutors) ? row.tutors[0] : row.tutors;
     return {
       id: row.id,
+      studentName: studentNames.get(row.user_id) || "학생",
       sessionDate: row.session_date,
       startsAt: row.starts_at,
       durationMinutes: row.duration_minutes,
+      actualMinutes: row.actual_minutes,
       subject: row.subject,
       title: row.title,
       sessionType: row.session_type,
@@ -51,24 +87,72 @@ export default async function PortalPage() {
       zoomMeetingNumber: row.zoom_meeting_number,
       zoomStatus: row.zoom_status,
       tutor: tutor
-        ? { name: tutor.name, university: tutor.university, photoUrl: tutor.photo_url }
+        ? {
+            name: tutor.name,
+            university: tutor.university,
+            photoUrl: tutor.photo_url,
+          }
         : null,
     };
   });
 
+  let consultations: PortalConsultation[] = [];
+  if (isParent) {
+    const { data } = await supabase
+      .from("consultation_sessions")
+      .select(
+        "id,session_date,starts_at,duration_minutes,actual_minutes,topic,title,notes,zoom_meeting_number,zoom_status",
+      )
+      .eq("parent_id", user.id)
+      .order("session_date", { ascending: true })
+      .order("starts_at", { ascending: true });
+    consultations = (data ?? []).map((row) => ({
+      id: row.id,
+      sessionDate: row.session_date,
+      startsAt: row.starts_at,
+      durationMinutes: row.duration_minutes,
+      actualMinutes: row.actual_minutes,
+      topic: row.topic,
+      title: row.title,
+      notes: row.notes,
+      zoomMeetingNumber: row.zoom_meeting_number,
+      zoomStatus: row.zoom_status,
+    }));
+  }
+
+  let chatThreads: PortalChatThread[] = [];
+  if (!isParent) {
+    const { data: rows } = await supabase
+      .from("chat_threads")
+      .select("id,tutor_registry_id,tutors(name,university)")
+      .eq("student_id", user.id)
+      .order("updated_at", { ascending: false });
+    chatThreads = (rows ?? []).map((row) => {
+      const tutor = Array.isArray(row.tutors) ? row.tutors[0] : row.tutors;
+      return {
+        id: row.id,
+        counterpartName: tutor?.name || "담당 튜터",
+        counterpartMeta: tutor?.university || row.tutor_registry_id,
+      };
+    });
+  }
+
   return (
     <PortalDashboard
+      currentUserId={user.id}
       user={{
-        name: profile?.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "사용자",
+        name:
+          profile?.full_name
+          || user.user_metadata?.full_name
+          || user.email?.split("@")[0]
+          || "회원",
         email: profile?.email || user.email || "",
-        role:
-          profile?.role === "tutor"
-            ? "tutor"
-            : profile?.role === "admin"
-              ? "admin"
-              : "user",
+        role: isParent ? "parent" : "user",
       }}
       sessions={sessions}
+      consultations={consultations}
+      chatThreads={chatThreads}
+      linkedStudentCount={isParent ? studentIds.length : 0}
     />
   );
 }

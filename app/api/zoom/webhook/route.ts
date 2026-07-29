@@ -84,23 +84,55 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data: session } = await admin
+  const { data: lesson } = await admin
     .from("portal_sessions")
-    .select("id")
+    .select("id,zoom_started_at,duration_minutes")
     .eq("zoom_meeting_number", meetingNumber)
     .maybeSingle();
-  if (!session) {
+
+  const { data: consultation } = lesson
+    ? { data: null }
+    : await admin
+        .from("consultation_sessions")
+        .select("id,zoom_started_at,duration_minutes")
+        .eq("zoom_meeting_number", meetingNumber)
+        .maybeSingle();
+
+  if (!lesson && !consultation) {
     return new NextResponse(null, { status: 204 });
   }
 
   if (event === "meeting.started" || event === "meeting.ended") {
+    const table = lesson ? "portal_sessions" : "consultation_sessions";
+    const record = lesson || consultation;
+    const now = new Date().toISOString();
+    const startedAt =
+      body.payload?.object?.start_time
+      || record?.zoom_started_at
+      || now;
+    const endedAt = body.payload?.object?.end_time || now;
+    const updates =
+      event === "meeting.started"
+        ? {
+            zoom_status: "live",
+            zoom_started_at: startedAt,
+            updated_at: now,
+          }
+        : {
+            zoom_status: "ended",
+            zoom_ended_at: endedAt,
+            actual_minutes: elapsedMinutes(
+              startedAt,
+              endedAt,
+              record?.duration_minutes || 0,
+            ),
+            updated_at: now,
+          };
+
     await admin
-      .from("portal_sessions")
-      .update({
-        zoom_status: event === "meeting.started" ? "live" : "ended",
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", session.id);
+      .from(table)
+      .update(updates)
+      .eq("id", record!.id);
   }
 
   if (
@@ -121,10 +153,14 @@ export async function POST(request: NextRequest) {
         participantId || participant?.user_name || "unknown",
       ].join(":");
 
-    await admin.from("zoom_attendance").upsert(
+    await admin
+      .from(lesson ? "zoom_attendance" : "consultation_attendance")
+      .upsert(
       {
         event_id: eventId,
-        session_id: session.id,
+        ...(lesson
+          ? { session_id: lesson.id }
+          : { consultation_id: consultation!.id }),
         zoom_participant_id: participantId,
         participant_name: participant?.user_name || null,
         participant_email: participant?.email || null,
@@ -142,4 +178,17 @@ export async function POST(request: NextRequest) {
   }
 
   return new NextResponse(null, { status: 204 });
+}
+
+function elapsedMinutes(
+  startedAt: string,
+  endedAt: string,
+  fallbackMinutes: number,
+) {
+  const started = new Date(startedAt).getTime();
+  const ended = new Date(endedAt).getTime();
+  if (!Number.isFinite(started) || !Number.isFinite(ended) || ended <= started) {
+    return Math.max(0, fallbackMinutes);
+  }
+  return Math.min(1440, Math.max(1, Math.round((ended - started) / 60000)));
 }

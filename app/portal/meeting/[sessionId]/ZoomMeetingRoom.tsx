@@ -93,10 +93,12 @@ export default function ZoomMeetingRoom({
   sessionId,
   meetingReady,
   meetingStatus,
+  signatureEndpoint = "/api/zoom/signature",
 }: {
   sessionId: number;
   meetingReady: boolean;
   meetingStatus: string;
+  signatureEndpoint?: string;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "loading" | "joined" | "error">("idle");
@@ -113,7 +115,7 @@ export default function ZoomMeetingRoom({
     setMessage("Zoom 보안 연결을 준비하고 있습니다…");
 
     try {
-      const response = await fetch("/api/zoom/signature", {
+      const response = await fetch(signatureEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId }),

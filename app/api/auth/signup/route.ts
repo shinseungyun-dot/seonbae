@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     email?: unknown;
     phone?: unknown;
     password?: unknown;
+    accountRole?: unknown;
     privacyAgreed?: unknown;
     termsAgreed?: unknown;
     ageConfirmed?: unknown;
@@ -28,6 +29,7 @@ export async function POST(request: NextRequest) {
   const phoneInput = typeof body.phone === "string" ? body.phone : "";
   const phone = normalizePhone(phoneInput);
   const password = typeof body.password === "string" ? body.password : "";
+  const accountRole = body.accountRole === "parent" ? "parent" : "user";
   const passwordError = getPasswordPolicyError(password);
   const privacyAgreed = body.privacyAgreed === true;
   const termsAgreed = body.termsAgreed === true;
@@ -63,6 +65,7 @@ export async function POST(request: NextRequest) {
       data: {
         full_name: fullName,
         phone,
+        account_role: accountRole,
         privacy_agreed: true,
         privacy_consent_version: PRIVACY_POLICY_VERSION,
         terms_agreed: true,

@@ -66,7 +66,17 @@ export async function POST(request: NextRequest) {
     && Boolean(profile.tutor_registry_id)
     && profile.tutor_registry_id === session.tutor_registry_id;
   const isStudent = profile.role === "user" && session.user_id === user.id;
-  if (!isAdmin && !isTutor && !isStudent) {
+  let isLinkedParent = false;
+  if (profile.role === "parent") {
+    const { data: familyLink } = await supabase
+      .from("parent_student_links")
+      .select("parent_id")
+      .eq("parent_id", user.id)
+      .eq("student_id", session.user_id)
+      .maybeSingle();
+    isLinkedParent = Boolean(familyLink);
+  }
+  if (!isAdmin && !isTutor && !isStudent && !isLinkedParent) {
     return NextResponse.json(
       { error: "이 수업에 접근할 수 없습니다." },
       { status: 403 },
@@ -86,8 +96,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const hostRole = isAdmin || isTutor;
-  if (!hostRole && !isStudentJoinWindowOpen(session)) {
+  const hostRole = isTutor;
+  if (!hostRole && !isAdmin && !isStudentJoinWindowOpen(session)) {
     return NextResponse.json(
       { error: "학생 입장은 수업 시작 30분 전부터 가능합니다." },
       { status: 403 },

@@ -41,13 +41,20 @@ export default async function MeetingPage({
   const tutor = Array.isArray(session.tutors)
     ? session.tutors[0]
     : session.tutors;
-  const backHref = profile.role === "admin" ? "/admin/sessions" : "/portal";
+  const backHref =
+    profile.role === "admin"
+      ? "/admin/sessions"
+      : profile.role === "tutor"
+        ? "/portal/tutor"
+        : "/portal";
   const roleLabel =
     profile.role === "admin"
-      ? "관리자 호스트"
+      ? "관리자 참관"
       : profile.role === "tutor"
         ? "튜터 호스트"
-        : "수강생";
+        : profile.role === "parent"
+          ? "보호자"
+          : "수강생";
 
   return (
     <main className={styles.page}>

@@ -47,6 +47,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountRole, setAccountRole] = useState<"user" | "parent">("user");
   const [remember, setRemember] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -99,6 +100,7 @@ export default function LoginPage() {
             email: identifier,
             phone,
             password,
+            accountRole,
             privacyAgreed,
             termsAgreed,
             ageConfirmed,
@@ -150,6 +152,7 @@ export default function LoginPage() {
     setPhone("");
     setPassword("");
     setConfirmPassword("");
+    setAccountRole("user");
     setPrivacyAgreed(false);
     setTermsAgreed(false);
     setAgeConfirmed(false);
@@ -243,6 +246,32 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {isSignup && (
+              <fieldset className={styles.accountRole}>
+                <legend>계정 유형</legend>
+                <label data-selected={accountRole === "user"}>
+                  <input
+                    type="radio"
+                    name="account-role"
+                    value="user"
+                    checked={accountRole === "user"}
+                    onChange={() => setAccountRole("user")}
+                  />
+                  <span><b>학생</b><small>수업 일정과 튜터 채팅</small></span>
+                </label>
+                <label data-selected={accountRole === "parent"}>
+                  <input
+                    type="radio"
+                    name="account-role"
+                    value="parent"
+                    checked={accountRole === "parent"}
+                    onChange={() => setAccountRole("parent")}
+                  />
+                  <span><b>보호자</b><small>자녀 수업과 선배팀 상담</small></span>
+                </label>
+              </fieldset>
+            )}
+
             {(isSignup || isRecovery) && (
               <label>
                 <span>이름</span>

@@ -6,6 +6,11 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../../utils/supabase/client";
 import styles from "./sessions.module.css";
+import AdminConsultationPanel, {
+  type AdminConsultation,
+  type AdminFamilyLink,
+  type AdminParent,
+} from "./AdminConsultationPanel";
 
 export type AdminStudent = {
   id: string;
@@ -52,12 +57,18 @@ export default function AdminSessionManager({
   initialStudents,
   initialTutors,
   initialLessons,
+  initialParents,
+  initialConsultations,
+  initialFamilyLinks,
   zoomConfigured,
 }: {
   adminName: string;
   initialStudents: AdminStudent[];
   initialTutors: AdminZoomTutor[];
   initialLessons: AdminLesson[];
+  initialParents: AdminParent[];
+  initialConsultations: AdminConsultation[];
+  initialFamilyLinks: AdminFamilyLink[];
   zoomConfigured: boolean;
 }) {
   const router = useRouter();
@@ -241,6 +252,13 @@ export default function AdminSessionManager({
             </div>
           </section>
         </div>
+        <AdminConsultationPanel
+          parents={initialParents}
+          students={initialStudents}
+          initialFamilyLinks={initialFamilyLinks}
+          initialConsultations={initialConsultations}
+          zoomConfigured={zoomConfigured}
+        />
       </section>
     </main>
   );

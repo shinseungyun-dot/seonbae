@@ -64,7 +64,12 @@ export async function POST(request: NextRequest) {
   cookieStore.set("seonbae-remember", remember ? "1" : "0", rememberOptions);
 
   return NextResponse.json({
-    destination: profile?.role === "admin" ? "/admin" : "/portal",
+    destination:
+      profile?.role === "admin"
+        ? "/admin"
+        : profile?.role === "tutor"
+          ? "/portal/tutor"
+          : "/portal",
   });
 }
 
