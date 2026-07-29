@@ -1,3 +1,4 @@
+-- Runs after the portal migration creates public.profiles.
 alter table public.profiles
   add column if not exists phone text,
   add column if not exists privacy_consent_version text,

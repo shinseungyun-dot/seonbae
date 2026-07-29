@@ -1,3 +1,4 @@
+-- Unique timestamp preserves the original dependency order for Supabase previews.
 alter table public.tutors
   add column if not exists university text,
   add column if not exists university_en text,

@@ -1,3 +1,4 @@
+-- Zoom portal schema follows the account-recovery migrations from this date.
 alter table public.tutors
   add column if not exists zoom_host_email text;
 

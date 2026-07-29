@@ -1,3 +1,4 @@
+-- Defines phone normalization before the vault-backed recovery function uses it.
 create or replace function public.canonical_phone_digits(value text)
 returns text
 language sql
