@@ -17,6 +17,7 @@ export type AdminTutor = {
   university_en: string | null;
   photo_url: string | null;
   banner_url: string | null;
+  zoom_host_email: string | null;
   display_order: number;
   active: boolean;
 };
@@ -76,6 +77,7 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
         <nav>
           <span>MANAGEMENT</span>
           <a className={styles.active} href="#tutors">튜터 명부</a>
+          <Link href="/admin/sessions">수업 · Zoom 관리</Link>
           <Link href="/#/ko/tutors">공개 명부 보기</Link>
         </nav>
         <div className={styles.adminAccount}><small>관리자</small><b>{adminName}</b><button type="button" onClick={signOut}>로그아웃</button></div>
@@ -123,6 +125,7 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
                 <label><span>대학교 (한국어)</span><input value={selected.university || ""} onChange={(event) => updateSelected("university", event.target.value || null)} /></label>
                 <label><span>대학교 (영문)</span><input value={selected.university_en || ""} onChange={(event) => updateSelected("university_en", event.target.value || null)} /></label>
                 <label><span>대학교 배너</span><select value={selected.banner_url || ""} onChange={(event) => updateSelected("banner_url", event.target.value || null)}><option value="">배너 없음</option>{bannerOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}</select></label>
+                <label><span>Zoom 호스트 이메일</span><input type="email" placeholder="tutor@seonbae.com" value={selected.zoom_host_email || ""} onChange={(event) => updateSelected("zoom_host_email", event.target.value || null)} /></label>
                 <label className={styles.full}><span>튜터 사진 URL</span><input type="url" placeholder="https://... 또는 /images/..." value={selected.photo_url || ""} onChange={(event) => updateSelected("photo_url", event.target.value || null)} /></label>
                 <label className={styles.toggle}><input type="checkbox" checked={selected.active} onChange={(event) => updateSelected("active", event.target.checked)} /><span>공개 명부에 표시</span></label>
               </div>

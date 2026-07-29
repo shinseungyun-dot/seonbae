@@ -41,7 +41,7 @@ export default function TermsPage() {
         </nav>
         <article className={styles.document}>
           <p className={styles.notice}>
-            시행일: 2026년 7월 25일 · 서비스 제공자: 선배(Seonbae) · 문의:{" "}
+            시행일: 2026년 7월 29일 · 서비스 제공자: 선배(Seonbae) · 문의:{" "}
             <a href="mailto:admissions@seonbae.com">admissions@seonbae.com</a>
           </p>
 
@@ -61,6 +61,7 @@ export default function TermsPage() {
               <li>검증된 튜터 명부와 교육 관련 정보 제공</li>
               <li>학생의 목표와 과목에 맞춘 상담 및 튜터 연결</li>
               <li>회원별 수업 일정, 담당 튜터와 전달 사항을 확인하는 포털</li>
+              <li>포털 안에서 이용하는 Zoom 온라인 수업 교실</li>
               <li>수업 운영, 문의 응대 및 관련 지원</li>
             </ul>
             <p>
@@ -108,6 +109,15 @@ export default function TermsPage() {
               이용자는 수업 진행에 필요한 정보를 정확히 제공하고, 튜터와 다른
               이용자의 안전과 권리를 존중해야 합니다. 수업 자료와 피드백은 해당
               학생의 학습 목적으로만 이용해야 합니다.
+            </p>
+            <p>
+              온라인 수업은 Zoom Meeting SDK를 통해 제공됩니다. 이용자는
+              브라우저의 카메라·마이크 권한을 직접 선택하며, 계정과 수업 링크를
+              제3자와 공유해서는 안 됩니다. 선배는 기본적으로 수업을 녹화하지
+              않습니다. 녹화가 필요한 경우 시작 전에 목적, 이용 범위와 보유기간을
+              알리고 관계 법령상 필요한 동의를 받습니다. Zoom의 장애나 이용자의
+              네트워크·기기 문제로 연결이 중단될 수 있으며, 가능한 경우 선배가
+              일정 조정 또는 대체 접속을 안내합니다.
             </p>
           </section>
 
@@ -178,7 +188,7 @@ export default function TermsPage() {
             <section>
               <h2>Terms of Service</h2>
               <p>
-                Effective July 25, 2026. These terms apply to Seonbae’s public
+                Effective July 29, 2026. These terms apply to Seonbae’s public
                 website, member accounts, learning portal, consultations, tutor
                 discovery and matching, and related services. Separate confirmed
                 terms for lesson subject, schedule, fees, cancellation and
@@ -209,7 +219,11 @@ export default function TermsPage() {
                 access, harass users, submit false information, disrupt the
                 service, or reproduce and commercially exploit the registry,
                 learning materials, brand, design or software without
-                permission.
+                permission. Embedded lessons use Zoom Meeting SDK. Participants
+                control browser camera and microphone permissions and must not
+                share account access or meeting credentials. Recording is off
+                by default; any recording requires advance notice and any
+                consent required by law.
               </p>
               <h3>Availability, liability and law</h3>
               <p>

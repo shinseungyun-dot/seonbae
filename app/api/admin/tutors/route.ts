@@ -4,7 +4,7 @@ import { createClient } from "../../../../utils/supabase/server";
 export const dynamic = "force-dynamic";
 
 const tutorFields =
-  "registry_id,name,exam,score,category,tier,university,university_en,photo_url,banner_url,display_order,active";
+  "registry_id,name,exam,score,category,tier,university,university_en,photo_url,banner_url,zoom_host_email,display_order,active";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -78,6 +78,23 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "표시 순서는 0~9999 사이의 정수여야 합니다." }, { status: 400 });
   }
 
+  const existingTutor = await auth.supabase
+    .from("tutors")
+    .select("zoom_host_email")
+    .eq("registry_id", registryId)
+    .single();
+  const zoomHostEmailInput = cleanText(body.zoom_host_email, 254).toLowerCase();
+  if (
+    zoomHostEmailInput
+    && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(zoomHostEmailInput)
+  ) {
+    return NextResponse.json(
+      { error: "Zoom 호스트 이메일 형식을 확인해 주세요." },
+      { status: 400 },
+    );
+  }
+  const zoomHostEmail = zoomHostEmailInput || null;
+
   const updates = {
     name: cleanText(body.name, 80),
     exam: cleanText(body.exam, 80),
@@ -88,6 +105,7 @@ export async function PATCH(request: NextRequest) {
     university_en: nullableText(body.university_en, 160),
     photo_url: safeAssetUrl(body.photo_url),
     banner_url: safeAssetUrl(body.banner_url),
+    zoom_host_email: zoomHostEmail,
     display_order: displayOrder,
     active: body.active === true,
     updated_at: new Date().toISOString(),
@@ -106,6 +124,34 @@ export async function PATCH(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: "튜터 정보를 저장하지 못했습니다." }, { status: 500 });
+  }
+
+  const previousHostEmail = existingTutor.data?.zoom_host_email;
+  if (
+    previousHostEmail
+    && previousHostEmail.toLowerCase() !== zoomHostEmail?.toLowerCase()
+  ) {
+    await auth.supabase
+      .from("profiles")
+      .update({
+        role: "user",
+        tutor_registry_id: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("tutor_registry_id", registryId)
+      .neq("role", "admin");
+  }
+
+  if (zoomHostEmail) {
+    await auth.supabase
+      .from("profiles")
+      .update({
+        role: "tutor",
+        tutor_registry_id: registryId,
+        updated_at: new Date().toISOString(),
+      })
+      .ilike("email", zoomHostEmail)
+      .neq("role", "admin");
   }
 
   return NextResponse.json(data, {

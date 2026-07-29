@@ -11,3 +11,15 @@
 :global(html[data-theme="dark"]) .calendarGrid .selectedDay{background:var(--navy);color:#fff}
 :global(html[data-theme="dark"]) .brand b,:global(html[data-theme="dark"]) .panelHeading h2,:global(html[data-theme="dark"]) .sideHeading h2,:global(html[data-theme="dark"]) .days button b,:global(html[data-theme="dark"]) .profileMenu>div a,:global(html[data-theme="dark"]) .profileMenu>div button{color:#edf3ff}
 :global(html[data-theme="dark"]) .profileMenu>div a:hover,:global(html[data-theme="dark"]) .profileMenu>div button:hover{background:#223047}
+
+.lesson{grid-template-columns:70px minmax(0,1fr) auto auto}
+.zoomLink,.nextZoomLink,.detailZoomLink{display:inline-flex;align-items:center;justify-content:center;background:var(--blue);color:#fff;font-size:.64rem;font-weight:800}
+.zoomLink{min-height:31px;padding:0 10px;border-radius:999px;white-space:nowrap}
+.nextZoomLink{min-height:42px;margin-top:12px;padding:0 14px;border-radius:11px;justify-content:space-between}
+.nextZoomLink span{margin-left:auto}
+.detailZoomLink{grid-column:1/-1;min-height:39px;border-radius:10px}
+
+@media(max-width:680px){
+  .lesson{grid-template-columns:58px minmax(0,1fr) auto}
+  .zoomLink{grid-column:2/-1;justify-self:start}
+}

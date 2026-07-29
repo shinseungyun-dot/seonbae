@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
         <article className={styles.document}>
           <p className={styles.notice}>
-            시행일: 2026년 7월 25일 · 처리자: 선배(Seonbae) · 문의:{" "}
+            시행일: 2026년 7월 29일 · 처리자: 선배(Seonbae) · 문의:{" "}
             <a href="mailto:admissions@seonbae.com">admissions@seonbae.com</a>
           </p>
 
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
                 <thead><tr><th>구분</th><th>처리 항목</th><th>목적</th><th>보유 기간</th></tr></thead>
                 <tbody>
                   <tr><td>회원가입·계정</td><td>이름, 이메일, 휴대전화번호, 비밀번호 해시, 이메일 인증 상태, 가입·동의 일시와 정책 버전</td><td>회원 식별, 로그인, 포털 제공, 등록 이메일을 통한 안전한 계정 복구, 비밀번호 재설정, 부정 이용 방지</td><td>회원 탈퇴 또는 계정 삭제 완료 시까지. 법령상 보존 의무가 있으면 해당 기간까지</td></tr>
-                  <tr><td>학습 포털</td><td>수업 일정, 과목, 담당 튜터, 수업 방식·장소, 전달 사항</td><td>수업 운영, 일정 안내, 학습 지원</td><td>서비스 이용 기간 및 수업 관계 종료 후 1년. 분쟁이 진행 중이면 해결 시까지</td></tr>
+                  <tr><td>학습 포털·온라인 수업</td><td>수업 일정, 과목, 담당 튜터, 수업 방식·장소, 전달 사항, Zoom 회의 번호·상태, 참가자 이름·이메일·입퇴장 시각</td><td>수업 운영, 본인과 권한 확인, 일정 안내, 온라인 교실 제공, 출결·장애 대응</td><td>서비스 이용 기간 및 수업 관계 종료 후 1년. 분쟁이 진행 중이면 해결 시까지</td></tr>
                   <tr><td>상담·문의</td><td>문의자가 제공한 이름, 이메일 또는 메신저 계정, 커리큘럼·과목, 목표와 상담 내용</td><td>상담 응대, 튜터 매칭, 민원 처리</td><td>상담 종료 후 1년. 계약으로 이어지는 경우 계약 관계 및 법정 보존기간까지</td></tr>
                   <tr><td>자동 생성 정보</td><td>필수 인증 쿠키, 접속 시각, IP 주소, 브라우저·기기 정보, 오류·보안 로그</td><td>로그인 유지, 서비스 보안, 장애 대응</td><td>인증 쿠키는 세션 또는 로그인 유지기간까지. 보안 로그는 원칙적으로 90일 이내 또는 제공자 설정·법령상 기간까지</td></tr>
                 </tbody>
@@ -113,6 +113,7 @@ export default function PrivacyPage() {
                   <tr><td>Supabase, Inc. 및 공개된 하위처리자</td><td>인도(뭄바이, ap-south-1) 및 지원·하위처리를 위한 미국·싱가포르 등</td><td>계정·프로필·수업 정보, 인증 쿠키와 로그 / 데이터베이스, 인증, 보안 운영</td><td>가입·로그인·포털 이용 시 TLS 암호화 전송</td><td>계정 삭제 또는 위탁계약 종료 시까지. 백업은 제공자 정책에 따른 제한 기간 후 삭제</td></tr>
                   <tr><td>Vercel Inc. 및 하위처리자</td><td>미국 및 글로벌 엣지 인프라 소재국</td><td>IP, 요청 정보, 오류·보안 로그 / 웹 호스팅, 전송, 장애 대응</td><td>웹사이트 접속 시 TLS 암호화 전송</td><td>서비스 운영 및 보안에 필요한 기간 또는 위탁계약 종료 시까지</td></tr>
                   <tr><td>Google LLC</td><td>미국 및 Google이 서버를 운영하는 국가</td><td>이메일 주소, 인증·재설정 메일 내용과 전송 기록 / SMTP 메일 전송, 웹폰트 제공</td><td>인증 메일 발송 또는 폰트 요청 시 암호화 전송</td><td>메일 계정·전송 기록 및 서비스 제공자 정책에 따른 기간</td></tr>
+                  <tr><td>Zoom Communications, Inc. 및 공개된 하위처리자</td><td>미국 및 Zoom이 서비스를 운영하는 국가</td><td>표시 이름, 회의 번호·상태, 참가자 식별값, 이메일, 입퇴장 시각, 카메라·마이크로 전달되는 음성·영상 / 웹 기반 온라인 수업, 회의 보안, 출결·장애 대응</td><td>이용자가 포털에서 Zoom 수업에 입장하거나 회의 이벤트가 발생할 때 암호화 전송</td><td>음성·영상은 기본적으로 선배가 녹화·저장하지 않습니다. 회의·출결 정보는 수업 관계 종료 후 1년 또는 Zoom의 계약·법정 보존기간까지</td></tr>
                   <tr><td>jsDelivr 운영자 및 CDN 제공자</td><td>글로벌 CDN 노드 소재국</td><td>IP, 브라우저 요청 정보 / Pretendard 웹폰트 제공</td><td>페이지 접속 시 암호화 전송</td><td>CDN 보안·운영 정책에 따른 제한 기간</td></tr>
                 </tbody>
               </table>
@@ -121,6 +122,12 @@ export default function PrivacyPage() {
               이용자는 국외 이전을 거부할 수 있습니다. 다만 인증·호스팅은 서비스
               제공에 필수적이므로 거부 시 계정 및 포털 이용이 어려울 수 있습니다.
               거부나 관련 문의는 개인정보 보호 담당 연락처로 요청해 주세요.
+            </p>
+            <p>
+              Zoom 수업에서는 브라우저가 카메라와 마이크 사용 권한을 요청할 수
+              있으며, 이용자가 허용한 경우에만 작동합니다. 선배는 수업을 기본
+              설정상 녹화하지 않습니다. 녹화가 필요한 경우 시작 전에 목적과
+              보유기간을 별도로 알리고 필요한 동의를 받습니다.
             </p>
           </section>
 
@@ -203,7 +210,7 @@ export default function PrivacyPage() {
             <section>
               <h2>Privacy Policy</h2>
               <p>
-                Effective July 25, 2026. Seonbae processes only the personal
+                Effective July 29, 2026. Seonbae processes only the personal
                 data needed to create accounts, operate the learning portal,
                 support account recovery, arrange lessons, and answer
                 enquiries. Contact:{" "}
@@ -214,7 +221,8 @@ export default function PrivacyPage() {
                 Account data includes name, email, mobile number, password hash,
                 email-verification status, and consent records. Portal data may
                 include lesson schedules, subjects, tutors, delivery method,
-                location, and notes. Essential cookies, IP address, device and
+                location, notes, Zoom meeting status, participant identifiers,
+                display name, email, and join and leave times. Essential cookies, IP address, device and
                 security logs may be generated automatically. Raw passwords are
                 not stored in Seonbae’s profile database.
               </p>
@@ -239,6 +247,15 @@ export default function PrivacyPage() {
                 infrastructure. Transfers occur through encrypted connections
                 when the relevant service is used and continue only for the
                 service or legally required retention period.
+              </p>
+              <p>
+                Zoom provides the embedded online classroom and may process
+                display names, meeting and participant identifiers, email,
+                attendance events, and audio or video that a participant chooses
+                to transmit. Camera and microphone access is controlled by the
+                browser. Seonbae disables cloud and local recording by default;
+                any recording requires advance notice and any consent required
+                by law.
               </p>
               <h3>Your rights, cookies and children</h3>
               <p>

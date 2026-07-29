@@ -17,13 +17,15 @@ export type PortalSession = {
   location: string | null;
   notes: string | null;
   tutorRegistryId: string | null;
+  zoomMeetingNumber: string | null;
+  zoomStatus: string;
   tutor: { name: string; university: string | null; photoUrl: string | null } | null;
 };
 
 type PortalUser = {
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: "user" | "tutor" | "admin";
 };
 
 export default function PortalDashboard({ user, sessions }: { user: PortalUser; sessions: PortalSession[] }) {
@@ -95,8 +97,12 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
         <div className={styles.hero}>
           <div>
             <p>SEONBAE MEMBER · {user.email}</p>
-            <h1>{user.name}님의<br />학습 포털</h1>
-            <span>수업 일정과 담당 튜터 정보를 한곳에서 확인하세요.</span>
+            <h1>{user.name}님의<br />{user.role === "tutor" ? "튜터 포털" : "학습 포털"}</h1>
+            <span>
+              {user.role === "tutor"
+                ? "담당 수업 일정과 Zoom 교실을 한곳에서 확인하세요."
+                : "수업 일정과 담당 튜터 정보를 한곳에서 확인하세요."}
+            </span>
           </div>
           <div className={styles.stats}>
             <article><b>{monthSessions.length}</b><span>이번 달 수업</span></article>
@@ -107,7 +113,7 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
 
         <div className={styles.sync}>
           <span className={styles.syncDot} />
-          <p><b>실시간 일정</b> · 선배 팀이 반영한 최신 수업 정보입니다.</p>
+          <p><b>실시간 일정</b> · 수업 일정과 Zoom 상태가 실시간으로 반영됩니다.</p>
           <time>{new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric" }).format(new Date())} 기준</time>
         </div>
 
@@ -168,6 +174,14 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
                   <time><b>{session.startsAt.slice(0, 5)}</b><small>{session.durationMinutes}분</small></time>
                   <div><h3>{session.title}</h3><p>{session.tutor?.name || "담당 튜터 배정 중"} · {session.sessionType}</p></div>
                   <span className={styles.subject}>{session.subject}</span>
+                  {zoomIsAvailable(session) && (
+                    <Link
+                      className={styles.zoomLink}
+                      href={`/portal/meeting/${session.id}`}
+                    >
+                      Zoom 입장 ↗
+                    </Link>
+                  )}
                 </article>
               )) : (
                 <div className={styles.empty}><span>수업이 없는 날입니다.</span><p>다른 날짜를 선택하면 예정된 수업을 확인할 수 있습니다.</p></div>
@@ -184,6 +198,14 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
                   <h3>{nextSession.title}</h3>
                   <p>{nextSession.subject} · {nextSession.durationMinutes}분</p>
                   <b>{nextSession.sessionType}{nextSession.location ? ` · ${nextSession.location}` : ""}</b>
+                  {zoomIsAvailable(nextSession) && (
+                    <Link
+                      className={styles.nextZoomLink}
+                      href={`/portal/meeting/${nextSession.id}`}
+                    >
+                      Zoom 교실 열기 <span>↗</span>
+                    </Link>
+                  )}
                 </div>
               ) : (
                 <div className={styles.sideEmpty}>예정된 다음 수업이 없습니다.</div>
@@ -199,6 +221,14 @@ export default function PortalDashboard({ user, sessions }: { user: PortalUser; 
                     : <span className={styles.tutorPhoto}>{initials(selected.tutor?.name || "선배")}</span>}
                   <div><b>{selected.tutor?.name || "담당 튜터 배정 중"}</b><small>{selected.tutor?.university || selected.tutorRegistryId || "선배 튜터"}</small></div>
                   <p>{selected.notes || "수업 전 전달 사항이 등록되면 이곳에 표시됩니다."}</p>
+                  {zoomIsAvailable(selected) && (
+                    <Link
+                      className={styles.detailZoomLink}
+                      href={`/portal/meeting/${selected.id}`}
+                    >
+                      포털에서 Zoom 수업 입장
+                    </Link>
+                  )}
                 </div>
               ) : (
                 <div className={styles.sideEmpty}>수업을 선택하면 담당 튜터와 전달 사항을 확인할 수 있습니다.</div>
@@ -270,4 +300,12 @@ function initials(value: string) {
   if (!clean) return "선";
   if (/^[가-힣]/.test(clean)) return clean.slice(-2);
   return clean.split(/\s+/).map((word) => word[0]).slice(0, 2).join("").toUpperCase();
+}
+
+function zoomIsAvailable(session: PortalSession) {
+  return (
+    Boolean(session.zoomMeetingNumber)
+    && session.zoomStatus !== "cancelled"
+    && session.zoomStatus !== "ended"
+  );
 }

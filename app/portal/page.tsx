@@ -12,19 +12,28 @@ export default async function PortalPage() {
 
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: sessionRows }] = await Promise.all([
-    supabase.from("profiles").select("full_name,email,role").eq("id", user.id).single(),
-    supabase
-      .from("portal_sessions")
-      .select(
-        "id,session_date,starts_at,duration_minutes,subject,title,session_type,location,notes,tutor_registry_id,tutors(name,university,photo_url)",
-      )
-      .eq("user_id", user.id)
-      .order("session_date", { ascending: true })
-      .order("starts_at", { ascending: true }),
-  ]);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name,email,role,tutor_registry_id")
+    .eq("id", user.id)
+    .single();
 
   if (profile?.role === "admin") redirect("/admin");
+
+  let sessionQuery = supabase
+    .from("portal_sessions")
+    .select(
+      "id,session_date,starts_at,duration_minutes,subject,title,session_type,location,notes,tutor_registry_id,zoom_meeting_number,zoom_status,tutors(name,university,photo_url)",
+    );
+
+  sessionQuery =
+    profile?.role === "tutor" && profile.tutor_registry_id
+      ? sessionQuery.eq("tutor_registry_id", profile.tutor_registry_id)
+      : sessionQuery.eq("user_id", user.id);
+
+  const { data: sessionRows } = await sessionQuery
+    .order("session_date", { ascending: true })
+    .order("starts_at", { ascending: true });
 
   const sessions: PortalSession[] = (sessionRows ?? []).map((row) => {
     const tutor = Array.isArray(row.tutors) ? row.tutors[0] : row.tutors;
@@ -39,6 +48,8 @@ export default async function PortalPage() {
       location: row.location,
       notes: row.notes,
       tutorRegistryId: row.tutor_registry_id,
+      zoomMeetingNumber: row.zoom_meeting_number,
+      zoomStatus: row.zoom_status,
       tutor: tutor
         ? { name: tutor.name, university: tutor.university, photoUrl: tutor.photo_url }
         : null,
@@ -50,7 +61,12 @@ export default async function PortalPage() {
       user={{
         name: profile?.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "사용자",
         email: profile?.email || user.email || "",
-        role: profile?.role === "admin" ? "admin" : "user",
+        role:
+          profile?.role === "tutor"
+            ? "tutor"
+            : profile?.role === "admin"
+              ? "admin"
+              : "user",
       }}
       sessions={sessions}
     />
