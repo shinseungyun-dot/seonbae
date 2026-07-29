@@ -22,7 +22,7 @@ alter table public.profiles
 
 alter table public.profiles
   add constraint profiles_role_check
-    check (role in ('user', 'tutor', 'admin')),
+    check (role in ('user', 'parent', 'tutor', 'admin')),
   add column if not exists tutor_registry_id text
     references public.tutors(registry_id) on delete set null;
 
