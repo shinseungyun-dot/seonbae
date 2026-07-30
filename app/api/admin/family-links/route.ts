@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     .in("id", [parentId, studentId]);
   const parent = profiles?.find((profile) => profile.id === parentId);
   const student = profiles?.find((profile) => profile.id === studentId);
-  if (parent?.role !== "parent" || student?.role !== "user") {
+  if (parent?.role !== "parent" || student?.role !== "student") {
     return NextResponse.json(
       { error: "보호자 또는 학생 계정 역할이 올바르지 않습니다." },
       { status: 400 },

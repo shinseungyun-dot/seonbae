@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../../utils/supabase/server";
 import { normalizePhone } from "../../../../utils/auth/phone";
+import {
+  authRateLimitResponse,
+  consumeAuthRateLimit,
+} from "../../../../utils/auth/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +12,11 @@ type RecoveryAction = "find-id" | "reset-password";
 
 export async function POST(request: NextRequest) {
   const startedAt = Date.now();
+  const rateLimit = await consumeAuthRateLimit(request, "recovery");
+  if (!rateLimit.allowed) {
+    return authRateLimitResponse(rateLimit.retryAfterSeconds);
+  }
+
   let body: {
     action?: unknown;
     fullName?: unknown;

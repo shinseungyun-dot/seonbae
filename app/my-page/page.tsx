@@ -28,7 +28,14 @@ export default async function MyPage() {
       "사용자",
     email: profile?.email || user.email || "",
     phone: profile?.phone || null,
-    role: profile?.role === "admin" ? "admin" : "user",
+    role:
+      profile?.role === "admin"
+        ? "admin"
+        : profile?.role === "tutor"
+          ? "tutor"
+          : profile?.role === "parent"
+            ? "parent"
+            : "student",
     createdAt: profile?.created_at || user.created_at,
     privacyVersion: profile?.privacy_consent_version || null,
     privacyConsentedAt: profile?.privacy_consented_at || null,

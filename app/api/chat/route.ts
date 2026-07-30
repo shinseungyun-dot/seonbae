@@ -102,7 +102,7 @@ async function requireChatUser() {
     .eq("id", user.id)
     .single();
 
-  if (!profile || !["user", "tutor", "admin"].includes(profile.role)) {
+  if (!profile || !["student", "tutor", "admin"].includes(profile.role)) {
     return {
       error: NextResponse.json(
         { error: "학생과 튜터 계정에서만 채팅을 이용할 수 있습니다." },
@@ -128,7 +128,7 @@ async function getAccessibleThread(
 
   if (!thread) return null;
   if (profile.role === "admin") return thread;
-  if (profile.role === "user" && thread.student_id === userId) return thread;
+  if (profile.role === "student" && thread.student_id === userId) return thread;
   if (
     profile.role === "tutor"
     && profile.tutor_registry_id

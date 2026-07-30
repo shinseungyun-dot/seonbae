@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
+import {
+  authRateLimitResponse,
+  consumeAuthRateLimit,
+} from "../../../../utils/auth/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +12,11 @@ const adminLoginId = "ssapgoadmin";
 const adminAuthEmail = "ssapgoadmin@seonbae.internal";
 
 export async function POST(request: NextRequest) {
+  const rateLimit = await consumeAuthRateLimit(request, "authenticate");
+  if (!rateLimit.allowed) {
+    return authRateLimitResponse(rateLimit.retryAfterSeconds);
+  }
+
   let body: { identifier?: unknown; password?: unknown; remember?: unknown };
   try {
     body = await request.json();

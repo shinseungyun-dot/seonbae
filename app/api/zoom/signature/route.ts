@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     profile.role === "tutor"
     && Boolean(profile.tutor_registry_id)
     && profile.tutor_registry_id === session.tutor_registry_id;
-  const isStudent = profile.role === "user" && session.user_id === user.id;
+  const isStudent = profile.role === "student" && session.user_id === user.id;
   let isLinkedParent = false;
   if (profile.role === "parent") {
     const { data: familyLink } = await supabase

@@ -32,3 +32,17 @@
 :global(html[data-theme="dark"]) .chatLayout,:global(html[data-theme="dark"]) .chatConversation textarea,:global(html[data-theme="dark"]) .consultationCard,:global(html[data-theme="dark"]) .tutorSchedule article{background:var(--card);color:#e8edf5}:global(html[data-theme="dark"]) .chatThreads{background:#111b2b}:global(html[data-theme="dark"]) .chatConversation>header b{color:#edf3ff}:global(html[data-theme="dark"]) .chatMessages p{background:#263247;color:#edf3ff}
 
 @media(max-width:680px){.tutorSchedule article{grid-template-columns:1fr}.tutorSchedule article>a{justify-self:start}.tutorHistory article{grid-template-columns:1fr auto}.tutorHistory article p{grid-column:1/-1}.consultationIntro{font-size:.68rem}}
+
+/* Shared editorial workspace language. */
+.page{--navy:#09192f;--blue:#132a4b;--paper:#f4f0e7;--card:#fffdf8;--line:rgba(19,42,75,.14);--red:#c7443b;background:radial-gradient(820px 420px at 92% -7%,rgba(199,68,59,.10),transparent 62%),var(--paper)}
+.topbar{height:78px;background:rgba(255,253,248,.88)}
+.hero{border-radius:18px;background:linear-gradient(145deg,#132a4b,#09192f);box-shadow:0 28px 72px -44px rgba(9,25,47,.72)}
+.hero h1,.panelHeading h2,.sideHeading h2,.monthTitle,.brand b{font-family:"Gowun Batang","Noto Serif KR",serif}
+.sync{border-radius:12px}
+.panel{border-radius:16px;box-shadow:0 20px 50px -38px rgba(9,25,47,.48)}
+.days button,.lesson,.next,.calendarShell,.tutorSchedule article{border-radius:11px}
+.weekNav button{border-radius:9px}
+.account button,.adminLink,.tutorSchedule article>a{border-radius:10px}
+.profileMenu>div{border-radius:12px}
+.profileMenu>div a,.profileMenu>div button{border-radius:8px}
+@media(max-width:680px){.topbar{height:70px}.hero{border-radius:14px}}

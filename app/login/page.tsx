@@ -47,13 +47,14 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountRole, setAccountRole] = useState<"user" | "parent">("user");
+  const [accountRole, setAccountRole] = useState<"student" | "parent">("student");
   const [remember, setRemember] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
   const passwordChecks = useMemo(() => getPasswordChecks(password), [password]);
   const allRequiredAgreed = privacyAgreed && termsAgreed && ageConfirmed;
@@ -142,6 +143,55 @@ export default function LoginPage() {
     }
   }
 
+  async function handleGoogleAuth() {
+    setMessage("");
+
+    if (action === "signup") {
+      if (!normalizePhone(phone)) {
+        setMessage(
+          "Google 가입에도 올바른 휴대전화번호를 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.",
+        );
+        return;
+      }
+      if (!privacyAgreed || !termsAgreed || !ageConfirmed) {
+        setMessage("Google 가입에 필요한 필수 항목을 모두 확인하고 동의해 주세요.");
+        return;
+      }
+    }
+
+    setGoogleBusy(true);
+    try {
+      const response = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: action === "signup" ? "signup" : "signin",
+          accountRole,
+          phone,
+          privacyAgreed,
+          termsAgreed,
+          ageConfirmed,
+          next: new URLSearchParams(window.location.search).get("next") || "/portal",
+        }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || typeof result.url !== "string") {
+        setMessage(
+          result.error
+          || "Google 인증을 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        );
+        return;
+      }
+
+      window.location.assign(result.url);
+    } catch {
+      setMessage("Google 인증 서버에 연결하지 못했습니다. 네트워크를 확인해 주세요.");
+    } finally {
+      setGoogleBusy(false);
+    }
+  }
+
   function switchAction(nextAction: AuthAction) {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
@@ -152,7 +202,7 @@ export default function LoginPage() {
     setPhone("");
     setPassword("");
     setConfirmPassword("");
-    setAccountRole("user");
+    setAccountRole("student");
     setPrivacyAgreed(false);
     setTermsAgreed(false);
     setAgeConfirmed(false);
@@ -246,16 +296,31 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {action === "signin" && (
+              <>
+                <button
+                  className={styles.googleButton}
+                  type="button"
+                  onClick={handleGoogleAuth}
+                  disabled={busy || googleBusy}
+                >
+                  <GoogleIcon />
+                  <span>{googleBusy ? "Google 연결 중..." : "Google로 로그인"}</span>
+                </button>
+                <div className={styles.authDivider}><span>또는 이메일로</span></div>
+              </>
+            )}
+
             {isSignup && (
               <fieldset className={styles.accountRole}>
                 <legend>계정 유형</legend>
-                <label data-selected={accountRole === "user"}>
+                <label data-selected={accountRole === "student"}>
                   <input
                     type="radio"
                     name="account-role"
-                    value="user"
-                    checked={accountRole === "user"}
-                    onChange={() => setAccountRole("user")}
+                    value="student"
+                    checked={accountRole === "student"}
+                    onChange={() => setAccountRole("student")}
                   />
                   <span><b>학생</b><small>수업 일정과 튜터 채팅</small></span>
                 </label>
@@ -442,6 +507,27 @@ export default function LoginPage() {
                     </label>
                   </div>
                 </div>
+                <div className={styles.googleSignup}>
+                  <button
+                    className={styles.googleButton}
+                    type="button"
+                    onClick={handleGoogleAuth}
+                    disabled={busy || googleBusy}
+                  >
+                    <GoogleIcon />
+                    <span>
+                      {googleBusy ? "Google 연결 중..." : "Google 계정으로 회원가입"}
+                    </span>
+                  </button>
+                  <small>
+                    선택한 계정 유형, 휴대전화번호와 필수 동의를 저장하고 Google의
+                    이름·이메일로 가입합니다. 튜터 권한은 선배 명부 이메일이 확인된
+                    계정에만 자동 부여됩니다.
+                  </small>
+                </div>
+                <div className={styles.authDivider}>
+                  <span>또는 위 이메일과 비밀번호로 가입</span>
+                </div>
               </>
             )}
 
@@ -501,5 +587,28 @@ export default function LoginPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.91h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.4Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 22c2.7 0 4.98-.9 6.64-2.43l-3.24-2.54c-.9.6-2.05.96-3.4.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M6.39 13.86a6 6 0 0 1 0-3.72V7.52H3.04a10 10 0 0 0 0 8.96l3.35-2.62Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 6.01c1.47 0 2.79.5 3.83 1.5l2.88-2.88A9.66 9.66 0 0 0 12 2a10 10 0 0 0-8.96 5.52l3.35 2.62C7.18 7.77 9.39 6.01 12 6.01Z"
+      />
+    </svg>
   );
 }

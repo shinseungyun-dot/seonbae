@@ -40,7 +40,7 @@ export default async function AdminSessionsPage() {
       supabase
         .from("profiles")
         .select("id,full_name,email")
-        .eq("role", "user")
+        .eq("role", "student")
         .order("full_name", { ascending: true }),
       supabase
         .from("profiles")

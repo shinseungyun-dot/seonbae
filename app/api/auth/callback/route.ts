@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "../../../../utils/supabase/server";
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
+import {
+  decodeGoogleOnboarding,
+  GOOGLE_ONBOARDING_COOKIE,
+} from "../../../../utils/auth/google-onboarding";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +31,47 @@ export async function GET(request: NextRequest) {
 
   if (verified) {
     const cookieStore = await cookies();
+    const onboarding = decodeGoogleOnboarding(
+      cookieStore.get(GOOGLE_ONBOARDING_COOKIE)?.value,
+    );
+
+    if (onboarding) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
+        return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
+      }
+
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: {
+          ...user.user_metadata,
+          full_name:
+            user.user_metadata?.full_name
+            || user.user_metadata?.name
+            || null,
+          phone: onboarding.phone,
+          account_role: onboarding.role,
+          privacy_agreed: true,
+          privacy_consent_version: PRIVACY_POLICY_VERSION,
+          terms_agreed: true,
+          terms_version: TERMS_VERSION,
+          age_confirmed: true,
+        },
+      });
+
+      if (metadataError) {
+        cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
+        await supabase.auth.signOut({ scope: "local" });
+        return NextResponse.redirect(
+          new URL("/login?error=google-onboarding", request.nextUrl.origin),
+        );
+      }
+    }
+
+    cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
     cookieStore.set("seonbae-remember", "1", {
       httpOnly: true,
       sameSite: "lax",

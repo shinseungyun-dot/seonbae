@@ -134,7 +134,7 @@ export async function PATCH(request: NextRequest) {
     await auth.supabase
       .from("profiles")
       .update({
-        role: "user",
+        role: "student",
         tutor_registry_id: null,
         updated_at: new Date().toISOString(),
       })

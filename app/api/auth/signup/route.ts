@@ -4,10 +4,19 @@ import { createClient } from "../../../../utils/supabase/server";
 import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
 import { getPasswordPolicyError } from "../../../../utils/auth/password";
 import { normalizePhone } from "../../../../utils/auth/phone";
+import {
+  authRateLimitResponse,
+  consumeAuthRateLimit,
+} from "../../../../utils/auth/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const rateLimit = await consumeAuthRateLimit(request, "signup");
+  if (!rateLimit.allowed) {
+    return authRateLimitResponse(rateLimit.retryAfterSeconds);
+  }
+
   let body: {
     fullName?: unknown;
     email?: unknown;
@@ -29,7 +38,7 @@ export async function POST(request: NextRequest) {
   const phoneInput = typeof body.phone === "string" ? body.phone : "";
   const phone = normalizePhone(phoneInput);
   const password = typeof body.password === "string" ? body.password : "";
-  const accountRole = body.accountRole === "parent" ? "parent" : "user";
+  const accountRole = body.accountRole === "parent" ? "parent" : "student";
   const passwordError = getPasswordPolicyError(password);
   const privacyAgreed = body.privacyAgreed === true;
   const termsAgreed = body.termsAgreed === true;

@@ -29,7 +29,7 @@ export async function GET() {
         ? "tutor"
         : profile?.role === "parent"
           ? "parent"
-          : "user";
+          : "student";
   const metadataName =
     typeof user.user_metadata?.full_name === "string"
       ? user.user_metadata.full_name.trim()

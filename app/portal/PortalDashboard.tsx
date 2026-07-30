@@ -45,7 +45,7 @@ export type PortalConsultation = {
 type PortalUser = {
   name: string;
   email: string;
-  role: "user" | "parent";
+  role: "student" | "parent";
 };
 
 export default function PortalDashboard({

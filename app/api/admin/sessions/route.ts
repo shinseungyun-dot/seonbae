@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       .single(),
   ]);
 
-  if (!student || student.role !== "user") {
+  if (!student || student.role !== "student") {
     return NextResponse.json(
       { error: "선택한 학생 계정을 확인하지 못했습니다." },
       { status: 400 },

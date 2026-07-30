@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../../utils/supabase/server";
 import { getPasswordPolicyError } from "../../../../utils/auth/password";
+import {
+  authRateLimitResponse,
+  consumeAuthRateLimit,
+} from "../../../../utils/auth/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const rateLimit = await consumeAuthRateLimit(request, "password_update");
+  if (!rateLimit.allowed) {
+    return authRateLimitResponse(rateLimit.retryAfterSeconds);
+  }
+
   let body: { password?: unknown };
 
   try {
@@ -51,6 +60,11 @@ export async function POST(request: NextRequest) {
     .single();
 
   return NextResponse.json({
-    destination: profile?.role === "admin" ? "/admin" : "/portal",
+    destination:
+      profile?.role === "admin"
+        ? "/admin"
+        : profile?.role === "tutor"
+          ? "/portal/tutor"
+          : "/portal",
   });
 }

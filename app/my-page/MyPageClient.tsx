@@ -9,7 +9,7 @@ export type MyPageProfile = {
   name: string;
   email: string;
   phone: string | null;
-  role: "user" | "admin";
+  role: "student" | "parent" | "tutor" | "admin";
   createdAt: string;
   privacyVersion: string | null;
   privacyConsentedAt: string | null;
@@ -101,7 +101,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
           </span>
         </Link>
         <nav>
-          <Link href={profile.role === "admin" ? "/admin" : "/portal"}>포털</Link>
+          <Link href={portalDestination(profile.role)}>포털</Link>
           <button type="button" onClick={signOut} disabled={busy}>
             로그아웃
           </button>
@@ -158,7 +158,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
               </div>
               <div>
                 <dt>계정 유형</dt>
-                <dd>{profile.role === "admin" ? "관리자" : "사용자"}</dd>
+                <dd>{roleLabel(profile.role)}</dd>
               </div>
               <div>
                 <dt>가입일</dt>
@@ -243,7 +243,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
                 )}
               </div>
 
-              {profile.role === "user" && (
+              {profile.role !== "admin" && (
                 <form onSubmit={deleteAccount}>
                   <label>
                     <span>현재 비밀번호</span>
@@ -297,6 +297,19 @@ function initials(value: string) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
+}
+
+function portalDestination(role: MyPageProfile["role"]) {
+  if (role === "admin") return "/admin";
+  if (role === "tutor") return "/portal/tutor";
+  return "/portal";
+}
+
+function roleLabel(role: MyPageProfile["role"]) {
+  if (role === "admin") return "관리자";
+  if (role === "tutor") return "튜터";
+  if (role === "parent") return "보호자";
+  return "학생";
 }
 
 function formatDate(value: string | null) {

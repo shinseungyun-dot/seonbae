@@ -147,7 +147,7 @@ export default async function PortalPage() {
           || user.email?.split("@")[0]
           || "회원",
         email: profile?.email || user.email || "",
-        role: isParent ? "parent" : "user",
+        role: isParent ? "parent" : "student",
       }}
       sessions={sessions}
       consultations={consultations}
