@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import styles from "./portal.module.css";
 
 export type PortalHeaderUser = {
@@ -18,6 +19,11 @@ export default function PortalHeader({
   active?: "overview" | "family" | "reports" | "billing";
 }) {
   const router = useRouter();
+  const profileMenuRef = useRef<HTMLDetailsElement>(null);
+
+  function setProfileMenuOpen(open: boolean) {
+    if (profileMenuRef.current) profileMenuRef.current.open = open;
+  }
 
   async function signOut() {
     try {
@@ -60,8 +66,24 @@ export default function PortalHeader({
       )}
 
       <div className={styles.account}>
-        <details className={styles.profileMenu}>
-          <summary>
+        <details
+          ref={profileMenuRef}
+          className={styles.profileMenu}
+          onMouseEnter={() => setProfileMenuOpen(true)}
+          onMouseLeave={() => setProfileMenuOpen(false)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              setProfileMenuOpen(false);
+            }
+          }}
+        >
+          <summary
+            onClick={(event) => {
+              if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                event.preventDefault();
+              }
+            }}
+          >
             <span className={styles.avatar}>{initials(user.name)}</span>
             <span className={styles.accountMeta}>
               <small>로그인 계정</small>

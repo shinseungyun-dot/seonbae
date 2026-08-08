@@ -312,29 +312,52 @@ export default function LoginPage() {
             )}
 
             {isSignup && (
-              <fieldset className={styles.accountRole}>
-                <legend>계정 유형</legend>
-                <label data-selected={accountRole === "student"}>
-                  <input
-                    type="radio"
-                    name="account-role"
-                    value="student"
-                    checked={accountRole === "student"}
-                    onChange={() => setAccountRole("student")}
-                  />
-                  <span><b>학생 계정</b><small>수업 일정, Zoom, 튜터 채팅</small></span>
-                </label>
-                <label data-selected={accountRole === "parent"}>
-                  <input
-                    type="radio"
-                    name="account-role"
-                    value="parent"
-                    checked={accountRole === "parent"}
-                    onChange={() => setAccountRole("parent")}
-                  />
-                  <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
-                </label>
-              </fieldset>
+              <>
+                <div className={styles.googleSignup}>
+                  <button
+                    className={styles.googleButton}
+                    type="button"
+                    onClick={handleGoogleAuth}
+                    disabled={busy || googleBusy}
+                  >
+                    <GoogleIcon />
+                    <span>
+                      {googleBusy ? "Google 연결 중..." : "Google 계정으로 회원가입"}
+                    </span>
+                  </button>
+                  <small>
+                    아래 계정 유형, 휴대전화번호와 필수 동의를 먼저 입력하면 Google의
+                    이름·이메일로 가입합니다. 튜터 권한은 선배 명부 이메일이 확인된
+                    계정에만 자동 부여됩니다.
+                  </small>
+                </div>
+                <div className={styles.authDivider}>
+                  <span>또는 이메일과 비밀번호로 가입</span>
+                </div>
+                <fieldset className={styles.accountRole}>
+                  <legend>계정 유형</legend>
+                  <label data-selected={accountRole === "student"}>
+                    <input
+                      type="radio"
+                      name="account-role"
+                      value="student"
+                      checked={accountRole === "student"}
+                      onChange={() => setAccountRole("student")}
+                    />
+                    <span><b>학생 계정</b><small>수업 일정, Zoom, 튜터 채팅</small></span>
+                  </label>
+                  <label data-selected={accountRole === "parent"}>
+                    <input
+                      type="radio"
+                      name="account-role"
+                      value="parent"
+                      checked={accountRole === "parent"}
+                      onChange={() => setAccountRole("parent")}
+                    />
+                    <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
+                  </label>
+                </fieldset>
+              </>
             )}
 
             {(isSignup || isRecovery) && (
@@ -506,27 +529,6 @@ export default function LoginPage() {
                       <b>[필수]</b> 만 14세 이상이거나, 만 14세 미만 학생을 위한 법정대리인으로 가입합니다.
                     </label>
                   </div>
-                </div>
-                <div className={styles.googleSignup}>
-                  <button
-                    className={styles.googleButton}
-                    type="button"
-                    onClick={handleGoogleAuth}
-                    disabled={busy || googleBusy}
-                  >
-                    <GoogleIcon />
-                    <span>
-                      {googleBusy ? "Google 연결 중..." : "Google 계정으로 회원가입"}
-                    </span>
-                  </button>
-                  <small>
-                    선택한 계정 유형, 휴대전화번호와 필수 동의를 저장하고 Google의
-                    이름·이메일로 가입합니다. 튜터 권한은 선배 명부 이메일이 확인된
-                    계정에만 자동 부여됩니다.
-                  </small>
-                </div>
-                <div className={styles.authDivider}>
-                  <span>또는 위 이메일과 비밀번호로 가입</span>
                 </div>
               </>
             )}

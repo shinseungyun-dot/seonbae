@@ -184,6 +184,7 @@ body::after{
 .nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1)}
 .nav a[aria-current]{color:var(--blue);font-weight:600}
 .nav-drop{position:relative;display:flex;align-items:center}
+.nav-drop::after{content:"";position:absolute;left:-8px;right:-8px;top:100%;height:10px}
 .nav-drop-menu{
   position:absolute;left:50%;top:calc(100% + 8px);width:190px;padding:8px;
   border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.97);
@@ -215,6 +216,7 @@ body::after{
   background-size:200% 100%;animation:account-loading 1.1s linear infinite;
 }
 .account-profile{position:relative}
+.account-profile::after{content:"";position:absolute;left:-8px;right:-8px;top:100%;height:12px}
 .account-profile[hidden]{display:none}
 .account-identity{display:flex;flex-direction:column;justify-content:center;min-width:0;max-width:138px;padding:5px 18px 5px 10px;line-height:1.2;color:var(--blue);text-align:left;border:1px solid transparent;border-radius:10px;transition:background-color .2s var(--ease),border-color .2s var(--ease)}
 .account-identity::after{content:"⌄";position:absolute;right:5px;top:50%;font-size:.65rem;color:var(--ink-4);transform:translateY(-55%);transition:transform .2s var(--ease)}
@@ -2212,20 +2214,27 @@ html[data-theme="dark"] .marquee{background:var(--paper-2)}
       });
   }
   if (accountIdentity && accountMenu) {
-    accountIdentity.addEventListener('click', function(){
-      var open = accountMenu.hidden;
+    function setAccountMenuOpen(open){
       accountMenu.hidden = !open;
       accountIdentity.setAttribute('aria-expanded',open ? 'true' : 'false');
+    }
+    accountIdentity.addEventListener('click', function(event){
+      var finePointerClick = event.detail > 0 && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+      setAccountMenuOpen(finePointerClick ? true : accountMenu.hidden);
+    });
+    accountProfile.addEventListener('mouseenter', function(){ setAccountMenuOpen(true); });
+    accountProfile.addEventListener('mouseleave', function(){ setAccountMenuOpen(false); });
+    accountProfile.addEventListener('focusin', function(){ setAccountMenuOpen(true); });
+    accountProfile.addEventListener('focusout', function(event){
+      if (!accountProfile.contains(event.relatedTarget)) setAccountMenuOpen(false);
     });
     document.addEventListener('click', function(event){
       if (!accountProfile || accountProfile.hidden || accountProfile.contains(event.target)) return;
-      accountMenu.hidden = true;
-      accountIdentity.setAttribute('aria-expanded','false');
+      setAccountMenuOpen(false);
     });
     document.addEventListener('keydown', function(event){
       if (event.key !== 'Escape' || accountMenu.hidden) return;
-      accountMenu.hidden = true;
-      accountIdentity.setAttribute('aria-expanded','false');
+      setAccountMenuOpen(false);
       accountIdentity.focus();
     });
   }

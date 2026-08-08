@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { createClient } from "../../../utils/supabase/client";
 import ChatPanel, { type PortalChatThread } from "../ChatPanel";
 import styles from "../portal.module.css";
@@ -34,6 +35,11 @@ export default function TutorPortalDashboard({
   chatThreads: PortalChatThread[];
 }) {
   const router = useRouter();
+  const profileMenuRef = useRef<HTMLDetailsElement>(null);
+
+  function setProfileMenuOpen(open: boolean) {
+    if (profileMenuRef.current) profileMenuRef.current.open = open;
+  }
   const completed = sessions.filter(
     (session) => session.zoomStatus === "ended",
   );
@@ -72,8 +78,24 @@ export default function TutorPortalDashboard({
           </span>
         </Link>
         <div className={styles.account}>
-          <details className={styles.profileMenu}>
-            <summary>
+          <details
+            ref={profileMenuRef}
+            className={styles.profileMenu}
+            onMouseEnter={() => setProfileMenuOpen(true)}
+            onMouseLeave={() => setProfileMenuOpen(false)}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                setProfileMenuOpen(false);
+              }
+            }}
+          >
+            <summary
+              onClick={(event) => {
+                if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                  event.preventDefault();
+                }
+              }}
+            >
               <span className={styles.avatar}>{initials(tutor.name)}</span>
               <span className={styles.accountMeta}>
                 <small>{tutor.registryId}</small>
