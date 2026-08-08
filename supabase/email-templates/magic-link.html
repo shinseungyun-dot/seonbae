@@ -10,7 +10,7 @@
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#fcfaf5;border:1px solid #d8d1c5;border-radius:22px;overflow:hidden;">
             <tr>
               <td align="center" style="background:#0c1d3c;padding:13px 24px;color:#c9c1b3;font:700 11px Arial,sans-serif;letter-spacing:2px;">
-                EDUCATION TO THE WORLD — SEONBAE 2026
+                EDUCATION TO THE WORLD - SEONBAE 2026
               </td>
             </tr>
             <tr>
@@ -35,12 +35,16 @@
                 <h1 style="margin:13px 0 16px;color:#102a59;font:700 32px/1.35 Georgia,'Times New Roman',serif;letter-spacing:-1px;">계정에 안전하게<br>접속하세요.</h1>
                 <p style="margin:0;color:#596070;font:15px/1.8 Arial,'Apple SD Gothic Neo',sans-serif;">
                   아이디 찾기 또는 계정 접속 요청이 확인되었습니다. 등록된 계정은
-                  <strong style="color:#16213a;">{{ .Email }}</strong>이며, 아래 링크를 통해 비밀번호 입력 없이 포털로 이동할 수 있습니다.
+                  <strong style="color:#16213a;">{{ .Email }}</strong>입니다. 요청 화면에 아래 일회용 인증번호를 입력하거나 승인 링크를 눌러 주세요.
                 </p>
+                <div style="margin:24px 0 4px;padding:18px 20px;border:1px solid #d8d1c5;border-radius:14px;background:#f2eee7;text-align:center;">
+                  <div style="color:#777e8b;font:700 10px Arial,sans-serif;letter-spacing:2px;">ONE-TIME VERIFICATION CODE</div>
+                  <div style="margin-top:9px;color:#102a59;font:700 30px 'Courier New',monospace;letter-spacing:8px;">{{ .Token }}</div>
+                </div>
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:28px 0 24px;">
                   <tr>
                     <td bgcolor="#c23a32" style="border-radius:999px;">
-                      <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:16px 26px;color:#ffffff;text-decoration:none;font:700 14px Arial,'Apple SD Gothic Neo',sans-serif;">선배 포털 접속하기 &nbsp;↗</a>
+                      <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:16px 26px;color:#ffffff;text-decoration:none;font:700 14px Arial,'Apple SD Gothic Neo',sans-serif;">일회용 승인 링크 열기 &nbsp;↗</a>
                     </td>
                   </tr>
                 </table>

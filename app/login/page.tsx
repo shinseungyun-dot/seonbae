@@ -24,7 +24,7 @@ const actionCopy: Record<
   },
   signup: {
     title: "회원가입",
-    description: "선배 포털에서 수업 일정과 튜터 정보를 확인하세요.",
+    description: "학생 또는 보호자 계정을 선택하고 전용 포털을 시작하세요.",
     submit: "회원가입",
   },
   "find-id": {
@@ -322,7 +322,7 @@ export default function LoginPage() {
                     checked={accountRole === "student"}
                     onChange={() => setAccountRole("student")}
                   />
-                  <span><b>학생</b><small>수업 일정과 튜터 채팅</small></span>
+                  <span><b>학생 계정</b><small>수업 일정, Zoom, 튜터 채팅</small></span>
                 </label>
                 <label data-selected={accountRole === "parent"}>
                   <input
@@ -332,7 +332,7 @@ export default function LoginPage() {
                     checked={accountRole === "parent"}
                     onChange={() => setAccountRole("parent")}
                   />
-                  <span><b>보호자</b><small>자녀 수업과 선배팀 상담</small></span>
+                  <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
                 </label>
               </fieldset>
             )}

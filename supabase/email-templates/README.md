@@ -8,5 +8,8 @@ These files mirror the hosted Supabase Auth templates used in production.
 | Magic link | `[선배] 안전한 계정 접속 링크` | `magic-link.html` |
 | Reset password | `[선배] 비밀번호 재설정 안내` | `reset-password.html` |
 
-The templates use Supabase's `{{ .ConfirmationURL }}` and `{{ .Email }}`
-variables. Keep the production dashboard copies synchronized with these files.
+The templates use Supabase's `{{ .ConfirmationURL }}`, `{{ .Token }}`, and
+`{{ .Email }}` variables. Keep the production dashboard copies synchronized
+with these files. The magic-link template must show `{{ .Token }}` because
+parent linking and billing re-verification accept either the numeric email OTP
+or the one-time approval link.

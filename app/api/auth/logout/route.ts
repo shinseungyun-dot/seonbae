@@ -10,6 +10,7 @@ export async function POST() {
 
   const cookieStore = await cookies();
   cookieStore.delete("seonbae-remember");
+  cookieStore.delete("seonbae-billing-access");
 
   return NextResponse.json(
     { authenticated: false, destination: "/#/ko/home" },

@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "../../utils/supabase/client";
 import ChatPanel, { type PortalChatThread } from "./ChatPanel";
+import PortalHeader, { type PortalHeaderUser } from "./PortalHeader";
 import styles from "./portal.module.css";
 
 export type PortalSession = {
@@ -42,11 +41,7 @@ export type PortalConsultation = {
   zoomStatus: string;
 };
 
-type PortalUser = {
-  name: string;
-  email: string;
-  role: "student" | "parent";
-};
+type PortalUser = PortalHeaderUser;
 
 export default function PortalDashboard({
   currentUserId,
@@ -63,7 +58,6 @@ export default function PortalDashboard({
   chatThreads: PortalChatThread[];
   linkedStudentCount: number;
 }) {
-  const router = useRouter();
   const [visibleMonth, setVisibleMonth] = useState(() => initialVisibleMonth());
   const [selectedDate, setSelectedDate] = useState(() => initialDateKey());
 
@@ -111,15 +105,9 @@ export default function PortalDashboard({
     if (!sameMonth(date, visibleMonth)) setVisibleMonth(startOfMonth(date));
   }
 
-  async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login");
-    router.refresh();
-  }
-
   return (
     <main className={styles.page}>
-      <PortalHeader user={user} onSignOut={signOut} />
+      <PortalHeader user={user} />
 
       <section className={styles.content}>
         <div className={styles.hero}>
@@ -179,6 +167,26 @@ export default function PortalDashboard({
             기준
           </time>
         </div>
+
+        {user.role === "parent" && (
+          <section className={styles.parentActions} aria-label="보호자 주요 메뉴">
+            <div>
+              <strong>
+                {linkedStudentCount > 0
+                  ? `${linkedStudentCount}명의 학생 계정이 연결되어 있습니다.`
+                  : "학생 계정을 먼저 연결해 주세요."}
+              </strong>
+              <span>
+                OTP 확인 후 학생 일정, 수업 리포트, 결제 내역을 함께 관리할 수 있습니다.
+              </span>
+            </div>
+            <nav>
+              <Link href="/portal/family">학생 연결</Link>
+              <Link href="/portal/reports">수업 리포트</Link>
+              <Link href="/portal/billing">결제 내역</Link>
+            </nav>
+          </section>
+        )}
 
         <div className={styles.dashboard}>
           <section className={styles.panel}>
@@ -375,51 +383,6 @@ export default function PortalDashboard({
         )}
       </section>
     </main>
-  );
-}
-
-function PortalHeader({
-  user,
-  onSignOut,
-}: {
-  user: PortalUser;
-  onSignOut: () => void;
-}) {
-  return (
-    <header className={styles.topbar}>
-      <Link className={styles.brand} href="/#/ko/home">
-        <img src="/seonbae-logo-antique.png" alt="" />
-        <span>
-          <b>선배</b>
-          <small>{user.role === "parent" ? "FAMILY PORTAL" : "STUDENT PORTAL"}</small>
-        </span>
-      </Link>
-      <div className={styles.account}>
-        <details className={styles.profileMenu}>
-          <summary>
-            <span className={styles.avatar}>{initials(user.name)}</span>
-            <span className={styles.accountMeta}>
-              <small>로그인 계정</small>
-              <b>{user.name}</b>
-            </span>
-            <span className={styles.profileChevron} aria-hidden="true">
-              ▾
-            </span>
-          </summary>
-          <div>
-            <Link href="/my-page#info">내 정보</Link>
-            <Link href="/my-page#policies">정책</Link>
-            <Link href="/my-page#settings">설정</Link>
-            <button type="button" onClick={onSignOut}>
-              로그아웃
-            </button>
-          </div>
-        </details>
-        <button type="button" onClick={onSignOut}>
-          로그아웃
-        </button>
-      </div>
-    </header>
   );
 }
 
