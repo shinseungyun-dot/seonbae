@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../../utils/supabase/server";
-import { normalizePhone } from "../../../../utils/auth/phone";
-import {
-  encodeGoogleOnboarding,
-  GOOGLE_ONBOARDING_COOKIE,
-  type GoogleOnboarding,
-} from "../../../../utils/auth/google-onboarding";
 import {
   authRateLimitResponse,
   consumeAuthRateLimit,
@@ -43,36 +37,14 @@ export async function POST(request: NextRequest) {
     return authRateLimitResponse(rateLimit.retryAfterSeconds);
   }
 
-  let onboarding: GoogleOnboarding | null = null;
-
   if (mode === "signup") {
-    const phone = normalizePhone(
-      typeof body.phone === "string" ? body.phone : "",
+    return NextResponse.json(
+      {
+        error:
+          "신규 가입은 .ac.kr 학교 이메일과 합격통지서 심사가 필요합니다. 이메일 가입 신청서를 이용해 주세요.",
+      },
+      { status: 400 },
     );
-    if (!phone) {
-      return NextResponse.json(
-        { error: "Google 가입에도 올바른 휴대전화번호가 필요합니다." },
-        { status: 400 },
-      );
-    }
-    if (
-      body.privacyAgreed !== true
-      || body.termsAgreed !== true
-      || body.ageConfirmed !== true
-    ) {
-      return NextResponse.json(
-        { error: "Google 가입에 필요한 필수 동의를 모두 확인해 주세요." },
-        { status: 400 },
-      );
-    }
-
-    onboarding = {
-      role: body.accountRole === "parent" ? "parent" : "student",
-      phone,
-      privacyAgreed: true,
-      termsAgreed: true,
-      ageConfirmed: true,
-    };
   }
 
   const callbackUrl = new URL("/api/auth/callback", request.nextUrl.origin);
@@ -109,22 +81,6 @@ export async function POST(request: NextRequest) {
       },
     },
   );
-
-  if (onboarding) {
-    response.cookies.set(
-      GOOGLE_ONBOARDING_COOKIE,
-      encodeGoogleOnboarding(onboarding),
-      {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 10 * 60,
-      },
-    );
-  } else {
-    response.cookies.delete(GOOGLE_ONBOARDING_COOKIE);
-  }
 
   return response;
 }

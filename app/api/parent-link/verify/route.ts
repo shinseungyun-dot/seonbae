@@ -32,11 +32,11 @@ export async function POST(request: NextRequest) {
   }
   const { data: profiles } = await admin
     .from("profiles")
-    .select("id,email,phone,role")
+    .select("id,email,phone,role,account_status")
     .in("id", [challenge.parentId, challenge.studentId]);
   const parent = profiles?.find((profile) => profile.id === challenge.parentId);
   const student = profiles?.find((profile) => profile.id === challenge.studentId);
-  if (parent?.role !== "parent" || student?.role !== "student") {
+  if (parent?.role !== "parent" || student?.role !== "student" || parent.account_status !== "approved" || student.account_status !== "approved") {
     return errorResponse("인증번호가 올바르지 않거나 만료되었습니다.", 400);
   }
 

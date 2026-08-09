@@ -18,7 +18,7 @@ export async function GET() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,email,role")
+    .select("full_name,email,role,account_status")
     .eq("id", user.id)
     .single();
 
@@ -48,7 +48,9 @@ export async function GET() {
       displayName,
       email: profile?.email || user.email || null,
       destination:
-        role === "admin"
+        role !== "admin" && profile?.account_status !== "approved"
+          ? "/portal/pending"
+          : role === "admin"
           ? "/admin"
           : role === "tutor"
             ? "/portal/tutor"

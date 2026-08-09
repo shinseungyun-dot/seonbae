@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
-import { createClient } from "../../../utils/supabase/client";
 import ChatPanel, { type PortalChatThread } from "../ChatPanel";
 import styles from "../portal.module.css";
+import TutorPortalHeader from "./TutorPortalHeader";
 
 export type TutorPortalSession = {
   id: number;
@@ -34,12 +32,6 @@ export default function TutorPortalDashboard({
   sessions: TutorPortalSession[];
   chatThreads: PortalChatThread[];
 }) {
-  const router = useRouter();
-  const profileMenuRef = useRef<HTMLDetailsElement>(null);
-
-  function setProfileMenuOpen(open: boolean) {
-    if (profileMenuRef.current) profileMenuRef.current.open = open;
-  }
   const completed = sessions.filter(
     (session) => session.zoomStatus === "ended",
   );
@@ -61,62 +53,9 @@ export default function TutorPortalDashboard({
         >= Date.now() - 30 * 60 * 1000,
   );
 
-  async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login");
-    router.refresh();
-  }
-
   return (
     <main className={styles.page}>
-      <header className={styles.topbar}>
-        <Link className={styles.brand} href="/#/ko/home">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span>
-            <b>선배</b>
-            <small>TUTOR PORTAL</small>
-          </span>
-        </Link>
-        <div className={styles.account}>
-          <details
-            ref={profileMenuRef}
-            className={styles.profileMenu}
-            onMouseEnter={() => setProfileMenuOpen(true)}
-            onMouseLeave={() => setProfileMenuOpen(false)}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                setProfileMenuOpen(false);
-              }
-            }}
-          >
-            <summary
-              onClick={(event) => {
-                if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                  event.preventDefault();
-                }
-              }}
-            >
-              <span className={styles.avatar}>{initials(tutor.name)}</span>
-              <span className={styles.accountMeta}>
-                <small>{tutor.registryId}</small>
-                <b>{tutor.name}</b>
-              </span>
-              <span className={styles.profileChevron}>▾</span>
-            </summary>
-            <div>
-              <Link href="/my-page#info">내 정보</Link>
-              <Link href="/my-page#policies">정책</Link>
-              <Link href="/my-page#settings">설정</Link>
-              <button type="button" onClick={signOut}>
-                로그아웃
-              </button>
-            </div>
-          </details>
-          <button type="button" onClick={signOut}>
-            로그아웃
-          </button>
-        </div>
-      </header>
+      <TutorPortalHeader tutor={tutor} />
 
       <section className={styles.content}>
         <div className={styles.hero}>
@@ -247,15 +186,4 @@ function formatMinutes(value: number) {
   if (!value) return "0h";
   const hours = value / 60;
   return Number.isInteger(hours) ? `${hours}h` : `${hours.toFixed(1)}h`;
-}
-
-function initials(value: string) {
-  const clean = value.trim();
-  if (/^[가-힣]/.test(clean)) return clean.slice(-2);
-  return clean
-    .split(/\s+/)
-    .map((word) => word[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 }

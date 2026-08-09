@@ -20,9 +20,10 @@ export default async function BillingPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,email,phone,role")
+    .select("full_name,email,phone,role,account_status")
     .eq("id", user.id)
     .single();
+  if (profile?.account_status !== "approved") redirect("/portal/pending");
   if (profile?.role !== "parent") redirect("/portal");
 
   const cookieStore = await cookies();

@@ -14,9 +14,10 @@ export default async function ReportsPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,email,role")
+    .select("full_name,email,role,account_status")
     .eq("id", user.id)
     .single();
+  if (profile?.account_status !== "approved") redirect("/portal/pending");
   if (profile?.role !== "parent") redirect("/portal");
 
   const { data: links } = await supabase

@@ -27,10 +27,10 @@ export async function POST(request: NextRequest) {
 
   const { data: parent } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role,account_status")
     .eq("id", user.id)
     .single();
-  if (parent?.role !== "parent") return errorResponse("보호자 계정만 이용할 수 있습니다.", 403);
+  if (parent?.role !== "parent" || parent.account_status !== "approved") return errorResponse("승인된 보호자 계정만 이용할 수 있습니다.", 403);
 
   const body = await request.json().catch(() => ({}));
   const method = body.method === "phone" ? "phone" : "email";
@@ -49,8 +49,9 @@ export async function POST(request: NextRequest) {
 
   const query = admin
     .from("profiles")
-    .select("id,email,phone,role")
+    .select("id,email,phone,role,account_status")
     .eq("role", "student")
+    .eq("account_status", "approved")
     .eq(method === "phone" ? "phone" : "email", target)
     .order("created_at", { ascending: true })
     .limit(1);

@@ -62,6 +62,15 @@
 @media(prefers-reduced-motion:reduce){.portalNav a{transition:none}}
 
 /* Keep account dropdown above portal hero and preserve hover path to menu. */
+
+/* Final dark-theme contrast pass: brighter neutral copy and a cleaner sans face. */
+:global(html[data-theme="dark"]) .page{--paper:#0b1220;--card:#172235;--line:rgba(231,237,247,.22);--blue:#f4f7fb;--muted:#c2ccda;color:#f7f9fc;font-family:"DM Sans","Pretendard","Noto Sans KR",sans-serif}
+:global(html[data-theme="dark"]) .topbar{background:#111c2d;border-color:var(--line)}
+:global(html[data-theme="dark"]) .brand b,:global(html[data-theme="dark"]) .hero h1,:global(html[data-theme="dark"]) .panelHeading h2,:global(html[data-theme="dark"]) .sideHeading h2,:global(html[data-theme="dark"]) .lesson h3,:global(html[data-theme="dark"]) .next h3,:global(html[data-theme="dark"]) .tutorSchedule h3,:global(html[data-theme="dark"]) .tutorHistory b,:global(html[data-theme="dark"]) .consultationCard h3{color:#fff}
+:global(html[data-theme="dark"]) .hero>div>span,:global(html[data-theme="dark"]) .sync p,:global(html[data-theme="dark"]) .lesson p,:global(html[data-theme="dark"]) .next p,:global(html[data-theme="dark"]) .tutorDetail small,:global(html[data-theme="dark"]) .tutorDetail p,:global(html[data-theme="dark"]) .sideEmpty,:global(html[data-theme="dark"]) .chatLive,:global(html[data-theme="dark"]) .consultationIntro,:global(html[data-theme="dark"]) .consultationCard p,:global(html[data-theme="dark"]) .tutorSchedule p,:global(html[data-theme="dark"]) .tutorHistory span,:global(html[data-theme="dark"]) .tutorHistory p{color:#c7d1df}
+:global(html[data-theme="dark"]) .lesson time small,:global(html[data-theme="dark"]) .calendarWeekdays span,:global(html[data-theme="dark"]) .monthNav span,:global(html[data-theme="dark"]) .accountMeta small,:global(html[data-theme="dark"]) .chatConversation>header span,:global(html[data-theme="dark"]) .chatMessages time{color:#aebbd0}
+:global(html[data-theme="dark"]) .days button,:global(html[data-theme="dark"]) .calendarGrid button,:global(html[data-theme="dark"]) .lesson,:global(html[data-theme="dark"]) .consultationCard,:global(html[data-theme="dark"]) .tutorSchedule article,:global(html[data-theme="dark"]) .chatConversation textarea{border-color:var(--line)}
+:global(html[data-theme="dark"]) .portalNav a{color:#d3dbe8}:global(html[data-theme="dark"]) .portalNav a:hover{color:#fff}:global(html[data-theme="dark"]) .portalNav a[aria-current=page]{background:#f4f7fb;color:#0b1220}
 .topbar{position:relative;z-index:100;overflow:visible}
 .profileMenu{z-index:101}
 .profileMenu[open]::after{content:"";position:absolute;z-index:109;top:100%;right:-8px;width:calc(100% + 16px);height:12px}

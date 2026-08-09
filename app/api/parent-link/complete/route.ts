@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
 
   const { data: profiles } = await admin
     .from("profiles")
-    .select("id,role")
+    .select("id,role,account_status")
     .in("id", [challenge.parentId, challenge.studentId]);
   const parent = profiles?.find((profile) => profile.id === challenge.parentId);
   const student = profiles?.find((profile) => profile.id === challenge.studentId);
-  if (parent?.role !== "parent" || student?.role !== "student") {
+  if (parent?.role !== "parent" || student?.role !== "student" || parent.account_status !== "approved" || student.account_status !== "approved") {
     return errorResponse("연결할 계정 정보를 확인할 수 없습니다.", 400);
   }
 

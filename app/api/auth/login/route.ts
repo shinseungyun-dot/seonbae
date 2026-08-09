@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role,account_status")
     .eq("id", data.user.id)
     .single();
 
@@ -74,7 +74,9 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     destination:
-      profile?.role === "admin"
+      profile?.role !== "admin" && profile?.account_status !== "approved"
+        ? "/portal/pending"
+        : profile?.role === "admin"
         ? "/admin"
         : profile?.role === "tutor"
           ? "/portal/tutor"

@@ -18,11 +18,12 @@ export default async function PortalPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,email,role,tutor_registry_id")
+    .select("full_name,email,role,tutor_registry_id,account_status")
     .eq("id", user.id)
     .single();
 
   if (profile?.role === "admin") redirect("/admin");
+  if (profile?.account_status !== "approved") redirect("/portal/pending");
   if (profile?.role === "tutor") redirect("/portal/tutor");
 
   const isParent = profile?.role === "parent";

@@ -165,6 +165,7 @@ export default function AdminSessionManager({
           <span>MANAGEMENT</span>
           <Link href="/admin">튜터 명부</Link>
           <Link className={styles.active} href="/admin/sessions">수업 · Zoom 관리</Link>
+          <Link href="/admin/applications">가입 · 검증 심사</Link>
           <Link href="/#/ko/tutors">공개 명부 보기</Link>
         </nav>
         <div className={styles.adminAccount}>

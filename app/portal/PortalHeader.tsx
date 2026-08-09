@@ -16,7 +16,7 @@ export default function PortalHeader({
   active = "overview",
 }: {
   user: PortalHeaderUser;
-  active?: "overview" | "family" | "reports" | "billing";
+  active?: "overview" | "homework" | "tutors" | "family" | "reports" | "billing";
 }) {
   const router = useRouter();
   const profileMenuRef = useRef<HTMLDetailsElement>(null);
@@ -48,11 +48,23 @@ export default function PortalHeader({
         </span>
       </Link>
 
-      {user.role === "parent" && (
-        <nav className={styles.portalNav} aria-label="보호자 포털 메뉴">
+      <nav
+        className={styles.portalNav}
+        aria-label={user.role === "parent" ? "보호자 포털 메뉴" : "학생 포털 메뉴"}
+      >
           <Link href="/portal" aria-current={active === "overview" ? "page" : undefined}>
-            일정
+            {user.role === "parent" ? "가족 일정" : "오늘 · 일정"}
           </Link>
+          <Link href="/portal/homework" aria-current={active === "homework" ? "page" : undefined}>
+            숙제
+          </Link>
+          {user.role === "student" && (
+            <Link href="/portal/tutors" aria-current={active === "tutors" ? "page" : undefined}>
+              내 튜터
+            </Link>
+          )}
+          {user.role === "parent" && (
+            <>
           <Link href="/portal/family" aria-current={active === "family" ? "page" : undefined}>
             학생 연결
           </Link>
@@ -62,8 +74,9 @@ export default function PortalHeader({
           <Link href="/portal/billing" aria-current={active === "billing" ? "page" : undefined}>
             결제
           </Link>
-        </nav>
-      )}
+            </>
+          )}
+      </nav>
 
       <div className={styles.account}>
         <details

@@ -23,9 +23,9 @@ const actionCopy: Record<
     submit: "로그인",
   },
   signup: {
-    title: "회원가입",
-    description: "학생 또는 보호자 계정을 선택하고 전용 포털을 시작하세요.",
-    submit: "회원가입",
+    title: "가입 심사 신청",
+    description: ".ac.kr 학교 이메일과 합격통지서를 제출하면 선배 팀이 계정을 확인합니다.",
+    submit: "가입 심사 요청",
   },
   "find-id": {
     title: "아이디 찾기",
@@ -47,7 +47,8 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountRole, setAccountRole] = useState<"student" | "parent">("student");
+  const [accountRole, setAccountRole] = useState<"student" | "parent" | "tutor">("student");
+  const [acceptanceLetter, setAcceptanceLetter] = useState<File | null>(null);
   const [remember, setRemember] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -76,6 +77,16 @@ export default function LoginPage() {
         setBusy(false);
         return;
       }
+      if (!/^[^\s@]+@[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\.ac\.kr$/i.test(identifier)) {
+        setMessage(".ac.kr로 끝나는 학교 이메일을 입력해 주세요.");
+        setBusy(false);
+        return;
+      }
+      if (!acceptanceLetter) {
+        setMessage("학교 합격통지서를 PDF, JPG 또는 PNG로 첨부해 주세요.");
+        setBusy(false);
+        return;
+      }
       if (!normalizePhone(phone)) {
         setMessage("휴대전화번호를 올바르게 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.");
         setBusy(false);
@@ -94,33 +105,35 @@ export default function LoginPage() {
         : action === "signin"
           ? "/api/auth/login"
           : "/api/auth/recovery";
-    const body =
-      action === "signup"
-        ? {
-            fullName,
-            email: identifier,
-            phone,
-            password,
-            accountRole,
-            privacyAgreed,
-            termsAgreed,
-            ageConfirmed,
-          }
-        : action === "signin"
-          ? { identifier, password, remember }
-          : {
-              action,
-              fullName,
-              phone,
-              ...(action === "reset-password" ? { email: identifier } : {}),
-            };
+    const body = action === "signin"
+      ? { identifier, password, remember }
+      : {
+          action,
+          fullName,
+          phone,
+          ...(action === "reset-password" ? { email: identifier } : {}),
+        };
 
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const signupForm = new FormData();
+      if (action === "signup" && acceptanceLetter) {
+        signupForm.set("fullName", fullName);
+        signupForm.set("email", identifier);
+        signupForm.set("phone", phone);
+        signupForm.set("password", password);
+        signupForm.set("accountRole", accountRole);
+        signupForm.set("privacyAgreed", String(privacyAgreed));
+        signupForm.set("termsAgreed", String(termsAgreed));
+        signupForm.set("ageConfirmed", String(ageConfirmed));
+        signupForm.set("acceptanceLetter", acceptanceLetter);
+      }
+      const response = await fetch(endpoint, action === "signup"
+        ? { method: "POST", body: signupForm }
+        : {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
       const result = await response.json();
 
       if (!response.ok) {
@@ -146,18 +159,7 @@ export default function LoginPage() {
   async function handleGoogleAuth() {
     setMessage("");
 
-    if (action === "signup") {
-      if (!normalizePhone(phone)) {
-        setMessage(
-          "Google 가입에도 올바른 휴대전화번호를 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.",
-        );
-        return;
-      }
-      if (!privacyAgreed || !termsAgreed || !ageConfirmed) {
-        setMessage("Google 가입에 필요한 필수 항목을 모두 확인하고 동의해 주세요.");
-        return;
-      }
-    }
+    if (action === "signup") return;
 
     setGoogleBusy(true);
     try {
@@ -165,12 +167,7 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mode: action === "signup" ? "signup" : "signin",
-          accountRole,
-          phone,
-          privacyAgreed,
-          termsAgreed,
-          ageConfirmed,
+          mode: "signin",
           next: new URLSearchParams(window.location.search).get("next") || "/portal",
         }),
       });
@@ -203,6 +200,7 @@ export default function LoginPage() {
     setPassword("");
     setConfirmPassword("");
     setAccountRole("student");
+    setAcceptanceLetter(null);
     setPrivacyAgreed(false);
     setTermsAgreed(false);
     setAgeConfirmed(false);
@@ -313,26 +311,9 @@ export default function LoginPage() {
 
             {isSignup && (
               <>
-                <div className={styles.googleSignup}>
-                  <button
-                    className={styles.googleButton}
-                    type="button"
-                    onClick={handleGoogleAuth}
-                    disabled={busy || googleBusy}
-                  >
-                    <GoogleIcon />
-                    <span>
-                      {googleBusy ? "Google 연결 중..." : "Google 계정으로 회원가입"}
-                    </span>
-                  </button>
-                  <small>
-                    아래 계정 유형, 휴대전화번호와 필수 동의를 먼저 입력하면 Google의
-                    이름·이메일로 가입합니다. 튜터 권한은 선배 명부 이메일이 확인된
-                    계정에만 자동 부여됩니다.
-                  </small>
-                </div>
-                <div className={styles.authDivider}>
-                  <span>또는 이메일과 비밀번호로 가입</span>
+                <div className={styles.reviewNotice}>
+                  <b>입학 확인 후 계정이 열립니다.</b>
+                  <span>신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.</span>
                 </div>
                 <fieldset className={styles.accountRole}>
                   <legend>계정 유형</legend>
@@ -355,6 +336,16 @@ export default function LoginPage() {
                       onChange={() => setAccountRole("parent")}
                     />
                     <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
+                  </label>
+                  <label data-selected={accountRole === "tutor"}>
+                    <input
+                      type="radio"
+                      name="account-role"
+                      value="tutor"
+                      checked={accountRole === "tutor"}
+                      onChange={() => setAccountRole("tutor")}
+                    />
+                    <span><b>튜터 계정</b><small>학생, 숙제, 자격 검증 관리</small></span>
                   </label>
                 </fieldset>
               </>
@@ -388,6 +379,26 @@ export default function LoginPage() {
                   maxLength={254}
                   required
                 />
+                {isSignup && (
+                  <small className={styles.fieldNote}>
+                    대학 또는 학교가 발급한 <b>.ac.kr</b> 이메일만 사용할 수 있습니다.
+                  </small>
+                )}
+              </label>
+            )}
+
+            {isSignup && (
+              <label className={styles.fileField}>
+                <span>학교 합격통지서</span>
+                <input
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                  onChange={(event) => setAcceptanceLetter(event.target.files?.[0] || null)}
+                  required
+                />
+                <small className={styles.fieldNote}>
+                  PDF, JPG 또는 PNG · 최대 10MB · 심사팀만 열람합니다.
+                </small>
               </label>
             )}
 
@@ -462,11 +473,11 @@ export default function LoginPage() {
                   <dl>
                     <div>
                       <dt>수집 항목</dt>
-                      <dd>이름, 이메일, 휴대전화번호, 인증·동의 기록</dd>
+                      <dd>이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록</dd>
                     </div>
                     <div>
                       <dt>이용 목적</dt>
-                      <dd>회원 관리, 포털 제공, 등록 이메일을 통한 계정 복구, 비밀번호 재설정</dd>
+                      <dd>입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정</dd>
                     </div>
                     <div>
                       <dt>보유 기간</dt>

@@ -1,52 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "../../../../utils/supabase/server";
+import { sendAdmissionsAccountReviewEmail } from "../../../../utils/email/admissions";
 import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
 import { getPasswordPolicyError } from "../../../../utils/auth/password";
 import { normalizePhone } from "../../../../utils/auth/phone";
+import { isKoreanSchoolEmail } from "../../../../utils/auth/school-email";
 import {
   authRateLimitResponse,
   consumeAuthRateLimit,
 } from "../../../../utils/auth/rate-limit";
+import { createAdminClient } from "../../../../utils/supabase/admin";
+import { createClient } from "../../../../utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
+const MAX_DOCUMENT_BYTES = 10 * 1024 * 1024;
+const ALLOWED_DOCUMENT_TYPES = new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+]);
+type AccountRole = "student" | "parent" | "tutor";
+
 export async function POST(request: NextRequest) {
   const rateLimit = await consumeAuthRateLimit(request, "signup");
-  if (!rateLimit.allowed) {
-    return authRateLimitResponse(rateLimit.retryAfterSeconds);
-  }
+  if (!rateLimit.allowed) return authRateLimitResponse(rateLimit.retryAfterSeconds);
 
-  let body: {
-    fullName?: unknown;
-    email?: unknown;
-    phone?: unknown;
-    password?: unknown;
-    accountRole?: unknown;
-    privacyAgreed?: unknown;
-    termsAgreed?: unknown;
-    ageConfirmed?: unknown;
-  };
+  let form: FormData;
   try {
-    body = await request.json();
+    form = await request.formData();
   } catch {
-    return NextResponse.json({ error: "가입 정보를 다시 확인해 주세요." }, { status: 400 });
+    return NextResponse.json(
+      { error: "가입 신청서와 합격통지서를 다시 확인해 주세요." },
+      { status: 400 },
+    );
   }
 
-  const fullName = typeof body.fullName === "string" ? body.fullName.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-  const phoneInput = typeof body.phone === "string" ? body.phone : "";
-  const phone = normalizePhone(phoneInput);
-  const password = typeof body.password === "string" ? body.password : "";
-  const accountRole = body.accountRole === "parent" ? "parent" : "student";
+  const fullName = formText(form, "fullName").slice(0, 80);
+  const email = formText(form, "email").toLowerCase();
+  const phone = normalizePhone(formText(form, "phone"));
+  const password = formText(form, "password");
+  const accountRole = parseRole(formText(form, "accountRole"));
+  const privacyAgreed = formText(form, "privacyAgreed") === "true";
+  const termsAgreed = formText(form, "termsAgreed") === "true";
+  const ageConfirmed = formText(form, "ageConfirmed") === "true";
+  const acceptanceLetter = form.get("acceptanceLetter");
   const passwordError = getPasswordPolicyError(password);
-  const privacyAgreed = body.privacyAgreed === true;
-  const termsAgreed = body.termsAgreed === true;
-  const ageConfirmed = body.ageConfirmed === true;
 
-  if (fullName.length < 2 || fullName.length > 80 || !isEmail(email)) {
+  if (fullName.length < 2 || !isKoreanSchoolEmail(email)) {
     return NextResponse.json(
-      { error: "이름과 이메일 주소를 다시 확인해 주세요." },
+      { error: "이름과 .ac.kr로 끝나는 학교 이메일을 확인해 주세요." },
       { status: 400 },
     );
   }
@@ -65,6 +68,31 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
+  if (!(acceptanceLetter instanceof File) || acceptanceLetter.size === 0) {
+    return NextResponse.json(
+      { error: "학교 합격통지서를 첨부해 주세요." },
+      { status: 400 },
+    );
+  }
+  if (
+    acceptanceLetter.size > MAX_DOCUMENT_BYTES
+    || !ALLOWED_DOCUMENT_TYPES.has(acceptanceLetter.type)
+  ) {
+    return NextResponse.json(
+      { error: "합격통지서는 10MB 이하 PDF, JPG 또는 PNG만 제출할 수 있습니다." },
+      { status: 400 },
+    );
+  }
+
+  let admin: ReturnType<typeof createAdminClient>;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return NextResponse.json(
+      { error: "가입 심사 시스템이 아직 설정되지 않았습니다. 선배 팀에 문의해 주세요." },
+      { status: 503 },
+    );
+  }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
@@ -81,72 +109,132 @@ export async function POST(request: NextRequest) {
         terms_version: TERMS_VERSION,
         age_confirmed: true,
       },
-      emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=/portal`,
+      emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=/portal/pending`,
     },
   });
 
-  if (error) {
-    const errorMessage = error.message.toLowerCase();
-    const duplicate =
-      errorMessage.includes("already") ||
-      errorMessage.includes("registered") ||
-      errorMessage.includes("exists");
-    const rateLimited = errorMessage.includes("rate limit");
-    const invalidEmail = errorMessage.includes("invalid") && errorMessage.includes("email");
-
-    return NextResponse.json(
-      {
-        error: duplicate
-          ? "이미 가입된 이메일입니다. 로그인해 주세요."
-          : rateLimited
-            ? "가입 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
-            : invalidEmail
-              ? "사용할 수 없는 이메일 주소입니다. 다른 이메일을 입력해 주세요."
-              : "회원가입을 완료하지 못했습니다. 입력한 정보를 다시 확인해 주세요.",
-      },
-      { status: 400 },
-    );
+  if (error || !data.user) return signupError(error?.message);
+  if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+    await supabase.auth.signOut();
+    return signupError("already registered");
   }
 
-  if (!data.user) {
+  const safeName = safeFileName(acceptanceLetter.name);
+  const documentPath = `${data.user.id}/${Date.now()}-${safeName}`;
+  const { error: uploadError } = await admin.storage
+    .from("account-documents")
+    .upload(documentPath, await acceptanceLetter.arrayBuffer(), {
+      contentType: acceptanceLetter.type,
+      upsert: false,
+    });
+
+  if (uploadError) {
+    await admin.auth.admin.deleteUser(data.user.id);
     return NextResponse.json(
-      { error: "계정을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요." },
+      { error: "합격통지서를 안전하게 저장하지 못했습니다. 다시 시도해 주세요." },
       { status: 500 },
     );
   }
 
-  if (!data.session) {
-    return NextResponse.json({
-      message: "인증 메일을 보냈습니다. 메일의 인증 링크를 누른 뒤 포털에 로그인해 주세요.",
+  const { data: application, error: applicationError } = await admin
+    .from("account_creation_requests")
+    .insert({
+      user_id: data.user.id,
+      full_name: fullName,
+      email,
+      phone,
+      requested_role: accountRole,
+      acceptance_letter_path: documentPath,
+      acceptance_letter_name: safeName,
+    })
+    .select("id")
+    .single();
+
+  if (applicationError || !application) {
+    await admin.storage.from("account-documents").remove([documentPath]);
+    await admin.auth.admin.deleteUser(data.user.id);
+    return NextResponse.json(
+      { error: "가입 심사 요청을 저장하지 못했습니다. 다시 시도해 주세요." },
+      { status: 500 },
+    );
+  }
+
+  let notificationError: string | null = null;
+  try {
+    const { data: signed, error: signedError } = await admin.storage
+      .from("account-documents")
+      .createSignedUrl(documentPath, 7 * 24 * 60 * 60);
+    if (signedError || !signed?.signedUrl) throw signedError || new Error("No document URL");
+
+    await sendAdmissionsAccountReviewEmail({
+      requestId: application.id,
+      fullName,
+      email,
+      phone,
+      role: accountRole,
+      letterName: safeName,
+      letterUrl: signed.signedUrl,
+    });
+  } catch (mailError) {
+    notificationError = mailError instanceof Error ? mailError.message.slice(0, 500) : "Email failed";
+  }
+
+  await admin
+    .from("account_creation_requests")
+    .update(
+      notificationError
+        ? { notification_error: notificationError, updated_at: new Date().toISOString() }
+        : { notification_sent_at: new Date().toISOString(), notification_error: null, updated_at: new Date().toISOString() },
+    )
+    .eq("id", application.id);
+
+  if (data.session) {
+    const cookieStore = await cookies();
+    cookieStore.set("seonbae-remember", "1", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 400 * 24 * 60 * 60,
     });
   }
 
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", data.user.id)
-    .single();
-
-  if (profileError || !profile) {
-    await supabase.auth.signOut();
-    return NextResponse.json(
-      { error: "계정 정보를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요." },
-      { status: 500 },
-    );
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set("seonbae-remember", "1", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 400 * 24 * 60 * 60,
+  return NextResponse.json({
+    destination: data.session ? "/portal/pending" : undefined,
+    message: data.session
+      ? "가입 심사 요청을 접수했습니다. 승인 전까지 심사 현황을 확인할 수 있습니다."
+      : "학교 이메일 인증 링크를 보냈습니다. 인증 후 선배 팀의 가입 심사가 시작됩니다.",
+    reviewPending: true,
+    notificationQueued: Boolean(notificationError),
   });
-
-  return NextResponse.json({ destination: "/portal" });
 }
 
-function isEmail(value: string) {
-  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+function formText(form: FormData, key: string) {
+  const value = form.get(key);
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function parseRole(value: string): AccountRole {
+  return value === "parent" || value === "tutor" ? value : "student";
+}
+
+function safeFileName(value: string) {
+  const clean = value.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
+  return clean.slice(0, 120) || "acceptance-letter";
+}
+
+function signupError(message = "") {
+  const normalized = message.toLowerCase();
+  const duplicate = normalized.includes("already") || normalized.includes("registered") || normalized.includes("exists");
+  const rateLimited = normalized.includes("rate limit");
+  return NextResponse.json(
+    {
+      error: duplicate
+        ? "이미 가입 또는 심사 중인 학교 이메일입니다. 로그인해 주세요."
+        : rateLimited
+          ? "가입 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
+          : "가입 신청을 완료하지 못했습니다. 입력한 정보를 다시 확인해 주세요.",
+    },
+    { status: 400 },
+  );
 }
