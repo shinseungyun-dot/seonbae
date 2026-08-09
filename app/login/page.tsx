@@ -9,6 +9,7 @@ import {
   PASSWORD_ALLOWED_SYMBOLS,
 } from "../../utils/auth/password";
 import { normalizePhone, sanitizePhoneInput } from "../../utils/auth/phone";
+import { isEmailAddress, isKoreanSchoolEmail } from "../../utils/auth/school-email";
 import styles from "./login.module.css";
 
 type AuthAction = "signin" | "signup" | "find-id" | "reset-password";
@@ -24,7 +25,7 @@ const actionCopy: Record<
   },
   signup: {
     title: "가입 심사 신청",
-    description: ".ac.kr 학교 이메일과 합격통지서를 제출하면 선배 팀이 계정을 확인합니다.",
+    description: "이메일과 합격통지서를 제출하면 선배 팀이 계정을 확인합니다.",
     submit: "가입 심사 요청",
   },
   "find-id": {
@@ -77,7 +78,12 @@ export default function LoginPage() {
         setBusy(false);
         return;
       }
-      if (!/^[^\s@]+@[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\.ac\.kr$/i.test(identifier)) {
+      if (!isEmailAddress(identifier)) {
+        setMessage("올바른 이메일 주소를 입력해 주세요.");
+        setBusy(false);
+        return;
+      }
+      if (accountRole === "tutor" && !isKoreanSchoolEmail(identifier)) {
         setMessage(".ac.kr로 끝나는 학교 이메일을 입력해 주세요.");
         setBusy(false);
         return;
@@ -368,7 +374,13 @@ export default function LoginPage() {
 
             {(action === "signin" || isSignup || action === "reset-password") && (
               <label>
-                <span>{action === "signin" ? "아이디 또는 이메일" : "이메일"}</span>
+                <span>
+                  {action === "signin"
+                    ? "아이디 또는 이메일"
+                    : isSignup && accountRole === "tutor"
+                      ? "학교 이메일"
+                      : "이메일"}
+                </span>
                 <input
                   type={action === "signin" ? "text" : "email"}
                   value={identifier}
@@ -381,7 +393,11 @@ export default function LoginPage() {
                 />
                 {isSignup && (
                   <small className={styles.fieldNote}>
-                    대학 또는 학교가 발급한 <b>.ac.kr</b> 이메일만 사용할 수 있습니다.
+                    {accountRole === "tutor" ? (
+                      <>튜터는 대학 또는 학교가 발급한 <b>.ac.kr</b> 이메일이 필요합니다.</>
+                    ) : (
+                      <>학생과 보호자는 일반 이메일 주소로 가입할 수 있습니다.</>
+                    )}
                   </small>
                 )}
               </label>
@@ -418,7 +434,7 @@ export default function LoginPage() {
                 <small className={styles.fieldNote}>
                   {action === "find-id"
                     ? "가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다."
-                    : "아이디 확인과 비밀번호 재설정에 사용합니다. 해외 번호는 +국가번호를 입력해 주세요."}
+                    : "계정마다 하나의 고유한 번호만 사용할 수 있습니다. 해외 번호는 +국가번호를 입력해 주세요."}
                 </small>
               </label>
             )}

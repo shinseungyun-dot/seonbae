@@ -665,3 +665,9 @@ footer{padding-top:72px}
   .consultCopy,.consultation form{padding:62px 24px}
   .footerConsultForm{width:auto}
 }
+
+/* Dark mode uses true white for the homepage proof statistics. */
+html[data-theme="dark"] .stats strong,
+html[data-theme="dark"] .stats span{
+  color:#fff;
+}

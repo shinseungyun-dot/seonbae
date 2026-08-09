@@ -4,7 +4,7 @@ import { sendAdmissionsAccountReviewEmail } from "../../../../utils/email/admiss
 import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
 import { getPasswordPolicyError } from "../../../../utils/auth/password";
 import { normalizePhone } from "../../../../utils/auth/phone";
-import { isKoreanSchoolEmail } from "../../../../utils/auth/school-email";
+import { isEmailAddress, isKoreanSchoolEmail } from "../../../../utils/auth/school-email";
 import {
   authRateLimitResponse,
   consumeAuthRateLimit,
@@ -47,9 +47,15 @@ export async function POST(request: NextRequest) {
   const acceptanceLetter = form.get("acceptanceLetter");
   const passwordError = getPasswordPolicyError(password);
 
-  if (fullName.length < 2 || !isKoreanSchoolEmail(email)) {
+  if (fullName.length < 2 || !isEmailAddress(email)) {
     return NextResponse.json(
-      { error: "이름과 .ac.kr로 끝나는 학교 이메일을 확인해 주세요." },
+      { error: "이름과 이메일 주소를 확인해 주세요." },
+      { status: 400 },
+    );
+  }
+  if (accountRole === "tutor" && !isKoreanSchoolEmail(email)) {
+    return NextResponse.json(
+      { error: "튜터는 .ac.kr로 끝나는 학교 이메일을 사용해야 합니다." },
       { status: 400 },
     );
   }
@@ -91,6 +97,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: "가입 심사 시스템이 아직 설정되지 않았습니다. 선배 팀에 문의해 주세요." },
       { status: 503 },
+    );
+  }
+
+  const { data: existingPhone, error: phoneLookupError } = await admin
+    .from("profiles")
+    .select("id")
+    .eq("phone", phone)
+    .limit(1)
+    .maybeSingle();
+
+  if (phoneLookupError) {
+    return NextResponse.json(
+      { error: "휴대전화번호 중복 여부를 확인하지 못했습니다. 다시 시도해 주세요." },
+      { status: 503 },
+    );
+  }
+  if (existingPhone) {
+    return NextResponse.json(
+      { error: "이미 다른 계정에서 사용 중인 휴대전화번호입니다." },
+      { status: 409 },
     );
   }
 

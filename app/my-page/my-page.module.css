@@ -342,13 +342,15 @@
 }
 
 .switch {
-  width: 82px;
-  height: 38px;
-  padding: 4px;
+  position: relative;
+  width: 96px;
+  min-width: 96px;
+  height: 48px;
+  padding: 0 12px 0 44px;
   flex: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: #ece8df;
@@ -357,16 +359,18 @@
 }
 
 .switch span {
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 4px 12px rgba(12, 29, 60, 0.16);
-  transition: transform 0.25s;
+  transition: transform 0.22s ease;
 }
 
 .switch em {
-  padding-right: 7px;
   font-size: 0.58rem;
   font-style: normal;
   font-weight: 800;
@@ -378,12 +382,11 @@
 }
 
 .switch[aria-checked="true"] span {
-  transform: translateX(44px);
+  transform: translateX(48px);
 }
 
 .switch[aria-checked="true"] em {
-  order: -1;
-  padding: 0 0 0 7px;
+  transform: translateX(-38px);
 }
 
 .danger {
