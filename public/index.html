@@ -1021,8 +1021,46 @@ html[data-theme="dark"] .account-logout{
 }
 html[data-theme="dark"] .closer,
 html[data-theme="dark"] .marquee{background:var(--paper-2)}
-html[data-theme="dark"] .stat .v,
-html[data-theme="dark"] .stat .k{color:#fff}
+html[data-theme="dark"] :is(
+  .display,
+  .mark-ko,
+  .mark-en span,
+  .nav a,
+  .lang a,
+  .account-identity,
+  .account-menu a,
+  .account-menu button,
+  .account-logout,
+  .btn-quiet,
+  .btn-quiet .arw,
+  .article-draw,
+  .article h3,
+  .stat .v,
+  .stat .k,
+  .crest,
+  .pick-mark,
+  .pick-name,
+  .tier-name h3,
+  .tier-name .badge.alt,
+  .filter:hover,
+  .tutor-score .v,
+  .tutor-cta,
+  .tutor-cta .arw,
+  .registry-state strong,
+  .step h3,
+  .include h3,
+  .prose strong,
+  .pull p,
+  .facts dd,
+  .org .uni,
+  .founder h3,
+  .founder .email,
+  .form-head h3,
+  .tutor-choice strong,
+  .route h3,
+  .route .go,
+  .ledger-col h4
+){color:#fff}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
