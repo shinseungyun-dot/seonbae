@@ -78,6 +78,7 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
           <span>MANAGEMENT</span>
           <a className={styles.active} href="#tutors">튜터 명부</a>
           <Link href="/admin/sessions">수업 · Zoom 관리</Link>
+          <Link href="/admin/consultations">상담 신청</Link>
           <Link href="/admin/applications">가입 · 검증 심사</Link>
           <Link href="/#/ko/tutors">공개 명부 보기</Link>
         </nav>

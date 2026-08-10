@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   getPasswordChecks,
@@ -60,6 +60,23 @@ export default function LoginPage() {
 
   const passwordChecks = useMemo(() => getPasswordChecks(password), [password]);
   const allRequiredAgreed = privacyAgreed && termsAgreed && ageConfirmed;
+
+  useEffect(() => {
+    try {
+      setRemember(window.localStorage.getItem("seonbae-remember-login") === "1");
+    } catch {
+      setRemember(false);
+    }
+  }, []);
+
+  function updateRemember(checked: boolean) {
+    setRemember(checked);
+    try {
+      window.localStorage.setItem("seonbae-remember-login", checked ? "1" : "0");
+    } catch {
+      // Login still works when browser storage is unavailable.
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -578,7 +595,7 @@ export default function LoginPage() {
                 <input
                   type="checkbox"
                   checked={remember}
-                  onChange={(event) => setRemember(event.target.checked)}
+                  onChange={(event) => updateRemember(event.target.checked)}
                 />
                 <span>로그인 상태 유지</span>
               </label>

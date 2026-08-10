@@ -8,7 +8,8 @@ export type AuthRateLimitAction =
   | "authenticate"
   | "signup"
   | "recovery"
-  | "password_update";
+  | "password_update"
+  | "consultation";
 
 const policies: Record<
   AuthRateLimitAction,
@@ -18,6 +19,7 @@ const policies: Record<
   signup: { limit: 5, windowSeconds: 15 * 60 },
   recovery: { limit: 3, windowSeconds: 15 * 60 },
   password_update: { limit: 5, windowSeconds: 15 * 60 },
+  consultation: { limit: 5, windowSeconds: 15 * 60 },
 };
 
 export async function consumeAuthRateLimit(

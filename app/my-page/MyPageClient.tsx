@@ -101,7 +101,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
           </span>
         </Link>
         <nav>
-          <Link href={portalDestination(profile.role)}>포털</Link>
+          <Link href={portalDestination(profile.role)}>{profile.role === "admin" ? "관리자 콘솔" : "포털"}</Link>
           <button type="button" onClick={signOut} disabled={busy}>
             로그아웃
           </button>
