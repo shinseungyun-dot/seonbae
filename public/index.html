@@ -233,6 +233,15 @@ body::after{
 .account-logout:hover{background:#fff;border-color:rgba(10,32,70,.42);transform:translateY(-1px)}
 .account-logout:disabled{opacity:.55;cursor:wait;transform:none}
 .account-logout[hidden]{display:none}
+.theme-toggle{width:44px;height:44px;flex:none;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:12px;background:rgba(255,255,255,.58);color:var(--blue);transition:transform .22s var(--ease),background-color .22s var(--ease),border-color .22s var(--ease),color .22s var(--ease)}
+.theme-toggle:hover{transform:translateY(-1px);background:#fff;border-color:rgba(10,32,70,.34)}
+.theme-toggle:focus-visible{outline:3px solid rgba(199,68,59,.32);outline-offset:2px}
+.theme-toggle svg{width:19px;height:19px;display:block}
+.theme-toggle .theme-sun{display:none}
+html[data-theme="dark"] .theme-toggle{background:var(--card);border-color:var(--line-2);color:#fff}
+html[data-theme="dark"] .theme-toggle:hover{background:var(--paper-2);border-color:rgba(255,255,255,.32)}
+html[data-theme="dark"] .theme-toggle .theme-moon{display:none}
+html[data-theme="dark"] .theme-toggle .theme-sun{display:block}
 @keyframes account-loading{to{background-position:-200% 0}}
 .cta-short{display:none}
 .burger{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.5);place-items:center;transition:background-color .25s var(--ease),border-color .25s var(--ease)}
@@ -1096,7 +1105,6 @@ html[data-theme="dark"] :is(
         <a class="nav-drop-trigger" href="#/en/tutors" data-route="tutors" data-ko="튜터">Tutors</a>
         <div class="nav-drop-menu" aria-label="Tutor menu">
           <a href="#/en/tutors" data-ko="튜터 찾기">Find a Tutor</a>
-          <a href="/tutor-apply" data-ko="튜터 지원하기">Apply as a Tutor</a>
         </div>
       </div>
       <a href="#/en/about" data-route="about" data-ko="선배 소개">About Seonbae</a>
@@ -1126,6 +1134,10 @@ html[data-theme="dark"] :is(
         </div>
         <button class="account-logout" id="accountLogout" type="button" data-ko="로그아웃" hidden>Log out</button>
       </div>
+      <button class="theme-toggle" id="themeToggle" type="button" role="switch" aria-checked="false" aria-label="다크 모드로 전환" title="다크 모드로 전환">
+        <svg class="theme-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="theme-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3.7" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.2v2.2M12 19.6v2.2M21.8 12h-2.2M4.4 12H2.2M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6M18.9 18.9l-1.6-1.6M6.7 6.7 5.1 5.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -1927,7 +1939,6 @@ html[data-theme="dark"] :is(
           <div class="ftr-col">
             <h4 data-ko="회사">Company</h4>
             <a href="#/en/about/founders" data-ko="팀 소개">Meet the team</a>
-            <a href="/tutor-apply" data-ko="튜터 지원 ↗">Apply as a tutor ↗</a>
           </div>
           <div class="ftr-col">
             <h4 data-ko="네트워크">Network</h4>
@@ -1983,6 +1994,29 @@ html[data-theme="dark"] :is(
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ROUTES = ['home','tutors','about','consult'];
+  var themeToggle = document.getElementById('themeToggle');
+
+  function syncThemeToggle(){
+    if (!themeToggle) return;
+    var dark = document.documentElement.dataset.theme === 'dark';
+    var ko = document.documentElement.getAttribute('data-lang') === 'ko';
+    var label = dark
+      ? (ko ? '라이트 모드로 전환' : 'Switch to light mode')
+      : (ko ? '다크 모드로 전환' : 'Switch to dark mode');
+    themeToggle.setAttribute('aria-checked', dark ? 'true' : 'false');
+    themeToggle.setAttribute('aria-label', label);
+    themeToggle.setAttribute('title', label);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function(){
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('seonbae-theme', next); } catch (e) {}
+      syncThemeToggle();
+    });
+    syncThemeToggle();
+  }
 
   /* ── reveal observer (shared across pages) ────────────── */
   var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
@@ -2099,6 +2133,7 @@ html[data-theme="dark"] :is(
     if (consultTutorSearch && consultTutorSelect) {
       consultTutorSearch.value = consultTutorLabel(consultTutorSelect.value || 'TEAM');
     }
+    syncThemeToggle();
   }
 
   function routeFromHash(){

@@ -24,9 +24,9 @@ const actionCopy: Record<
     submit: "로그인",
   },
   signup: {
-    title: "가입 심사 신청",
-    description: "이메일과 합격통지서를 제출하면 선배 팀이 계정을 확인합니다.",
-    submit: "가입 심사 요청",
+    title: "회원가입",
+    description: "",
+    submit: "회원가입",
   },
   "find-id": {
     title: "아이디 찾기",
@@ -88,7 +88,7 @@ export default function LoginPage() {
         setBusy(false);
         return;
       }
-      if (!acceptanceLetter) {
+      if (accountRole === "tutor" && !acceptanceLetter) {
         setMessage("학교 합격통지서를 PDF, JPG 또는 PNG로 첨부해 주세요.");
         setBusy(false);
         return;
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
     try {
       const signupForm = new FormData();
-      if (action === "signup" && acceptanceLetter) {
+      if (action === "signup") {
         signupForm.set("fullName", fullName);
         signupForm.set("email", identifier);
         signupForm.set("phone", phone);
@@ -131,7 +131,9 @@ export default function LoginPage() {
         signupForm.set("privacyAgreed", String(privacyAgreed));
         signupForm.set("termsAgreed", String(termsAgreed));
         signupForm.set("ageConfirmed", String(ageConfirmed));
-        signupForm.set("acceptanceLetter", acceptanceLetter);
+        if (accountRole === "tutor" && acceptanceLetter) {
+          signupForm.set("acceptanceLetter", acceptanceLetter);
+        }
       }
       const response = await fetch(endpoint, action === "signup"
         ? { method: "POST", body: signupForm }
@@ -219,7 +221,11 @@ export default function LoginPage() {
   }
 
   const isSignup = action === "signup";
+  const isTutorSignup = isSignup && accountRole === "tutor";
   const isRecovery = action === "find-id" || action === "reset-password";
+  const activeCopy = isTutorSignup
+    ? { title: "튜터 가입 심사 신청", description: "", submit: "심사 신청" }
+    : actionCopy[action];
 
   function setAllRequiredAgreements(checked: boolean) {
     setPrivacyAgreed(checked);
@@ -294,9 +300,9 @@ export default function LoginPage() {
                   <span aria-hidden="true">←</span>
                 </button>
               )}
-              <h2>{actionCopy[action].title}</h2>
+              <h2>{activeCopy.title}</h2>
             </div>
-            <span>{actionCopy[action].description}</span>
+            {activeCopy.description && <span>{activeCopy.description}</span>}
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -317,10 +323,6 @@ export default function LoginPage() {
 
             {isSignup && (
               <>
-                <div className={styles.reviewNotice}>
-                  <b>입학 확인 후 계정이 열립니다.</b>
-                  <span>신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.</span>
-                </div>
                 <fieldset className={styles.accountRole}>
                   <legend>계정 유형</legend>
                   <label data-selected={accountRole === "student"}>
@@ -329,7 +331,10 @@ export default function LoginPage() {
                       name="account-role"
                       value="student"
                       checked={accountRole === "student"}
-                      onChange={() => setAccountRole("student")}
+                      onChange={() => {
+                        setAccountRole("student");
+                        setAcceptanceLetter(null);
+                      }}
                     />
                     <span><b>학생 계정</b><small>수업 일정, Zoom, 튜터 채팅</small></span>
                   </label>
@@ -339,7 +344,10 @@ export default function LoginPage() {
                       name="account-role"
                       value="parent"
                       checked={accountRole === "parent"}
-                      onChange={() => setAccountRole("parent")}
+                      onChange={() => {
+                        setAccountRole("parent");
+                        setAcceptanceLetter(null);
+                      }}
                     />
                     <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
                   </label>
@@ -354,6 +362,12 @@ export default function LoginPage() {
                     <span><b>튜터 계정</b><small>학생, 숙제, 자격 검증 관리</small></span>
                   </label>
                 </fieldset>
+                {isTutorSignup && (
+                  <div className={styles.reviewNotice}>
+                    <b>입학 확인 후 계정이 열립니다.</b>
+                    <span>신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.</span>
+                  </div>
+                )}
               </>
             )}
 
@@ -391,19 +405,10 @@ export default function LoginPage() {
                   maxLength={254}
                   required
                 />
-                {isSignup && (
-                  <small className={styles.fieldNote}>
-                    {accountRole === "tutor" ? (
-                      <>튜터는 대학 또는 학교가 발급한 <b>.ac.kr</b> 이메일이 필요합니다.</>
-                    ) : (
-                      <>학생과 보호자는 일반 이메일 주소로 가입할 수 있습니다.</>
-                    )}
-                  </small>
-                )}
               </label>
             )}
 
-            {isSignup && (
+            {isTutorSignup && (
               <label className={styles.fileField}>
                 <span>학교 합격통지서</span>
                 <input
@@ -413,7 +418,7 @@ export default function LoginPage() {
                   required
                 />
                 <small className={styles.fieldNote}>
-                  PDF, JPG 또는 PNG · 최대 10MB · 심사팀만 열람합니다.
+                  PDF, JPG 또는 PNG · 최대 10MB
                 </small>
               </label>
             )}
@@ -431,11 +436,11 @@ export default function LoginPage() {
                   maxLength={24}
                   required
                 />
-                <small className={styles.fieldNote}>
-                  {action === "find-id"
-                    ? "가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다."
-                    : "계정마다 하나의 고유한 번호만 사용할 수 있습니다. 해외 번호는 +국가번호를 입력해 주세요."}
-                </small>
+                {action === "find-id" && (
+                  <small className={styles.fieldNote}>
+                    가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다.
+                  </small>
+                )}
               </label>
             )}
 
@@ -489,11 +494,19 @@ export default function LoginPage() {
                   <dl>
                     <div>
                       <dt>수집 항목</dt>
-                      <dd>이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록</dd>
+                      <dd>
+                        {isTutorSignup
+                          ? "이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록"
+                          : "이름, 이메일, 휴대전화번호, 인증·동의 기록"}
+                      </dd>
                     </div>
                     <div>
                       <dt>이용 목적</dt>
-                      <dd>입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정</dd>
+                      <dd>
+                        {isTutorSignup
+                          ? "입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정"
+                          : "회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정"}
+                      </dd>
                     </div>
                     <div>
                       <dt>보유 기간</dt>
@@ -577,7 +590,7 @@ export default function LoginPage() {
               </p>
             )}
             <button className={styles.submit} type="submit" disabled={busy}>
-              <span>{busy ? "확인 중..." : actionCopy[action].submit}</span>
+              <span>{busy ? "확인 중..." : activeCopy.submit}</span>
               <span aria-hidden="true">↗</span>
             </button>
           </form>

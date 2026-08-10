@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     form = await request.formData();
   } catch {
     return NextResponse.json(
-      { error: "가입 신청서와 합격통지서를 다시 확인해 주세요." },
+      { error: "가입 정보를 다시 확인해 주세요." },
       { status: 400 },
     );
   }
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
   const phone = normalizePhone(formText(form, "phone"));
   const password = formText(form, "password");
   const accountRole = parseRole(formText(form, "accountRole"));
+  const isTutor = accountRole === "tutor";
   const privacyAgreed = formText(form, "privacyAgreed") === "true";
   const termsAgreed = formText(form, "termsAgreed") === "true";
   const ageConfirmed = formText(form, "ageConfirmed") === "true";
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  if (accountRole === "tutor" && !isKoreanSchoolEmail(email)) {
+  if (isTutor && !isKoreanSchoolEmail(email)) {
     return NextResponse.json(
       { error: "튜터는 .ac.kr로 끝나는 학교 이메일을 사용해야 합니다." },
       { status: 400 },
@@ -74,15 +75,17 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  if (!(acceptanceLetter instanceof File) || acceptanceLetter.size === 0) {
+  if (isTutor && (!(acceptanceLetter instanceof File) || acceptanceLetter.size === 0)) {
     return NextResponse.json(
       { error: "학교 합격통지서를 첨부해 주세요." },
       { status: 400 },
     );
   }
   if (
-    acceptanceLetter.size > MAX_DOCUMENT_BYTES
-    || !ALLOWED_DOCUMENT_TYPES.has(acceptanceLetter.type)
+    isTutor
+    && acceptanceLetter instanceof File
+    && (acceptanceLetter.size > MAX_DOCUMENT_BYTES
+    || !ALLOWED_DOCUMENT_TYPES.has(acceptanceLetter.type))
   ) {
     return NextResponse.json(
       { error: "합격통지서는 10MB 이하 PDF, JPG 또는 PNG만 제출할 수 있습니다." },
@@ -95,7 +98,7 @@ export async function POST(request: NextRequest) {
     admin = createAdminClient();
   } catch {
     return NextResponse.json(
-      { error: "가입 심사 시스템이 아직 설정되지 않았습니다. 선배 팀에 문의해 주세요." },
+      { error: "회원가입 시스템이 아직 설정되지 않았습니다. 선배 팀에 문의해 주세요." },
       { status: 503 },
     );
   }
@@ -135,7 +138,7 @@ export async function POST(request: NextRequest) {
         terms_version: TERMS_VERSION,
         age_confirmed: true,
       },
-      emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=/portal/pending`,
+      emailRedirectTo: `${request.nextUrl.origin}/api/auth/callback?next=${isTutor ? "/portal/pending" : "/portal"}`,
     },
   });
 
@@ -143,6 +146,46 @@ export async function POST(request: NextRequest) {
   if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
     await supabase.auth.signOut();
     return signupError("already registered");
+  }
+
+  const { error: profileError } = await admin
+    .from("profiles")
+    .update({
+      phone,
+      account_status: isTutor ? "pending" : "approved",
+      account_reviewed_at: isTutor ? null : new Date().toISOString(),
+    })
+    .eq("id", data.user.id);
+
+  if (profileError) {
+    await admin.auth.admin.deleteUser(data.user.id);
+    return NextResponse.json(
+      {
+        error: profileError.code === "23505"
+          ? "이미 다른 계정에서 사용 중인 휴대전화번호입니다."
+          : "계정 정보를 저장하지 못했습니다. 다시 시도해 주세요.",
+      },
+      { status: profileError.code === "23505" ? 409 : 500 },
+    );
+  }
+
+  if (!isTutor) {
+    await setRememberCookie(Boolean(data.session));
+    return NextResponse.json({
+      destination: data.session ? "/portal" : undefined,
+      message: data.session
+        ? "회원가입이 완료되었습니다."
+        : "이메일 인증 링크를 보냈습니다.",
+      reviewPending: false,
+    });
+  }
+
+  if (!(acceptanceLetter instanceof File)) {
+    await admin.auth.admin.deleteUser(data.user.id);
+    return NextResponse.json(
+      { error: "학교 합격통지서를 첨부해 주세요." },
+      { status: 400 },
+    );
   }
 
   const safeName = safeFileName(acceptanceLetter.name);
@@ -214,16 +257,7 @@ export async function POST(request: NextRequest) {
     )
     .eq("id", application.id);
 
-  if (data.session) {
-    const cookieStore = await cookies();
-    cookieStore.set("seonbae-remember", "1", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 400 * 24 * 60 * 60,
-    });
-  }
+  await setRememberCookie(Boolean(data.session));
 
   return NextResponse.json({
     destination: data.session ? "/portal/pending" : undefined,
@@ -249,6 +283,18 @@ function safeFileName(value: string) {
   return clean.slice(0, 120) || "acceptance-letter";
 }
 
+async function setRememberCookie(hasSession: boolean) {
+  if (!hasSession) return;
+  const cookieStore = await cookies();
+  cookieStore.set("seonbae-remember", "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 400 * 24 * 60 * 60,
+  });
+}
+
 function signupError(message = "") {
   const normalized = message.toLowerCase();
   const duplicate = normalized.includes("already") || normalized.includes("registered") || normalized.includes("exists");
@@ -256,7 +302,7 @@ function signupError(message = "") {
   return NextResponse.json(
     {
       error: duplicate
-        ? "이미 가입 또는 심사 중인 학교 이메일입니다. 로그인해 주세요."
+        ? "이미 가입 또는 심사 중인 이메일입니다. 로그인해 주세요."
         : rateLimited
           ? "가입 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
           : "가입 신청을 완료하지 못했습니다. 입력한 정보를 다시 확인해 주세요.",

@@ -40,8 +40,7 @@ export async function POST(request: NextRequest) {
   if (mode === "signup") {
     return NextResponse.json(
       {
-        error:
-          "신규 가입은 .ac.kr 학교 이메일과 합격통지서 심사가 필요합니다. 이메일 가입 신청서를 이용해 주세요.",
+        error: "Google 신규 가입은 지원하지 않습니다. 이메일 회원가입을 이용해 주세요.",
       },
       { status: 400 },
     );
