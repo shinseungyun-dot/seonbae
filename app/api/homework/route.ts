@@ -74,7 +74,19 @@ export async function POST(request: NextRequest) {
     if (profile.role !== "student") return jsonError("학생 계정만 숙제를 제출할 수 있습니다.", 403);
     const assignmentId = Number(body.assignmentId);
     if (!Number.isInteger(assignmentId)) return jsonError("숙제 번호를 확인해 주세요.", 400);
-    const { data, error } = await supabase.rpc("submit_homework", { assignment_id: assignmentId });
+    const submittedAt = new Date().toISOString();
+    const { data, error } = await createAdminClient()
+      .from("portal_assignments")
+      .update({
+        status: "submitted",
+        submitted_at: submittedAt,
+        updated_at: submittedAt,
+      })
+      .eq("id", assignmentId)
+      .eq("student_id", user.id)
+      .eq("status", "todo")
+      .select("*")
+      .single();
     if (error) return jsonError("제출할 수 없는 숙제입니다.", 400);
     return NextResponse.json(data, { headers: { "Cache-Control": "no-store" } });
   }

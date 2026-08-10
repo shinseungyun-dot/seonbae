@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "../../../utils/supabase/admin";
 import { createClient } from "../../../utils/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -64,7 +65,9 @@ export async function DELETE(request: NextRequest) {
     );
   }
 
-  const { error: deletionError } = await supabase.rpc("delete_my_account");
+  const { error: deletionError } = await createAdminClient().auth.admin.deleteUser(
+    user.id,
+  );
 
   if (deletionError) {
     return NextResponse.json(

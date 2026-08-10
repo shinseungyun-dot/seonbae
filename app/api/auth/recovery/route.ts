@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "../../../../utils/supabase/admin";
 import { createClient } from "../../../../utils/supabase/server";
 import { normalizePhone } from "../../../../utils/auth/phone";
 import {
@@ -51,9 +52,10 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = await createClient();
+  const admin = createAdminClient();
 
   if (action === "find-id") {
-    const { error } = await supabase.rpc("request_account_id_email", {
+    const { error } = await admin.rpc("request_account_id_email", {
       p_full_name: fullName,
       p_phone: phone,
     });
@@ -87,7 +89,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data: verified, error: verificationError } = await supabase.rpc(
+  const { data: verified, error: verificationError } = await admin.rpc(
     "verify_account_recovery",
     {
       p_full_name: fullName,
