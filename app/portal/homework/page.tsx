@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
 import PortalHeader from "../PortalHeader";
 import HomeworkList, { type HomeworkItem } from "./HomeworkList";
+import { PortalText } from "../PortalLocale";
 import styles from "./homework.module.css";
 
 export const dynamic = "force-dynamic";
@@ -88,17 +89,17 @@ export default async function HomeworkPage() {
         <header className={styles.heading}>
           <div>
             <p>HOMEWORK</p>
-            <h1>{isParent ? "자녀 숙제 현황" : "내 숙제"}</h1>
+            <h1>{isParent ? <PortalText ko="자녀 숙제 현황" en="Student homework" /> : <PortalText ko="내 숙제" en="My homework" />}</h1>
             <span>
               {isParent
-                ? "연결된 학생의 과제, 제출 상태와 튜터 피드백을 한곳에서 확인합니다."
-                : "튜터가 등록한 과제를 확인하고 완료하면 제출 상태로 바꾸세요."}
+                ? <PortalText ko="연결된 학생의 과제, 제출 상태와 튜터 피드백을 한곳에서 확인합니다." en="Review linked students' assignments, submission status, and tutor feedback in one place." />
+                : <PortalText ko="튜터가 등록한 과제를 확인하고 완료하면 제출 상태로 바꾸세요." en="Review assignments from your tutor and submit them when complete." />}
             </span>
           </div>
           <dl>
-            <div><dt>할 일</dt><dd>{openCount}</dd></div>
-            <div><dt>검토 중</dt><dd>{reviewCount}</dd></div>
-            <div><dt>피드백 완료</dt><dd>{assignments.length - openCount - reviewCount}</dd></div>
+            <div><dt><PortalText ko="할 일" en="To do" /></dt><dd>{openCount}</dd></div>
+            <div><dt><PortalText ko="검토 중" en="In review" /></dt><dd>{reviewCount}</dd></div>
+            <div><dt><PortalText ko="피드백 완료" en="Feedback received" /></dt><dd>{assignments.length - openCount - reviewCount}</dd></div>
           </dl>
         </header>
         <HomeworkList assignments={assignments} role={isParent ? "parent" : "student"} />
@@ -106,4 +107,3 @@ export default async function HomeworkPage() {
     </main>
   );
 }
-

@@ -6,7 +6,8 @@ import {
   readBillingAccess,
 } from "../../../utils/auth/portal-otp";
 import PortalHeader from "../PortalHeader";
-import BillingClient, { type BillingLineItem } from "./BillingClient";
+import { type BillingLineItem } from "./BillingClient";
+import BillingPageContent from "./BillingPageContent";
 import styles from "../parent.module.css";
 
 export const dynamic = "force-dynamic";
@@ -87,19 +88,12 @@ export default async function BillingPage() {
   return (
     <main className={styles.page}>
       <PortalHeader user={portalUser} active="billing" />
-      <div className={styles.shell}>
-        <header className={styles.pageHeading}>
-          <p>SECURE BILLING</p>
-          <h1>수업료 결제</h1>
-          <span>월별 수업 시간, 학생과 튜터, 결제 예정 금액을 확인합니다.</span>
-        </header>
-        <BillingClient
-          locked={!access}
-          accessExpiresAt={access?.expiresAt ?? null}
-          methods={{ email: Boolean(profile.email || user.email), phone: Boolean(profile.phone || user.phone) }}
-          items={items}
-        />
-      </div>
+      <BillingPageContent
+        locked={!access}
+        accessExpiresAt={access?.expiresAt ?? null}
+        methods={{ email: Boolean(profile.email || user.email), phone: Boolean(profile.phone || user.phone) }}
+        items={items}
+      />
     </main>
   );
 }

@@ -3,23 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
-  ArrowSquareOut,
-  BookOpenText,
-  CalendarDots,
-  Certificate,
-  ChartLineUp,
-  GearSix,
-  House,
   List,
-  Receipt,
-  ShieldCheck,
   SidebarSimple,
-  SignOut,
-  Student,
-  UserCircle,
-  UsersThree,
   X,
-  type Icon,
 } from "@phosphor-icons/react";
 import styles from "./portal.module.css";
 
@@ -38,17 +24,6 @@ export type PortalSidebarItem = {
   label: string;
   icon: PortalIconName;
   active?: boolean;
-};
-
-const icons: Record<PortalIconName, Icon> = {
-  overview: House,
-  calendar: CalendarDots,
-  homework: BookOpenText,
-  tutors: UsersThree,
-  students: Student,
-  reports: ChartLineUp,
-  billing: Receipt,
-  verification: Certificate,
 };
 
 export default function PortalSidebar({
@@ -79,7 +54,7 @@ export default function PortalSidebar({
   };
   onSignOut: () => void | Promise<void>;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -96,8 +71,8 @@ export default function PortalSidebar({
   }, [mobileOpen]);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("portal-shell-expanded", expanded);
-    return () => document.documentElement.classList.remove("portal-shell-expanded");
+    document.documentElement.classList.toggle("portal-shell-collapsed", !expanded);
+    return () => document.documentElement.classList.remove("portal-shell-collapsed");
   }, [expanded]);
 
   const closeMobile = () => setMobileOpen(false);
@@ -153,27 +128,21 @@ export default function PortalSidebar({
         </div>
 
         <nav className={styles.sidebarNav} aria-label={navigationLabel}>
-          {items.map((item) => {
-            const Icon = icons[item.icon];
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={item.active ? "page" : undefined}
-                aria-label={item.label}
-                title={expanded ? undefined : item.label}
-                onClick={closeMobile}
-              >
-                <Icon size={21} weight={item.active ? "bold" : "regular"} aria-hidden />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={item.active ? "page" : undefined}
+              title={expanded ? undefined : item.label}
+              onClick={closeMobile}
+            >
+              <span>{item.label}</span>
+            </Link>
+          ))}
         </nav>
 
         <div className={styles.sidebarFooter}>
           <Link href="/" className={styles.sidebarUtility} aria-label={labels.website} title={expanded ? undefined : labels.website} onClick={closeMobile}>
-            <ArrowSquareOut size={20} weight="regular" aria-hidden />
             <span>{labels.website}</span>
           </Link>
 
@@ -188,16 +157,16 @@ export default function PortalSidebar({
 
           <div className={styles.sidebarAccountLinks}>
             <Link href="/my-page#info" aria-label={labels.information} title={expanded ? undefined : labels.information} onClick={closeMobile}>
-              <UserCircle size={20} aria-hidden /><span>{labels.information}</span>
+              <span>{labels.information}</span>
             </Link>
             <Link href="/my-page#policies" aria-label={labels.policies} title={expanded ? undefined : labels.policies} onClick={closeMobile}>
-              <ShieldCheck size={20} aria-hidden /><span>{labels.policies}</span>
+              <span>{labels.policies}</span>
             </Link>
             <Link href="/my-page#settings" aria-label={labels.settings} title={expanded ? undefined : labels.settings} onClick={closeMobile}>
-              <GearSix size={20} aria-hidden /><span>{labels.settings}</span>
+              <span>{labels.settings}</span>
             </Link>
             <button type="button" aria-label={labels.signOut} title={expanded ? undefined : labels.signOut} onClick={onSignOut}>
-              <SignOut size={20} aria-hidden /><span>{labels.signOut}</span>
+              <span>{labels.signOut}</span>
             </button>
           </div>
         </div>

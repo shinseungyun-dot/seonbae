@@ -11,9 +11,14 @@ export interface NavItem { label: string; labelKo: string; href: string; }
 export const mainNav: NavItem[] = [
   { label: 'How it works', labelKo: '이용 방법', href: '/how-it-works' },
   { label: 'Subjects', labelKo: '과목', href: '/subjects' },
-  { label: 'Tutors', labelKo: '선배', href: '/tutors' },
+  { label: 'Tutors', labelKo: '튜터', href: '/tutors' },
   { label: 'Pricing', labelKo: '요금', href: '/pricing' },
   { label: 'About', labelKo: '소개', href: '/about' },
+];
+
+export const tutorNav: NavItem[] = [
+  { label: 'Find a tutor', labelKo: '튜터 찾기', href: '/tutors' },
+  { label: 'Become a tutor', labelKo: '튜터 지원하기', href: '/become-a-tutor' },
 ];
 
 // Shown inside the header "About" menu, the mobile drawer, and the footer.
@@ -22,6 +27,7 @@ export const exploreNav: NavItem[] = [
   { label: 'Our standard', labelKo: '검증 기준', href: '/verification' },
   { label: 'Resources', labelKo: '학습 자료', href: '/resources' },
   { label: 'Contact', labelKo: '문의', href: '/contact' },
+  { label: 'FAQ', labelKo: '자주 묻는 질문', href: '/pricing#faq' },
 ];
 
 export const footerLearn: NavItem[] = [

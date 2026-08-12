@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
 import PortalHeader from "../PortalHeader";
-import FamilyLinkClient, { type LinkedStudent } from "./FamilyLinkClient";
+import { type LinkedStudent } from "./FamilyLinkClient";
+import FamilyPageContent from "./FamilyPageContent";
 import styles from "../parent.module.css";
 
 export const dynamic = "force-dynamic";
@@ -54,14 +55,7 @@ export default async function FamilyPage() {
   return (
     <main className={styles.page}>
       <PortalHeader user={portalUser} active="family" />
-      <div className={styles.shell}>
-        <header className={styles.pageHeading}>
-          <p>FAMILY CONNECTION</p>
-          <h1>학생 계정 연결</h1>
-          <span>학생에게 전송된 일회용 인증번호 또는 승인 링크로 가족 관계를 확인합니다.</span>
-        </header>
-        <FamilyLinkClient linkedStudents={linkedStudents} />
-      </div>
+      <FamilyPageContent linkedStudents={linkedStudents} />
     </main>
   );
 }

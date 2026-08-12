@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
 import PortalHeader from "../PortalHeader";
+import { PortalDateTime, PortalText } from "../PortalLocale";
 import styles from "./tutors.module.css";
 
 export const dynamic = "force-dynamic";
@@ -57,17 +58,17 @@ export default async function StudentTutorsPage() {
     <main className={styles.page}>
       <PortalHeader user={portalUser} active="tutors" />
       <section className={styles.shell}>
-        <header className={styles.heading}><p>MY TUTORS</p><h1>내 튜터</h1><span>이번 학기에 함께하는 튜터와 담당 과목을 확인합니다.</span></header>
+        <header className={styles.heading}><p>MY TUTORS</p><h1><PortalText ko="내 튜터" en="My tutors" /></h1><span><PortalText ko="이번 학기에 함께하는 튜터와 담당 과목을 확인합니다." en="See the tutors and subjects assigned to you this term." /></span></header>
         <div className={styles.grid}>
           {[...tutors.values()].length ? [...tutors.values()].map((tutor) => (
             <article key={tutor.registryId}>
               <header>
-                {tutor.photoUrl ? <img src={tutor.photoUrl} alt={`${tutor.name} 튜터`} /> : <span>{initials(tutor.name)}</span>}
+                {tutor.photoUrl ? <img src={tutor.photoUrl} alt={tutor.name} /> : <span>{initials(tutor.name)}</span>}
                 <div><small>{tutor.registryId}</small><h2>{tutor.name}</h2><p>{tutor.university}</p></div>
               </header>
-              <dl><div><dt>담당 과목</dt><dd>{[...tutor.subjects].join(" · ")}</dd></div>{tutor.exam && <div><dt>검증 성적</dt><dd>{tutor.exam} · {tutor.score}</dd></div>}<div><dt>다음 수업</dt><dd>{tutor.nextSession ? formatDate(tutor.nextSession) : "일정 조율 중"}</dd></div></dl>
+              <dl><div><dt><PortalText ko="담당 과목" en="Subjects" /></dt><dd>{[...tutor.subjects].join(" · ")}</dd></div>{tutor.exam && <div><dt><PortalText ko="검증 성적" en="Verified result" /></dt><dd>{tutor.exam} · {tutor.score}</dd></div>}<div><dt><PortalText ko="다음 수업" en="Next lesson" /></dt><dd>{tutor.nextSession ? <PortalDateTime value={tutor.nextSession} /> : <PortalText ko="일정 조율 중" en="Scheduling in progress" />}</dd></div></dl>
             </article>
-          )) : <div className={styles.empty}><b>아직 배정된 튜터가 없습니다.</b><span>매칭이 완료되면 튜터 프로필이 이곳에 표시됩니다.</span></div>}
+          )) : <div className={styles.empty}><b><PortalText ko="아직 배정된 튜터가 없습니다." en="No tutor has been assigned yet." /></b><span><PortalText ko="매칭이 완료되면 튜터 프로필이 이곳에 표시됩니다." en="Tutor profiles will appear here once matching is complete." /></span></div>}
         </div>
       </section>
     </main>
@@ -75,5 +76,3 @@ export default async function StudentTutorsPage() {
 }
 
 function initials(value: string) { const clean = value.trim(); return /^[가-힣]/.test(clean) ? clean.slice(-2) : clean.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase(); }
-function formatDate(value: string) { return new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(value)); }
-

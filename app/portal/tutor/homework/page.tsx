@@ -3,6 +3,7 @@ import { createClient } from "../../../../utils/supabase/server";
 import TutorPortalHeader from "../TutorPortalHeader";
 import TutorHomeworkClient, { type TutorHomeworkItem, type TutorStudent } from "./TutorHomeworkClient";
 import styles from "./tutor-homework.module.css";
+import { PortalText } from "../../PortalLocale";
 
 export const dynamic = "force-dynamic";
 
@@ -80,12 +81,11 @@ export default async function TutorHomeworkPage() {
       <section className={styles.shell}>
         <header className={styles.heading}>
           <p>ASSIGNMENTS</p>
-          <h1>숙제 관리</h1>
-          <span>배정 학생에게 과제를 등록하고 제출된 작업에 피드백을 남깁니다.</span>
+          <h1><PortalText ko="숙제 관리" en="Homework management" /></h1>
+          <span><PortalText ko="배정 학생에게 과제를 등록하고 제출된 작업에 피드백을 남깁니다." en="Assign work to your students and leave feedback on their submissions." /></span>
         </header>
         <TutorHomeworkClient students={students} assignments={assignments} />
       </section>
     </main>
   );
 }
-

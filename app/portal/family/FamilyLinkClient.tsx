@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../parent.module.css";
+import { usePortalText } from "../PortalLocale";
 
 export type LinkedStudent = {
   id: string;
@@ -19,6 +20,7 @@ export default function FamilyLinkClient({
   linkedStudents: LinkedStudent[];
 }) {
   const router = useRouter();
+  const { text: l } = usePortalText();
   const [method, setMethod] = useState<Method>("phone");
   const [target, setTarget] = useState("");
   const [challenge, setChallenge] = useState("");
@@ -40,14 +42,14 @@ export default function FamilyLinkClient({
       });
       const result = await response.json();
       if (!response.ok) {
-        setMessage(result.error || "인증 요청을 보내지 못했습니다.");
+        setMessage(result.error || l("인증 요청을 보내지 못했습니다.", "The verification request could not be sent."));
         return;
       }
       setChallenge(result.challenge);
       setMessage(result.message);
       setPhase("verify");
     } catch {
-      setMessage("네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+      setMessage(l("네트워크 연결을 확인한 뒤 다시 시도해 주세요.", "Check your connection and try again."));
     } finally {
       setBusy(false);
     }
@@ -66,14 +68,14 @@ export default function FamilyLinkClient({
       });
       const result = await response.json();
       if (!response.ok) {
-        setMessage(result.error || "인증번호를 확인하지 못했습니다.");
+        setMessage(result.error || l("인증번호를 확인하지 못했습니다.", "The verification code could not be confirmed."));
         return;
       }
       setPhase("success");
       setMessage(result.message);
       router.refresh();
     } catch {
-      setMessage("네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+      setMessage(l("네트워크 연결을 확인한 뒤 다시 시도해 주세요.", "Check your connection and try again."));
     } finally {
       setBusy(false);
     }
@@ -90,8 +92,8 @@ export default function FamilyLinkClient({
     <div className={styles.twoColumn}>
       <section className={styles.panel}>
         <div className={styles.sectionHeading}>
-          <span>현재 연결</span>
-          <h2>연결된 학생</h2>
+          <span>{l("현재 연결", "Current connections")}</span>
+          <h2>{l("연결된 학생", "Linked students")}</h2>
         </div>
         {linkedStudents.length ? (
           <div className={styles.studentList}>
@@ -108,22 +110,22 @@ export default function FamilyLinkClient({
           </div>
         ) : (
           <div className={styles.emptyState}>
-            <strong>연결된 학생이 없습니다.</strong>
-            <p>오른쪽 인증 절차를 완료하면 학생 일정과 리포트가 포털에 표시됩니다.</p>
+            <strong>{l("연결된 학생이 없습니다.", "No students are linked yet.")}</strong>
+            <p>{l("오른쪽 인증 절차를 완료하면 학생 일정과 리포트가 포털에 표시됩니다.", "Complete verification to show the student's schedule and reports in the portal.")}</p>
           </div>
         )}
       </section>
 
       <section className={`${styles.panel} ${styles.verificationPanel}`}>
         <div className={styles.sectionHeading}>
-          <span>2단계 확인</span>
-          <h2>{phase === "success" ? "연결 완료" : "새 학생 연결"}</h2>
+          <span>{l("2단계 확인", "Two-step verification")}</span>
+          <h2>{phase === "success" ? l("연결 완료", "Connection complete") : l("새 학생 연결", "Link a new student")}</h2>
         </div>
 
         {phase === "identify" && (
           <form className={styles.form} onSubmit={requestOtp}>
             <fieldset className={styles.methodChoice}>
-              <legend>인증 방법</legend>
+              <legend>{l("인증 방법", "Verification method")}</legend>
               <label data-selected={method === "phone"}>
                 <input
                   type="radio"
@@ -135,7 +137,7 @@ export default function FamilyLinkClient({
                     setTarget("");
                   }}
                 />
-                <span><b>휴대전화 OTP</b><small>문자 인증번호 입력</small></span>
+                <span><b>{l("휴대전화 OTP", "Phone OTP")}</b><small>{l("문자 인증번호 입력", "Enter a text-message code")}</small></span>
               </label>
               <label data-selected={method === "email"}>
                 <input
@@ -148,12 +150,12 @@ export default function FamilyLinkClient({
                     setTarget("");
                   }}
                 />
-                <span><b>이메일 OTP</b><small>번호 입력 또는 승인 링크</small></span>
+                <span><b>{l("이메일 OTP", "Email OTP")}</b><small>{l("번호 입력 또는 승인 링크", "Enter a code or use an approval link")}</small></span>
               </label>
             </fieldset>
 
             <label className={styles.field}>
-              <span>{method === "phone" ? "학생 휴대전화번호" : "학생 이메일"}</span>
+              <span>{method === "phone" ? l("학생 휴대전화번호", "Student phone number") : l("학생 이메일", "Student email")}</span>
               <input
                 type={method === "phone" ? "tel" : "email"}
                 inputMode={method === "phone" ? "tel" : "email"}
@@ -163,12 +165,12 @@ export default function FamilyLinkClient({
                 placeholder={method === "phone" ? "01012345678" : "student@example.com"}
                 required
               />
-              <small>학생 계정에 등록된 정보와 정확히 일치해야 합니다.</small>
+              <small>{l("학생 계정에 등록된 정보와 정확히 일치해야 합니다.", "This must exactly match the student's account information.")}</small>
             </label>
 
             {message && <p className={styles.formMessage} role="alert">{message}</p>}
             <button className={styles.primaryButton} type="submit" disabled={busy}>
-              {busy ? "전송 중" : "인증 요청"}
+              {busy ? l("전송 중", "Sending") : l("인증 요청", "Request verification")}
             </button>
           </form>
         )}
@@ -179,12 +181,12 @@ export default function FamilyLinkClient({
               <strong>{message}</strong>
               <p>
                 {method === "email"
-                  ? "학생이 이메일의 승인 링크를 눌러도 연결이 완료됩니다."
-                  : "인증번호는 10분 동안 사용할 수 있습니다."}
+                  ? l("학생이 이메일의 승인 링크를 눌러도 연결이 완료됩니다.", "The student can also complete the connection through the email approval link.")
+                  : l("인증번호는 10분 동안 사용할 수 있습니다.", "The verification code is valid for 10 minutes.")}
               </p>
             </div>
             <label className={styles.field}>
-              <span>6자리 인증번호</span>
+              <span>{l("6자리 인증번호", "6-digit verification code")}</span>
               <input
                 className={styles.otpInput}
                 type="text"
@@ -202,10 +204,10 @@ export default function FamilyLinkClient({
             )}
             <div className={styles.formActions}>
               <button className={styles.secondaryButton} type="button" onClick={restart}>
-                다시 입력
+                {l("다시 입력", "Start over")}
               </button>
               <button className={styles.primaryButton} type="submit" disabled={busy || token.length < 6}>
-                {busy ? "확인 중" : "연결 확인"}
+                {busy ? l("확인 중", "Checking") : l("연결 확인", "Confirm connection")}
               </button>
             </div>
           </form>
@@ -214,10 +216,10 @@ export default function FamilyLinkClient({
         {phase === "success" && (
           <div className={styles.successState} role="status">
             <span aria-hidden="true">✓</span>
-            <strong>{message || "학생 계정이 연결되었습니다."}</strong>
-            <p>일정과 수업 리포트가 보호자 포털에 반영됩니다.</p>
+            <strong>{message || l("학생 계정이 연결되었습니다.", "The student account is now linked.")}</strong>
+            <p>{l("일정과 수업 리포트가 보호자 포털에 반영됩니다.", "Schedules and lesson reports now appear in the family portal.")}</p>
             <button className={styles.primaryButton} type="button" onClick={restart}>
-              다른 학생 연결
+              {l("다른 학생 연결", "Link another student")}
             </button>
           </div>
         )}

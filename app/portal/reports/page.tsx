@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
 import PortalHeader from "../PortalHeader";
+import ReportsContent, { type PortalReport } from "./ReportsContent";
 import styles from "../parent.module.css";
 
 export const dynamic = "force-dynamic";
@@ -55,70 +56,24 @@ export default async function ReportsPage() {
     role: "parent" as const,
   };
 
+  const reports: PortalReport[] = (sessions ?? []).map((session) => {
+    const tutor = Array.isArray(session.tutors) ? session.tutors[0] : session.tutors;
+    return {
+      id: session.id,
+      date: session.session_date,
+      title: session.title,
+      studentName: studentNames.get(session.user_id) || "Student",
+      subject: session.subject,
+      tutorName: tutor?.name || "Seonbae tutor",
+      minutes: session.actual_minutes ?? session.duration_minutes,
+      notes: session.notes,
+    };
+  });
+
   return (
     <main className={styles.page}>
       <PortalHeader user={portalUser} active="reports" />
-      <div className={styles.shell}>
-        <header className={styles.pageHeading}>
-          <p>LESSON REPORTS</p>
-          <h1>수업 리포트</h1>
-          <span>완료된 수업별 학습 내용과 튜터 전달 사항을 확인합니다.</span>
-        </header>
-
-        <section className={styles.reportLayout}>
-          <aside className={styles.reportSummary}>
-            <span>누적 완료</span>
-            <strong>{sessions?.length ?? 0}</strong>
-            <p>연결된 학생 {studentIds.length}명의 수업 기록</p>
-          </aside>
-          <div className={styles.reportList}>
-            {sessions?.length ? sessions.map((session) => {
-              const tutor = Array.isArray(session.tutors) ? session.tutors[0] : session.tutors;
-              return (
-                <article className={styles.reportCard} key={session.id}>
-                  <header>
-                    <div>
-                      <time>{formatDate(session.session_date)}</time>
-                      <h2>{session.title}</h2>
-                    </div>
-                    <span>{studentNames.get(session.user_id) || "학생"}</span>
-                  </header>
-                  <dl>
-                    <div><dt>과목</dt><dd>{session.subject}</dd></div>
-                    <div><dt>튜터</dt><dd>{tutor?.name || "담당 튜터"}</dd></div>
-                    <div><dt>진행 시간</dt><dd>{formatMinutes(session.actual_minutes ?? session.duration_minutes)}</dd></div>
-                  </dl>
-                  <div className={styles.reportBody}>
-                    <strong>수업 전달 사항</strong>
-                    <p>{session.notes || "튜터가 수업 리포트를 작성 중입니다."}</p>
-                  </div>
-                </article>
-              );
-            }) : (
-              <div className={`${styles.panel} ${styles.emptyState}`}>
-                <strong>아직 완료된 수업 리포트가 없습니다.</strong>
-                <p>수업이 완료되면 튜터 전달 사항과 진행 시간이 이곳에 쌓입니다.</p>
-              </div>
-            )}
-          </div>
-        </section>
-      </div>
+      <ReportsContent reports={reports} studentCount={studentIds.length} />
     </main>
   );
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "short",
-  }).format(new Date(`${value}T00:00:00`));
-}
-
-function formatMinutes(value: number) {
-  const hours = Math.floor(value / 60);
-  const minutes = value % 60;
-  if (!hours) return `${minutes}분`;
-  return minutes ? `${hours}시간 ${minutes}분` : `${hours}시간`;
 }

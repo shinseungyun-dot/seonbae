@@ -3,6 +3,7 @@ import { createClient } from "../../../../utils/supabase/server";
 import TutorPortalHeader from "../TutorPortalHeader";
 import CredentialSubmissionForm, { type TutorCredential } from "./CredentialSubmissionForm";
 import styles from "./verification.module.css";
+import { PortalText } from "../../PortalLocale";
 
 export const dynamic = "force-dynamic";
 
@@ -37,12 +38,11 @@ export default async function TutorVerificationPage() {
       <TutorPortalHeader tutor={tutor} active="verification" />
       <section className={styles.shell}>
         <header className={styles.heading}>
-          <div><p>VERIFICATION</p><h1>자격 검증</h1><span>재학·졸업 증명, 자격증과 시험 성적 원본을 제출합니다.</span></div>
-          <aside><b>프로필 반영 기준</b><span>선배 팀 승인 자료만 검증 배지와 함께 공개 프로필에 표시됩니다.</span></aside>
+          <div><p>VERIFICATION</p><h1><PortalText ko="자격 검증" en="Credential verification" /></h1><span><PortalText ko="재학·졸업 증명, 자격증과 시험 성적 원본을 제출합니다." en="Submit enrollment, degree, certificate, and test-score documents." /></span></div>
+          <aside><b><PortalText ko="프로필 반영 기준" en="Profile publishing standard" /></b><span><PortalText ko="선배 팀 승인 자료만 검증 배지와 함께 공개 프로필에 표시됩니다." en="Only documents approved by the Seonbae team appear on the public profile with a verification badge." /></span></aside>
         </header>
         <CredentialSubmissionForm credentials={credentials} />
       </section>
     </main>
   );
 }
-
