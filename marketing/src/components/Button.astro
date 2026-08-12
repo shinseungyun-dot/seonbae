@@ -3,6 +3,7 @@
 interface Props {
   href?: string;
   label: string;
+  labelKo?: string;
   variant?: 'primary' | 'secondary' | 'ghost-dark' | 'text' | 'text-light';
   size?: 'md' | 'lg';
   class?: string;
@@ -11,6 +12,7 @@ interface Props {
 const {
   href = '#',
   label,
+  labelKo,
   variant = 'primary',
   size = 'md',
   class: cls = '',
@@ -18,6 +20,7 @@ const {
 } = Astro.props;
 
 const isText = variant === 'text' || variant === 'text-light';
+import T from './T.astro';
 const arrowPath =
   arrow === 'diag'
     ? 'M6 14L14 6M14 6H7M14 6V13'
@@ -26,7 +29,7 @@ const arrowPath =
 
 {isText ? (
   <a href={href} class={`textlink ${variant === 'text-light' ? 'textlink--light' : ''} ${cls}`}>
-    <span>{label}</span>
+    <span>{labelKo ? <T en={label} ko={labelKo} /> : label}</span>
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d={arrowPath} stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
@@ -36,7 +39,7 @@ const arrowPath =
     href={href}
     class={`btn btn--${variant} ${size === 'lg' ? 'btn--lg' : ''} ${cls}`}
   >
-    <span>{label}</span>
+    <span>{labelKo ? <T en={label} ko={labelKo} /> : label}</span>
     <span class="btn__disc" aria-hidden="true">
       <svg viewBox="0 0 20 20" fill="none">
         <path d={arrowPath} stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />

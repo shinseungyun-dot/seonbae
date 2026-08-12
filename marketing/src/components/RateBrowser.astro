@@ -1,6 +1,8 @@
 ---
 import { groupedRatesFor, ratesFor, type CurriculumSlug } from '../data/rates';
 import { won } from '../lib/format';
+import T from './T.astro';
+import { subjectsKo } from '../i18n/content';
 
 // A searchable, per-subject rate table. Prices are set per subject, never per
 // curriculum, so this is the only place a family ever reads a price.
@@ -17,22 +19,30 @@ const { curricula, showTabs = false, showCurriculumHeadings = false, id = 'rates
 const surfaceVar = surface === 'cream' ? 'var(--canvas)' : 'var(--white)';
 
 const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
+const groupKo: Record<string, string> = {
+  Languages: '언어', 'Individuals and societies': '개인과 사회', Sciences: '과학',
+  Mathematics: '수학', Core: '코어', Capstone: '캡스톤', Arts: '예술', English: '영어',
+  'History and social science': '역사·사회과학', 'Mathematics and computer science': '수학·컴퓨터과학',
+  'World languages': '세계 언어', 'Business and technology': '비즈니스·기술',
+  'Business and social science': '비즈니스·사회과학', 'Humanities and arts': '인문·예술',
+  SAT: 'SAT', ACT: 'ACT', 'English proficiency': '영어 능력 시험',
+};
 ---
 <div class="rb" id={id} data-total={total} style={`--rb-bg:${surfaceVar}`}>
   <div class="rb__head">
   <div class="rb__bar">
     <label class="rb__search">
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.7"/><path d="M13.2 13.2L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-      <input type="search" class="rb__input" placeholder="Search a subject, for example Physics or Calculus" aria-label="Search subjects" />
+      <input type="search" class="rb__input" placeholder="Search a subject, for example Physics or Calculus" data-placeholder-en="Search a subject, for example Physics or Calculus" data-placeholder-ko="물리, 미적분처럼 과목을 검색하세요" aria-label="Search subjects" data-aria-en="Search subjects" data-aria-ko="과목 검색" />
     </label>
-    <p class="rb__count"><span class="rb__n">{total}</span> subjects</p>
+    <p class="rb__count"><span class="rb__n">{total}</span> <T en="subjects" ko="개 과목" /></p>
   </div>
 
   {showTabs && (
-    <div class="rb__tabs" role="group" aria-label="Filter by curriculum">
-      <button type="button" class="rb__tab" data-cur="all" aria-pressed="true">All</button>
+    <div class="rb__tabs" role="group" aria-label="Filter by curriculum" data-aria-en="Filter by curriculum" data-aria-ko="교육과정별 필터">
+      <button type="button" class="rb__tab" data-cur="all" aria-pressed="true"><T en="All" ko="전체" /></button>
       {curricula.map((c) => (
-        <button type="button" class="rb__tab" data-cur={c.slug} aria-pressed="false">{c.label}</button>
+        <button type="button" class="rb__tab" data-cur={c.slug} aria-pressed="false"><T en={c.label} ko={subjectsKo[c.slug]?.title ?? c.label} /></button>
       ))}
     </div>
   )}
@@ -41,16 +51,16 @@ const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
   <div class="rb__body">
     {curricula.map((c) => (
       <section class="rb__cur" data-cur={c.slug}>
-        {showCurriculumHeadings && <h3 class="rb__cur-h">{c.label}</h3>}
+        {showCurriculumHeadings && <h3 class="rb__cur-h"><T en={c.label} ko={subjectsKo[c.slug]?.title ?? c.label} /></h3>}
         {groupedRatesFor(c.slug).map((g) => (
           <div class="rb__group">
-            <h4 class="rb__group-h">{g.group}</h4>
+            <h4 class="rb__group-h"><T en={g.group} ko={groupKo[g.group] ?? g.group} /></h4>
             <ul class="rb__rows">
               {g.items.map((r) => (
                 <li class="rb__row" data-name={r.name.toLowerCase()}>
                   <span class="rb__name">{r.name}</span>
                   <span class="rb__dots" aria-hidden="true"></span>
-                  <span class="rb__price" data-krw={r.price}>{won(r.price)}<span class="rb__unit">/ hr</span></span>
+                  <span class="rb__price" data-krw={r.price}>{won(r.price)}<span class="rb__unit"><T en="/ hr" ko="/ 시간" /></span></span>
                 </li>
               ))}
             </ul>
@@ -60,7 +70,7 @@ const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
     ))}
   </div>
 
-  <p class="rb__empty" hidden>No subject by that name yet. Tell us what you need and we will find a tutor for it.</p>
+  <p class="rb__empty" hidden><T en="No subject by that name yet. Tell us what you need and we will find a tutor for it." ko="아직 해당 이름의 과목이 없습니다. 필요한 내용을 알려주시면 맞는 선배를 찾아드릴게요." /></p>
 
   <!-- Spoken to screen readers whenever the result count changes. -->
   <p class="sr-only" role="status" aria-live="polite" data-rb-live></p>
@@ -214,7 +224,12 @@ const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
       // Debounced so typing does not fire an announcement per keystroke.
       clearTimeout(announce);
       announce = setTimeout(() => {
-        if (live) live.textContent = shown === 0 ? 'No subjects found' : `${shown} subject${shown === 1 ? '' : 's'} found`;
+        const korean = document.documentElement.dataset.lang === 'ko';
+        if (live) {
+          live.textContent = korean
+            ? shown === 0 ? '검색된 과목이 없습니다' : `${shown}개 과목을 찾았습니다`
+            : shown === 0 ? 'No subjects found' : `${shown} subject${shown === 1 ? '' : 's'} found`;
+        }
       }, 400);
     };
 

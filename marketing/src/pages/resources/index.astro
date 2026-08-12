@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import ResourceCard from '../../components/ResourceCard.astro';
+import T from '../../components/T.astro';
+import { resourceCategoryKo } from '../../i18n/content';
 
 const resources = (await getCollection('resources')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const [lead, ...rest] = resources;
@@ -13,12 +15,14 @@ const slug = (c: string) => c.toLowerCase().replace(/ /g, '-');
 <Base title="Resources — Seonbae" active="/resources">
   <PageHero
     eyebrow="Resources"
+    eyebrowKo="학습 자료"
     bg="yellow"
     illo="telescope"
     illoPos="right"
     copy="Practical notes on studying, subjects, and tests, written by the tutors who teach them. No filler, just the advice we give our own students."
+    copyKo="실제로 가르치는 선배들이 공부, 과목, 시험에 관한 실용적인 글을 씁니다. 꾸밈없이, 학생에게 직접 전하는 조언만 담았습니다."
   >
-    Clear advice for learning with <span class="mark">confidence</span>.
+    <T en="Clear advice for learning with confidence." ko="자신 있게 공부하기 위한 분명한 조언." />
   </PageHero>
 
   {lead && (
@@ -37,7 +41,7 @@ const slug = (c: string) => c.toLowerCase().replace(/ /g, '-');
     <div class="container">
       <div class="filter-row reveal" role="tablist" aria-label="Filter by category">
         {categories.map((c, i) => (
-          <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} class="filter-btn" data-filter={i === 0 ? 'all' : slug(c)}>{c}</button>
+          <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} class="filter-btn" data-filter={i === 0 ? 'all' : slug(c)}><T en={c} ko={c === 'All' ? '전체' : resourceCategoryKo[c] ?? c} /></button>
         ))}
       </div>
       <div class="res-grid" id="res-grid">
@@ -45,7 +49,7 @@ const slug = (c: string) => c.toLowerCase().replace(/ /g, '-');
           <div class="res-cell reveal" data-cat={slug(r.data.category)}><ResourceCard entry={r} variant="standard" /></div>
         ))}
       </div>
-      <p class="no-match" hidden>Nothing here yet in that category. Try another.</p>
+      <p class="no-match" hidden><T en="Nothing here yet in that category. Try another." ko="이 분류에는 아직 글이 없습니다. 다른 분류를 선택해 주세요." /></p>
     </div>
   </section>
 </Base>

@@ -371,7 +371,8 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   const setDrawer = (open: boolean) => {
     if (!toggle || !drawer) return;
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    const korean = document.documentElement.dataset.lang === 'ko';
+    toggle.setAttribute('aria-label', open ? (korean ? '메뉴 닫기' : 'Close menu') : (korean ? '메뉴 열기' : 'Open menu'));
     drawer.hidden = !open;
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) header?.classList.add('is-solid');

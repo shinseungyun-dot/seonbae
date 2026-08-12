@@ -121,8 +121,24 @@ const still = Astro.url.searchParams.has('still');
           document.documentElement.setAttribute('data-lang', lang);
           document.documentElement.setAttribute('lang', lang);
           try { localStorage.setItem('seonbae-lang', lang); } catch (e) {}
+          window.dispatchEvent(new CustomEvent('seonbae:language-change', { detail: { lang } }));
         });
       });
+
+      const syncLocalizedAttributes = () => {
+        const lang = document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
+        document.querySelectorAll<HTMLElement>('[data-placeholder-en]').forEach((node) => {
+          node.setAttribute('placeholder', node.dataset[lang === 'ko' ? 'placeholderKo' : 'placeholderEn'] ?? '');
+        });
+        document.querySelectorAll<HTMLElement>('[data-aria-en]').forEach((node) => {
+          node.setAttribute('aria-label', node.dataset[lang === 'ko' ? 'ariaKo' : 'ariaEn'] ?? '');
+        });
+        document.querySelectorAll<HTMLOptionElement>('[data-label-en]').forEach((option) => {
+          option.textContent = option.dataset[lang === 'ko' ? 'labelKo' : 'labelEn'] ?? option.value;
+        });
+      };
+      syncLocalizedAttributes();
+      window.addEventListener('seonbae:language-change', syncLocalizedAttributes);
 
       // Scroll reveal for .reveal elements.
       //

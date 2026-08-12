@@ -8,6 +8,7 @@ import FAQ from '../components/FAQ.astro';
 import RateBrowser from '../components/RateBrowser.astro';
 import { won } from '../lib/format';
 import { priceRange, pricePoints, rates, type CurriculumSlug } from '../data/rates';
+import T from '../components/T.astro';
 const plans = (await getCollection('plans')).sort((a, b) => a.data.order - b.data.order);
 
 // Everything below is derived from the per-subject rate sheet, so no number on
@@ -25,38 +26,40 @@ const curricula: { slug: CurriculumSlug; label: string }[] = [
 ];
 
 const included = [
-  'The lesson itself, one hour at a time',
-  'A verified tutor chosen by hand for your subject',
-  'Written lesson notes after every session',
-  'A recording of the lesson to review',
-  'Rematch after the first lesson if the fit is wrong',
+  ['The lesson itself, one hour at a time', '한 번에 한 시간씩 진행하는 실제 수업'],
+  ['A verified tutor chosen by hand for your subject', '과목에 맞춰 직접 고른 검증된 선배'],
+  ['Written lesson notes after every session', '매 수업 뒤 작성되는 수업 노트'],
+  ['A recording of the lesson to review', '복습할 수 있는 수업 녹화'],
+  ['Rematch after the first lesson if the fit is wrong', '첫 수업 뒤 맞지 않을 때 재매칭'],
 ];
 const neverCharged = [
-  'Registration or sign-up fees',
-  'Matching or placement fees',
-  'Lesson packages bought up front',
-  'Cancellations made 24 hours ahead',
-  'A minimum term or contract',
+  ['Registration or sign-up fees', '등록비·가입비'],
+  ['Matching or placement fees', '매칭비·배정비'],
+  ['Lesson packages bought up front', '선결제 수업 패키지'],
+  ['Cancellations made 24 hours ahead', '24시간 전에 취소한 수업'],
+  ['A minimum term or contract', '최소 이용 기간·장기 계약'],
 ];
 
 const faqs = [
-  { q: 'How does billing work?', a: 'Everything is billed monthly. On a monthly plan you are charged on the same date every month, in advance, for the hours you have set. By the hour, you are charged on the 1st for the hours you used. No packages, no long contracts.' },
-  { q: 'Can I cancel a lesson?', a: 'Yes. Cancel for free up to 24 hours before and the hour returns to your pool for the month. Cancel later or miss a lesson and it is charged, because the tutor still holds and prepares the time.' },
-  { q: 'What if the tutor is not the right fit?', a: 'Your first lesson comes with a rematch guarantee, no questions asked. If a lesson falls short because of us, we re-teach it or refund it.' },
-  { q: 'How are tutors matched?', a: 'By hand. We read your subject, level, and goals and choose a verified tutor who fits. You see their real results before the first lesson.' },
-  { q: 'Do prices change by subject?', a: 'Yes. Each subject has its own hourly price, from ' + won(FLOOR) + ' to ' + won(CEILING) + '. IB Physics and IB History are not the same rate, so we publish every subject rather than a single starting figure.' },
-  { q: 'Are there discounts or referral credits?', a: 'Refer a family or a tutor and you both benefit. We keep pricing simple and skip bundle discounts at launch, so the rate you see is the honest one.' },
+  { q: 'How does billing work?', qKo: '결제는 어떻게 하나요?', a: 'Everything is billed monthly. On a monthly plan you are charged on the same date every month, in advance, for the hours you have set. By the hour, you are charged on the 1st for the hours you used. No packages, no long contracts.', aKo: '모든 결제는 월 단위입니다. 월간 플랜은 매월 같은 날짜에 예정 시간을 선결제하고, 시간제는 사용한 시간을 기준으로 매월 1일에 결제합니다. 패키지나 장기 계약은 없습니다.' },
+  { q: 'Can I cancel a lesson?', qKo: '수업을 취소할 수 있나요?', a: 'Yes. Cancel for free up to 24 hours before and the hour returns to your pool for the month. Cancel later or miss a lesson and it is charged, because the tutor still holds and prepares the time.', aKo: '네. 24시간 전까지 무료로 취소하면 해당 시간이 그달 수업 시간으로 돌아옵니다. 이후 취소나 결석은 선배가 시간을 비우고 준비했기 때문에 결제됩니다.' },
+  { q: 'What if the tutor is not the right fit?', qKo: '선배와 잘 맞지 않으면 어떻게 하나요?', a: 'Your first lesson comes with a rematch guarantee, no questions asked. If a lesson falls short because of us, we re-teach it or refund it.', aKo: '첫 수업은 이유를 묻지 않는 재매칭을 보장합니다. 저희 책임으로 수업이 기준에 못 미치면 다시 수업하거나 환불합니다.' },
+  { q: 'How are tutors matched?', qKo: '선배는 어떻게 매칭하나요?', a: 'By hand. We read your subject, level, and goals and choose a verified tutor who fits. You see their real results before the first lesson.', aKo: '사람이 직접 합니다. 과목, 수준, 목표를 읽고 잘 맞는 검증된 선배를 고르며 첫 수업 전에 실제 성적을 보여드립니다.' },
+  { q: 'Do prices change by subject?', qKo: '과목마다 요금이 다른가요?', a: 'Yes. Each subject has its own hourly price, from ' + won(FLOOR) + ' to ' + won(CEILING) + '. IB Physics and IB History are not the same rate, so we publish every subject rather than a single starting figure.', aKo: `네. 과목별 시간당 요금은 ${won(FLOOR)}부터 ${won(CEILING)}까지입니다. IB 물리와 IB 역사는 같은 요금이 아니므로 시작가 하나 대신 전 과목 요금을 공개합니다.` },
+  { q: 'Are there discounts or referral credits?', qKo: '할인이나 추천 혜택이 있나요?', a: 'Refer a family or a tutor and you both benefit. We keep pricing simple and skip bundle discounts at launch, so the rate you see is the honest one.', aKo: '가족이나 튜터를 추천하면 양쪽 모두 혜택을 받을 수 있습니다. 묶음 할인 대신 보이는 요금 그대로 운영합니다.' },
 ];
 ---
 <Base title="Pricing — Seonbae" active="/pricing">
   <PageHero
     eyebrow="Pricing"
+    eyebrowKo="요금"
     bg="white"
     compact={true}
     copy="Every subject has its own hourly price, published in full below. Pay for the lessons ahead, nothing more, billed monthly for the hours you use."
+    copyKo="모든 과목의 시간당 요금을 아래에 전부 공개합니다. 이용할 수업 시간만 매월 결제하며 그 밖의 비용은 없습니다."
     align="center"
   >
-    One price per subject, <span class="mark">published</span>.
+    <T en="One price per subject, published." ko="과목별 요금, 숨김없이 공개합니다." />
   </PageHero>
 
   <!-- The whole rate sheet, searchable. Nothing is quoted as a curriculum
@@ -65,11 +68,11 @@ const faqs = [
     <div class="container">
       <div class="rates-head reveal">
         <div>
-          <Eyebrow label="Rate card" />
-          <h2 class="h2">Find your subject, see its price.</h2>
+          <Eyebrow label="Rate card" labelKo="요금표" />
+          <h2 class="h2"><T en="Find your subject, see its price." ko="과목을 찾고 요금을 확인하세요." /></h2>
         </div>
         <div class="rates-head__note">
-          <p class="body">Every one of the {rates.length} subjects we teach sits at one of {points.length} hourly prices, from {won(FLOOR)} to {won(CEILING)}. Search below, or pick a curriculum.</p>
+          <p class="body"><T en={`Every one of the ${rates.length} subjects we teach sits at one of ${points.length} hourly prices, from ${won(FLOOR)} to ${won(CEILING)}. Search below, or pick a curriculum.`} ko={`총 ${rates.length}개 과목은 ${won(FLOOR)}부터 ${won(CEILING)}까지 ${points.length}가지 시간당 요금 중 하나입니다. 아래에서 검색하거나 커리큘럼을 선택하세요.`} /></p>
           <ul class="pts" aria-label="The hourly price points we use">
             {points.map((p) => <li class="pt" data-krw={p}>{won(p)}</li>)}
           </ul>
@@ -88,10 +91,10 @@ const faqs = [
     <div class="container">
       <div class="plans-head reveal">
         <div>
-          <Eyebrow label="Two ways to book" />
-          <h2 class="h2">Same tutors. Same rate. Your choice of rhythm.</h2>
+          <Eyebrow label="Two ways to book" labelKo="두 가지 이용 방식" />
+          <h2 class="h2"><T en="Same tutors. Same rate. Your choice of rhythm." ko="같은 선배, 같은 요금. 원하는 리듬으로." /></h2>
         </div>
-        <p class="plans-head__note">Both are billed monthly, and both use the subject rate above. The only difference is whether your hours are set in advance.</p>
+        <p class="plans-head__note"><T en="Both are billed monthly, and both use the subject rate above. The only difference is whether your hours are set in advance." ko="두 방식 모두 위 과목 요금을 기준으로 매월 결제합니다. 수업 시간을 미리 정하는지만 다릅니다." /></p>
       </div>
       <div class="plans" id="pricing-plans">
         {plans.map((p) => (
@@ -106,15 +109,15 @@ const faqs = [
     <div class="container">
       <div class="ledger reveal">
         <div class="ledger__col">
-          <h2 class="ledger__h">In the hourly rate</h2>
+          <h2 class="ledger__h"><T en="In the hourly rate" ko="시간당 요금에 포함" /></h2>
           <ul class="ledger__list ledger__list--yes">
-            {included.map((i) => <li>{i}</li>)}
+            {included.map((i) => <li><T en={i[0]} ko={i[1]} /></li>)}
           </ul>
         </div>
         <div class="ledger__col">
-          <h2 class="ledger__h">Never charged</h2>
+          <h2 class="ledger__h"><T en="Never charged" ko="추가로 받지 않는 비용" /></h2>
           <ul class="ledger__list ledger__list--no">
-            {neverCharged.map((i) => <li>{i}</li>)}
+            {neverCharged.map((i) => <li><T en={i[0]} ko={i[1]} /></li>)}
           </ul>
         </div>
       </div>
@@ -124,9 +127,9 @@ const faqs = [
   <section class="section bg-cream" id="faq">
     <div class="container faq-wrap">
       <div class="faq-head reveal">
-        <Eyebrow label="Questions" />
-        <h2 class="h2">Answers before you ask.</h2>
-        <p class="body" style="margin-top:14px">Still unsure? Write to <a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a> and a person answers.</p>
+        <Eyebrow label="Questions" labelKo="자주 묻는 질문" />
+        <h2 class="h2"><T en="Answers before you ask." ko="궁금한 점을 먼저 답해 드립니다." /></h2>
+        <p class="body" style="margin-top:14px"><T en="Still unsure? Write to " ko="더 궁금하다면 " /><a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a><T en=" and a person answers." ko="으로 문의해 주세요. 담당자가 직접 답합니다." /></p>
       </div>
       <div class="reveal" style="margin-top:8px">
         <FAQ items={faqs} />

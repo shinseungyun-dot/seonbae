@@ -2,7 +2,6 @@
 // Thin navy utility strip above the header (standing facts), in the spirit of
 // eduvet's top bar. Scrolls away; the header below it is what stays sticky.
 import T from './T.astro';
-import RegionPicker from './RegionPicker.astro';
 import { ui } from '../i18n/home';
 ---
 <div class="utilbar">
@@ -10,13 +9,6 @@ import { ui } from '../i18n/home';
     <p class="utilbar__left">
       <T en={ui.utilLeft.en} ko={ui.utilLeft.ko} />
     </p>
-    <div class="utilbar__right">
-      <RegionPicker />
-      <span class="utilbar__dot" aria-hidden="true">·</span>
-      <a href="/become-a-tutor" class="utilbar__tutor"><T en={ui.becomeTutor.en} ko={ui.becomeTutor.ko} /> <span aria-hidden="true">→</span></a>
-      <span class="utilbar__dot utilbar__dot--email" aria-hidden="true">·</span>
-      <a href="mailto:admissions@seonbaetutor.com" class="utilbar__email">admissions@seonbaetutor.com</a>
-    </div>
   </div>
 </div>
 
@@ -30,21 +22,12 @@ import { ui } from '../i18n/home';
   .utilbar__inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 16px;
     min-height: 42px;
   }
-  .utilbar__left { display: inline-flex; align-items: center; letter-spacing: 0.01em; }
-  .utilbar__right { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
-  .utilbar__right a { color: var(--on-dark); transition: color 0.16s ease; }
-  .utilbar__right a:hover { color: var(--mint); }
-  .utilbar__dot { opacity: 0.4; }
-  @media (max-width: 1080px) {
-    .utilbar__email, .utilbar__dot--email { display: none; }
-  }
+  .utilbar__left { display: inline-flex; align-items: center; letter-spacing: 0.13em; font-weight: 700; }
   @media (max-width: 760px) {
-    /* The region picker stays: currency and time matter most on a phone. */
-    .utilbar__tutor, .utilbar__dot { display: none; }
     .utilbar__inner { gap: 10px; min-height: 38px; }
     .utilbar__left { font-size: 0.72rem; }
   }

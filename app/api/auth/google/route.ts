@@ -4,6 +4,11 @@ import {
   authRateLimitResponse,
   consumeAuthRateLimit,
 } from "../../../../utils/auth/rate-limit";
+import {
+  createGoogleLoginAttempt,
+  GOOGLE_LOGIN_ATTEMPT_COOKIE,
+  GOOGLE_LOGIN_ATTEMPT_MAX_AGE,
+} from "../../../../utils/auth/google-login-attempt";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +85,25 @@ export async function POST(request: NextRequest) {
       },
     },
   );
+
+  try {
+    response.cookies.set(
+      GOOGLE_LOGIN_ATTEMPT_COOKIE,
+      createGoogleLoginAttempt(),
+      {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: GOOGLE_LOGIN_ATTEMPT_MAX_AGE,
+      },
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "Google 로그인 확인 기능이 설정되지 않았습니다." },
+      { status: 503 },
+    );
+  }
 
   return response;
 }

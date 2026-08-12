@@ -96,8 +96,25 @@ export default function LoginPage() {
     }
     const requestedName = params.get("name");
     const requestedEmail = params.get("email");
+    const authError = params.get("error");
     if (requestedName) setFullName(requestedName.slice(0, 80));
     if (requestedEmail) setIdentifier(requestedEmail.slice(0, 254));
+    if (authError === "google-account-not-found") {
+      setMessage(l(
+        "등록된 계정과 일치하는 Google 이메일이 없습니다. 먼저 이메일로 회원가입해 주세요.",
+        "That Google email is not registered. Create an account with email first.",
+      ));
+    } else if (authError === "google-check-expired") {
+      setMessage(l(
+        "Google 로그인 시간이 만료되었습니다. 다시 시도해 주세요.",
+        "Your Google sign-in attempt expired. Please try again.",
+      ));
+    } else if (authError === "google-check-unavailable") {
+      setMessage(l(
+        "Google 계정 등록 여부를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        "We could not verify that Google account. Please try again shortly.",
+      ));
+    }
   }, []);
 
   function updateRemember(checked: boolean) {
@@ -374,7 +391,7 @@ export default function LoginPage() {
             {isSignup && (
               <>
                 <fieldset className={styles.accountRole}>
-                  <legend>{l("계정 유형", "Account type")}</legend>
+                  <legend>{l("계정 유형", "Account type")}<RequiredMark /></legend>
                   <label data-selected={accountRole === "student"}>
                     <input
                       type="radio"
@@ -423,7 +440,7 @@ export default function LoginPage() {
 
             {(isSignup || isRecovery) && (
               <label>
-                <span>{l("이름", "Full name")}</span>
+                <span>{l("이름", "Full name")}{isSignup && <RequiredMark />}</span>
                 <input
                   type="text"
                   value={fullName}
@@ -444,6 +461,7 @@ export default function LoginPage() {
                     : isSignup && accountRole === "tutor"
                       ? l("학교 이메일", "University email")
                       : l("이메일", "Email")}
+                  {isSignup && <RequiredMark />}
                 </span>
                 <input
                   type={action === "signin" ? "text" : "email"}
@@ -460,7 +478,7 @@ export default function LoginPage() {
 
             {isTutorSignup && (
               <label className={styles.fileField}>
-                <span>{l("학교 합격통지서", "University acceptance letter")}</span>
+                <span>{l("학교 합격통지서", "University acceptance letter")}<RequiredMark /></span>
                 <input
                   type="file"
                   accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
@@ -475,7 +493,7 @@ export default function LoginPage() {
 
             {(isSignup || isRecovery) && (
               <label>
-                <span>{l("휴대전화번호", "Mobile number")}</span>
+                <span>{l("휴대전화번호", "Mobile number")}{isSignup && <RequiredMark />}</span>
                 <input
                   type="tel"
                   value={phone}
@@ -496,7 +514,7 @@ export default function LoginPage() {
 
             {(action === "signin" || isSignup) && (
               <label>
-                <span>{l("비밀번호", "Password")}</span>
+                <span>{l("비밀번호", "Password")}{isSignup && <RequiredMark />}</span>
                 <input
                   type="password"
                   value={password}
@@ -528,7 +546,7 @@ export default function LoginPage() {
                   </div>
                 </div>
                 <label>
-                  <span>{l("비밀번호 확인", "Confirm password")}</span>
+                  <span>{l("비밀번호 확인", "Confirm password")}<RequiredMark /></span>
                   <input
                     type="password"
                     value={confirmPassword}
@@ -680,6 +698,10 @@ export default function LoginPage() {
       </section>
     </main>
   );
+}
+
+function RequiredMark() {
+  return <i className={styles.requiredMark} aria-hidden="true">*</i>;
 }
 
 function GoogleIcon() {

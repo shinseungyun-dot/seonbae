@@ -11,8 +11,10 @@ interface Props {
   copy?: string;
   copyKo?: string;
   ctaLabel?: string;
+  ctaLabelKo?: string;
   ctaHref?: string;
   secondaryLabel?: string;
+  secondaryLabelKo?: string;
   secondaryHref?: string;
   align?: 'left' | 'center';
   bg?: 'cream' | 'white' | 'yellow' | 'mint';
@@ -26,8 +28,10 @@ const {
   copy,
   copyKo,
   ctaLabel,
+  ctaLabelKo,
   ctaHref = '/get-matched',
   secondaryLabel,
+  secondaryLabelKo,
   secondaryHref = '/how-it-works',
   align = 'left',
   bg = 'cream',
@@ -56,8 +60,8 @@ const scene = `phero--s${seed + 1}`;
       {copy && <p class="lead phero__copy">{copyKo ? <T en={copy} ko={copyKo} /> : copy}</p>}
       {ctaLabel && (
         <div class="cta-row phero__cta">
-          <Button href={ctaHref} label={ctaLabel} variant="primary" size="lg" arrow="diag" />
-          {secondaryLabel && <Button href={secondaryHref} label={secondaryLabel} variant="text" arrow="right" />}
+          <Button href={ctaHref} label={ctaLabel} labelKo={ctaLabelKo} variant="primary" size="lg" arrow="diag" />
+          {secondaryLabel && <Button href={secondaryHref} label={secondaryLabel} labelKo={secondaryLabelKo} variant="text" arrow="right" />}
         </div>
       )}
     </div>

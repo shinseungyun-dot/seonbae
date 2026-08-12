@@ -4,12 +4,15 @@ import MediaPanel from './MediaPanel.astro';
 import { subjectScene } from '../lib/format';
 import { subjectCount } from '../data/rates';
 import MarkedTitle from './MarkedTitle.astro';
+import T from './T.astro';
+import { subjectsKo } from '../i18n/content';
 
 interface Props { entry: CollectionEntry<'subjects'>; variant?: 'row' | 'grid'; }
 const { entry, variant = 'row' } = Astro.props;
 const s = entry.data;
 const href = `/subjects/${entry.id}`;
 const nSubjects = subjectCount(entry.id);
+const ko = subjectsKo[entry.id];
 // The card stays white and the curriculum's colour is carried by a single
 // mark, which reads more serious than six tinted boxes and still lets a family
 // tell the six apart at a glance.
@@ -19,15 +22,15 @@ const tone = ((s.order - 1) % 6) + 1;
   <article class={`subject-row tone-${tone}`}>
     <div class="subject-row__body">
       <div class="subject-row__text">
-        <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}>{s.title}</MarkedTitle></a></h3>
-        <p class="body subject-summary">{s.summary}</p>
+        <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}><T en={s.title} ko={ko?.title ?? s.title} /></MarkedTitle></a></h3>
+        <p class="body subject-summary"><T en={s.summary} ko={ko?.summary ?? s.summary} /></p>
         <div class="subject-pills">
-          {s.levels.slice(0, 3).map((l) => <span class="pill pill--outline">{l}</span>)}
+          {s.levels.slice(0, 3).map((l, i) => <span class="pill pill--outline"><T en={l} ko={ko?.levels[i] ?? l} /></span>)}
         </div>
       </div>
       <div class="subject-row__foot">
-        <span class="subject-count"><strong>{nSubjects}</strong> subjects{s.tutorCount > 0 && ` · ${s.tutorCount} tutors`}</span>
-        <a href={href} class="textlink">Explore {s.title}
+        <span class="subject-count"><strong>{nSubjects}</strong> <T en={`subjects${s.tutorCount > 0 ? ` · ${s.tutorCount} tutors` : ''}`} ko={`개 과목${s.tutorCount > 0 ? ` · 튜터 ${s.tutorCount}명` : ''}`} /></span>
+        <a href={href} class="textlink"><T en={`Explore ${s.title}`} ko={`${ko?.title ?? s.title} 보기`} />
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
@@ -38,11 +41,11 @@ const tone = ((s.order - 1) % 6) + 1;
   </article>
 ) : (
   <article class={`subject-grid tone-${tone}`}>
-    <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}>{s.title}</MarkedTitle></a></h3>
-    <p class="body subject-summary">{s.summary}</p>
+    <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}><T en={s.title} ko={ko?.title ?? s.title} /></MarkedTitle></a></h3>
+    <p class="body subject-summary"><T en={s.summary} ko={ko?.summary ?? s.summary} /></p>
     <div class="subject-grid__foot">
-      <span class="subject-count"><strong>{nSubjects}</strong> subjects</span>
-      <a href={href} class="textlink" aria-label={`Explore ${s.title}`}>Explore
+      <span class="subject-count"><strong>{nSubjects}</strong> <T en="subjects" ko="개 과목" /></span>
+      <a href={href} class="textlink" aria-label={`Explore ${s.title}`}><T en="Explore" ko="보기" />
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>

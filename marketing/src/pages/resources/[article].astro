@@ -6,6 +6,8 @@ import Button from '../../components/Button.astro';
 import MediaPanel from '../../components/MediaPanel.astro';
 import ResourceCard from '../../components/ResourceCard.astro';
 import { formatDate } from '../../lib/format';
+import T from '../../components/T.astro';
+import { resourceKo, resourceCategoryKo } from '../../i18n/content';
 
 export async function getStaticPaths() {
   const resources = await getCollection('resources');
@@ -20,6 +22,8 @@ const related = (await getCollection('resources'))
   .filter((x) => x.id !== entry.id)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
+const ko = resourceKo[entry.id];
+const dateKo = new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(r.date);
 ---
 <Base title={`${r.title} — Seonbae`} description={r.excerpt} active="/resources">
   <article>
@@ -27,12 +31,12 @@ const related = (await getCollection('resources'))
       <div class="container article-head__inner reveal is-in">
         <a href="/resources" class="back-link">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          All resources
+          <T en="All resources" ko="전체 학습 자료" />
         </a>
-        <span class="pill pill--violet article-cat">{r.category}</span>
-        <h1 class="display article-title">{r.title}</h1>
-        <p class="lead article-excerpt">{r.excerpt}</p>
-        <p class="article-meta">{r.author} · {formatDate(r.date)} · {r.readingTime} min read</p>
+        <span class="pill pill--violet article-cat"><T en={r.category} ko={resourceCategoryKo[r.category] ?? r.category} /></span>
+        <h1 class="display article-title"><T en={r.title} ko={ko?.title ?? r.title} /></h1>
+        <p class="lead article-excerpt"><T en={r.excerpt} ko={ko?.excerpt ?? r.excerpt} /></p>
+        <p class="article-meta"><T en={`${r.author} · ${formatDate(r.date)} · ${r.readingTime} min read`} ko={`선배 팀 · ${dateKo} · ${r.readingTime}분 분량`} /></p>
       </div>
     </header>
 
@@ -44,7 +48,8 @@ const related = (await getCollection('resources'))
 
     <div class="container">
       <div class="article-body prose reveal">
-        <Content />
+        <div data-l="en"><Content /></div>
+        <div data-l="ko" class="kr">{(ko?.body ?? []).map((paragraph) => <p>{paragraph}</p>)}</div>
       </div>
     </div>
   </article>
@@ -53,10 +58,10 @@ const related = (await getCollection('resources'))
     <div class="container">
       <div class="sec-head reveal">
         <div>
-          <Eyebrow label="Keep reading" />
-          <h2 class="h2">More resources.</h2>
+          <Eyebrow label="Keep reading" labelKo="계속 읽기" />
+          <h2 class="h2"><T en="More resources." ko="더 많은 학습 자료." /></h2>
         </div>
-        <Button href="/resources" label="All resources" variant="text" arrow="right" />
+        <Button href="/resources" label="All resources" labelKo="전체 학습 자료" variant="text" arrow="right" />
       </div>
       <div class="grid three-col">
         {related.map((x) => <div class="reveal"><ResourceCard entry={x} variant="standard" /></div>)}

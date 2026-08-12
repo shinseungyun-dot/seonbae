@@ -2,43 +2,46 @@
 import type { CollectionEntry } from 'astro:content';
 import Button from './Button.astro';
 import MediaPanel from './MediaPanel.astro';
+import T from './T.astro';
+import { planKo } from '../i18n/content';
 
 interface Props { entry: CollectionEntry<'plans'>; }
 const { entry } = Astro.props;
 const p = entry.data;
+const ko = planKo[entry.id];
 ---
 <article class:list={['plan', { 'plan--featured': p.featured, 'plan--wide': p.wide }]}>
   <div class="plan__main">
-    {p.featured && <span class="plan__badge">Most chosen</span>}
-    <h3 class="plan__name">{p.name}</h3>
-    <p class="plan__tagline">{p.tagline}</p>
+    {p.featured && <span class="plan__badge"><T en="Most chosen" ko="가장 많이 선택" /></span>}
+    <h3 class="plan__name"><T en={p.name} ko={ko?.name ?? p.name} /></h3>
+    <p class="plan__tagline"><T en={p.tagline} ko={ko?.tagline ?? p.tagline} /></p>
 
     <!-- No single figure here: every subject carries its own hourly rate, so
          the card points at the rate card instead of quoting an average. -->
     <div class="plan__price">
-      <span class="plan__from">Hourly rate</span>
-      <span class="plan__amount">By subject</span>
-      <span class="plan__unit">Each subject is priced on its own. <a href="/pricing#all-rates">See the rate card</a></span>
+      <span class="plan__from"><T en="Hourly rate" ko="시간당 요금" /></span>
+      <span class="plan__amount"><T en="By subject" ko="과목별" /></span>
+      <span class="plan__unit"><T en="Each subject is priced on its own." ko="과목마다 요금이 다릅니다." /> <a href="/pricing#all-rates"><T en="See the rate card" ko="요금표 보기" /></a></span>
     </div>
-    <p class="plan__billing">{p.billingMonthly}</p>
+    <p class="plan__billing"><T en={p.billingMonthly} ko={ko?.billing ?? p.billingMonthly} /></p>
 
     <ul class="plan__features">
-      {p.features.map((f) => (
+      {p.features.map((f, i) => (
         <li>
           <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="var(--violet-soft)"/><path d="M6 10.5l2.6 2.6L14 7.5" fill="none" stroke="var(--violet)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>{f}</span>
+          <span><T en={f} ko={ko?.features[i] ?? f} /></span>
         </li>
       ))}
     </ul>
 
     <div class="plan__cta">
-      <Button href={p.ctaHref} label={p.ctaLabel} variant={p.featured ? 'primary' : 'secondary'} size="lg" arrow="diag" />
+      <Button href={p.ctaHref} label={p.ctaLabel} labelKo={ko?.cta} variant={p.featured ? 'primary' : 'secondary'} size="lg" arrow="diag" />
     </div>
   </div>
 
   {p.wide && (
     <div class="plan__media">
-      <MediaPanel scene="desk" accent="butter" ratio="1 / 1" label="A plan you can see" />
+      <MediaPanel scene="desk" accent="butter" ratio="1 / 1" label="A plan you can see" labelKo="눈에 보이는 학습 계획" />
     </div>
   )}
 </article>

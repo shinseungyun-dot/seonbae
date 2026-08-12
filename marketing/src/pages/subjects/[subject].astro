@@ -8,6 +8,8 @@ import TutorCard from '../../components/TutorCard.astro';
 import RateBrowser from '../../components/RateBrowser.astro';
 import { won } from '../../lib/format';
 import { ratesFor, priceRange, type CurriculumSlug } from '../../data/rates';
+import T from '../../components/T.astro';
+import { subjectsKo } from '../../i18n/content';
 
 export async function getStaticPaths() {
   const subjects = await getCollection('subjects');
@@ -37,6 +39,7 @@ tutors = tutors.slice(0, 3);
 const slug = entry.id as CurriculumSlug;
 const curriculumRates = ratesFor(slug);
 const span = curriculumRates.length ? priceRange(curriculumRates) : null;
+const ko = subjectsKo[entry.id];
 ---
 <Base title={`${s.title} tutoring — Seonbae`} description={s.summary} active="/subjects">
   <section class="subj-hero has-contour">
@@ -44,22 +47,22 @@ const span = curriculumRates.length ? priceRange(curriculumRates) : null;
       <div class="reveal is-in subj-lead">
         <a href="/subjects" class="back-link">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          All subjects
+          <T en="All subjects" ko="전체 과목" />
         </a>
-        <h1 class="subj-title">{s.title}</h1>
-        <p class="lead" style="margin-top:16px">{s.summary}</p>
+        <h1 class="subj-title"><T en={s.title} ko={ko?.title ?? s.title} /></h1>
+        <p class="lead" style="margin-top:16px"><T en={s.summary} ko={ko?.summary ?? s.summary} /></p>
         <div class="subj-pills">
-          {s.levels.map((l) => <span class="pill pill--violet">{l}</span>)}
+          {s.levels.map((l, i) => <span class="pill pill--violet"><T en={l} ko={ko?.levels[i] ?? l} /></span>)}
         </div>
         <div class="subj-meta">
           {curriculumRates.length > 0 && (
-            <span class="subj-fact"><strong>{curriculumRates.length}</strong> subjects, each priced on its own</span>
+            <span class="subj-fact"><strong>{curriculumRates.length}</strong> <T en="subjects, each priced on its own" ko="개 과목, 과목별 개별 요금" /></span>
           )}
-          {s.tutorCount > 0 && <span class="subj-fact"><strong>{s.tutorCount}</strong> verified tutors</span>}
+          {s.tutorCount > 0 && <span class="subj-fact"><strong>{s.tutorCount}</strong> <T en="verified tutors" ko="명의 검증된 튜터" /></span>}
         </div>
         <div class="cta-row" style="margin-top:26px">
-          <Button href="/get-matched" label="Get matched" variant="primary" size="lg" arrow="diag" />
-          {curriculumRates.length > 0 && <Button href="#rates" label="See every price" variant="text" arrow="right" />}
+          <Button href="/get-matched" label="Get matched" labelKo="매칭 시작하기" variant="primary" size="lg" arrow="diag" />
+          {curriculumRates.length > 0 && <Button href="#rates" label="See every price" labelKo="전체 요금 보기" variant="text" arrow="right" />}
         </div>
       </div>
     </div>
@@ -69,29 +72,30 @@ const span = curriculumRates.length ? priceRange(curriculumRates) : null;
     <div class="container subj-layout">
       <div class="subj-main">
         <div class="prose">
-          <Content />
+          <div data-l="en"><Content /></div>
+          <div data-l="ko" class="kr">{(ko?.body ?? []).map((paragraph) => <p>{paragraph}</p>)}</div>
         </div>
       </div>
       <aside class="subj-aside">
         <div class={`aside-card surface-${s.accent}`}>
-          <h2 class="aside-title">What you will work on</h2>
+          <h2 class="aside-title"><T en="What you will work on" ko="함께 공부할 내용" /></h2>
           <ul class="topic-list">
-            {s.topics.map((t) => (
+            {s.topics.map((t, i) => (
               <li>
                 <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M5 10.5l3 3 7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                {t}
+                <T en={t} ko={ko?.topics[i] ?? t} />
               </li>
             ))}
           </ul>
         </div>
         <div class="aside-card aside-card--plain">
-          <h2 class="aside-title">Who this is for</h2>
-          <p class="body">{s.idealLearner}</p>
+          <h2 class="aside-title"><T en="Who this is for" ko="이런 학생에게 추천합니다" /></h2>
+          <p class="body"><T en={s.idealLearner} ko={ko?.idealLearner ?? s.idealLearner} /></p>
         </div>
         <div class="aside-card aside-card--plain">
-          <h2 class="aside-title">How lessons are structured</h2>
+          <h2 class="aside-title"><T en="How lessons are structured" ko="수업 진행 방식" /></h2>
           <ul class="format-list">
-            {s.lessonFormat.map((f) => <li>{f}</li>)}
+            {s.lessonFormat.map((f, i) => <li><T en={f} ko={ko?.lessonFormat[i] ?? f} /></li>)}
           </ul>
         </div>
       </aside>
@@ -103,10 +107,10 @@ const span = curriculumRates.length ? priceRange(curriculumRates) : null;
       <div class="container">
         <div class="sec-head reveal">
           <div>
-            <Eyebrow label="Prices" />
-            <h2 class="h2">Every {s.title} subject, priced.</h2>
+            <Eyebrow label="Prices" labelKo="요금" />
+            <h2 class="h2"><T en={`Every ${s.title} subject, priced.`} ko={`${ko?.title ?? s.title} 전 과목 요금.`} /></h2>
           </div>
-          <p class="rates-note">From {won(span.min)} to {won(span.max)} an hour. The rate depends on the subject, not the curriculum.</p>
+          <p class="rates-note"><T en={`From ${won(span.min)} to ${won(span.max)} an hour. The rate depends on the subject, not the curriculum.`} ko={`시간당 ${won(span.min)}부터 ${won(span.max)}까지. 요금은 커리큘럼이 아니라 과목에 따라 달라집니다.`} /></p>
         </div>
         <div class="reveal">
           <RateBrowser curricula={[{ slug, label: s.title }]} id={`rates-${slug}`} surface="cream" />
@@ -120,10 +124,10 @@ const span = curriculumRates.length ? priceRange(curriculumRates) : null;
       <div class="container">
         <div class="sec-head reveal">
           <div>
-            <Eyebrow label="Tutors" />
-            <h2 class="h2">Tutors for {s.title}.</h2>
+            <Eyebrow label="Tutors" labelKo="선배" />
+            <h2 class="h2"><T en={`Tutors for ${s.title}.`} ko={`${ko?.title ?? s.title} 선배.`} /></h2>
           </div>
-          <Button href="/tutors" label="All tutors" variant="text" arrow="right" />
+          <Button href="/tutors" label="All tutors" labelKo="전체 선배" variant="text" arrow="right" />
         </div>
         <div class="grid three-col">
           {tutors.map((t) => <div class="reveal"><TutorCard entry={t} /></div>)}
@@ -136,10 +140,10 @@ const span = curriculumRates.length ? priceRange(curriculumRates) : null;
     <div class="container">
       <div class="sec-head reveal">
         <div>
-          <Eyebrow label="Keep exploring" />
-          <h2 class="h2">Other subjects.</h2>
+          <Eyebrow label="Keep exploring" labelKo="더 살펴보기" />
+          <h2 class="h2"><T en="Other subjects." ko="다른 과목." /></h2>
         </div>
-        <Button href="/subjects" label="Browse all" variant="text" arrow="right" />
+        <Button href="/subjects" label="Browse all" labelKo="전체 보기" variant="text" arrow="right" />
       </div>
       <div class="grid three-col">
         {related.map((r) => <div class="reveal"><SubjectCard entry={r} variant="grid" /></div>)}

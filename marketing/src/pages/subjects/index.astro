@@ -4,36 +4,41 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
 import SubjectCard from '../../components/SubjectCard.astro';
+import T from '../../components/T.astro';
 
 const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order - b.data.order);
 
 const levels = [
-  { label: 'Lower secondary', note: 'Grades 6 to 8' },
-  { label: 'IGCSE', note: 'Grades 9 to 10' },
-  { label: 'IB and A Level', note: 'Grades 11 to 12' },
-  { label: 'University prep', note: 'SAT, ACT, and beyond' },
+  { label: 'Lower secondary', labelKo: '중등 과정', note: 'Grades 6 to 8', noteKo: '6~8학년' },
+  { label: 'IGCSE', labelKo: 'IGCSE', note: 'Grades 9 to 10', noteKo: '9~10학년' },
+  { label: 'IB and A Level', labelKo: 'IB·A레벨', note: 'Grades 11 to 12', noteKo: '11~12학년' },
+  { label: 'University prep', labelKo: '대학 입시 준비', note: 'SAT, ACT, and beyond', noteKo: 'SAT·ACT와 그 이후' },
 ];
 ---
 <Base title="Subjects — Seonbae" active="/subjects">
   <PageHero
     eyebrow="Subjects"
+    eyebrowKo="과목"
     bg="yellow"
     illo="climb"
     illoPos="right"
     copy="Every curriculum a Korean student abroad is likely to sit, taught by tutors who sat it first. Choose a subject to see how lessons are structured and who they are for."
+    copyKo="해외에서 공부하는 한국 학생이 만날 주요 커리큘럼을, 같은 시험을 먼저 치른 선배가 가르칩니다. 과목을 선택해 수업 방식과 추천 대상을 확인하세요."
     ctaLabel="Find a tutor"
+    ctaLabelKo="선배 찾기"
     secondaryLabel="How it works"
+    secondaryLabelKo="이용 방법"
   >
-    Find support for the subject in front of <span class="mark">you</span>.
+    <T en="Find support for the subject in front of you." ko="지금 마주한 과목에 꼭 맞는 도움을 찾아보세요." />
   </PageHero>
 
   <section class="section bg-white section--tight">
     <div class="container">
       <div class="levels reveal">
-        <span class="levels__label">Levels we cover</span>
+        <span class="levels__label"><T en="Levels we cover" ko="수업 과정" /></span>
         <div class="levels__row">
           {levels.map((l) => (
-            <span class="level-pill"><strong>{l.label}</strong><span>{l.note}</span></span>
+            <span class="level-pill"><strong><T en={l.label} ko={l.labelKo} /></strong><span><T en={l.note} ko={l.noteKo} /></span></span>
           ))}
         </div>
       </div>

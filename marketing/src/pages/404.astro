@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Button from '../components/Button.astro';
 import Contour from '../components/Contour.astro';
+import T from '../components/T.astro';
 ---
 <Base title="Page not found — Seonbae" active="none" showConversion={false}>
   <section class="nf has-contour">
@@ -20,11 +21,11 @@ import Contour from '../components/Contour.astro';
         </svg>
       </div>
       <Eyebrow label="404" />
-      <h1 class="display nf-title">Looks like this lesson wandered <span class="mark">off</span>.</h1>
-      <p class="lead nf-copy">The page you are after is not here. It may have moved, or the link had a typo. Let us get you back on track.</p>
+      <h1 class="display nf-title"><T en="Looks like this lesson wandered off." ko="찾으시는 페이지가 길을 잃었나 봐요." /></h1>
+      <p class="lead nf-copy"><T en="The page you are after is not here. It may have moved, or the link had a typo. Let us get you back on track." ko="페이지가 이동했거나 주소가 잘못 입력되었을 수 있습니다. 다시 올바른 곳으로 안내해 드릴게요." /></p>
       <div class="cta-row nf-cta">
-        <Button href="/" label="Back to home" variant="secondary" arrow="right" />
-        <Button href="/get-matched" label="Find a tutor" variant="primary" arrow="diag" />
+        <Button href="/" label="Back to home" labelKo="홈으로" variant="secondary" arrow="right" />
+        <Button href="/get-matched" label="Find a tutor" labelKo="선배 찾기" variant="primary" arrow="diag" />
       </div>
     </div>
   </section>

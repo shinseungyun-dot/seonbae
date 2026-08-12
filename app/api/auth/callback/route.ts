@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "../../../../utils/supabase/server";
-import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "../../../../utils/auth/legal";
 import {
-  decodeGoogleOnboarding,
-  GOOGLE_ONBOARDING_COOKIE,
-} from "../../../../utils/auth/google-onboarding";
+  GOOGLE_LOGIN_ATTEMPT_COOKIE,
+  readGoogleLoginAttempt,
+} from "../../../../utils/auth/google-login-attempt";
+import { createAdminClient } from "../../../../utils/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const type = emailOtpType(request.nextUrl.searchParams.get("type"));
   const next = safeDestination(request.nextUrl.searchParams.get("next"));
+  const provider = request.nextUrl.searchParams.get("provider");
   const supabase = await createClient();
   let verified = false;
 
@@ -31,47 +32,32 @@ export async function GET(request: NextRequest) {
 
   if (verified) {
     const cookieStore = await cookies();
-    const onboarding = decodeGoogleOnboarding(
-      cookieStore.get(GOOGLE_ONBOARDING_COOKIE)?.value,
-    );
+    if (provider === "google") {
+      const googleCheck = await checkExistingGoogleAccount(
+        supabase,
+        cookieStore.get(GOOGLE_LOGIN_ATTEMPT_COOKIE)?.value,
+      );
+      cookieStore.delete(GOOGLE_LOGIN_ATTEMPT_COOKIE);
 
-    if (onboarding) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
-        return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
-      }
-
-      const { error: metadataError } = await supabase.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          full_name:
-            user.user_metadata?.full_name
-            || user.user_metadata?.name
-            || null,
-          phone: onboarding.phone,
-          account_role: onboarding.role,
-          privacy_agreed: true,
-          privacy_consent_version: PRIVACY_POLICY_VERSION,
-          terms_agreed: true,
-          terms_version: TERMS_VERSION,
-          age_confirmed: true,
-        },
-      });
-
-      if (metadataError) {
-        cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
-        await supabase.auth.signOut({ scope: "local" });
+      if (!googleCheck.allowed) {
         return NextResponse.redirect(
-          new URL("/login?error=google-onboarding", request.nextUrl.origin),
+          new URL(`/login?error=${googleCheck.error}`, request.nextUrl.origin),
         );
       }
+
+      const destination = destinationForGoogleProfile(googleCheck.profile);
+      cookieStore.set("seonbae-remember", "1", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 400 * 24 * 60 * 60,
+      });
+      return NextResponse.redirect(
+        new URL(next === "/portal" ? destination : next, request.nextUrl.origin),
+      );
     }
 
-    cookieStore.delete(GOOGLE_ONBOARDING_COOKIE);
     cookieStore.set("seonbae-remember", "1", {
       httpOnly: true,
       sameSite: "lax",
@@ -84,6 +70,80 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
+}
+
+async function checkExistingGoogleAccount(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  attemptToken: string | undefined,
+) {
+  const attempt = readGoogleLoginAttempt(attemptToken);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!attempt || !user?.email) {
+    await supabase.auth.signOut({ scope: "local" });
+    return { allowed: false as const, error: "google-check-expired" };
+  }
+
+  try {
+    const admin = createAdminClient();
+    const { data: profiles, error } = await admin
+      .from("profiles")
+      .select("id,email,role,account_status,created_at")
+      .ilike("email", user.email)
+      .order("created_at", { ascending: true })
+      .limit(5);
+
+    if (error) throw error;
+    const matchingProfile = (profiles ?? []).find(
+      (profile) => profile.id === user.id,
+    );
+    const profileCreatedAt = matchingProfile?.created_at
+      ? Date.parse(matchingProfile.created_at)
+      : Number.NaN;
+    const existedBeforeGoogle =
+      Boolean(matchingProfile)
+      && Number.isFinite(profileCreatedAt)
+      && profileCreatedAt <= attempt.issuedAt;
+
+    if (existedBeforeGoogle) {
+      return {
+        allowed: true as const,
+        profile: {
+          role: matchingProfile!.role,
+          accountStatus: matchingProfile!.account_status,
+        },
+      };
+    }
+
+    const userCreatedAt = Date.parse(user.created_at);
+    await supabase.auth.signOut({ scope: "local" });
+
+    // Supabase may have created a new auth user and profile during OAuth. Only
+    // remove it when both timestamps prove it belongs to this login attempt;
+    // an older account is never deleted merely because its profile is missing.
+    if (Number.isFinite(userCreatedAt) && userCreatedAt >= attempt.issuedAt) {
+      await admin.auth.admin.deleteUser(user.id);
+    }
+
+    return { allowed: false as const, error: "google-account-not-found" };
+  } catch (error) {
+    console.error("Google account pre-existence check failed", {
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+    await supabase.auth.signOut({ scope: "local" });
+    return { allowed: false as const, error: "google-check-unavailable" };
+  }
+}
+
+function destinationForGoogleProfile(profile: {
+  role: string | null;
+  accountStatus: string | null;
+}) {
+  if (profile.role === "admin") return "/admin";
+  if (profile.accountStatus !== "approved") return "/portal/pending";
+  return profile.role === "tutor" ? "/portal/tutor" : "/portal";
 }
 
 function emailOtpType(value: string | null): EmailOtpType | null {

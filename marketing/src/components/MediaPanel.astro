@@ -6,6 +6,7 @@ interface Props {
   scene?: 'call' | 'desk' | 'figure' | 'rings' | 'notes';
   accent?: 'mint' | 'lavender' | 'butter' | 'violet' | 'ink';
   label?: string;
+  labelKo?: string;
   play?: boolean;
   ratio?: string; // e.g. "4 / 3"
   src?: string;
@@ -16,6 +17,7 @@ const {
   scene = 'call',
   accent = 'lavender',
   label,
+  labelKo,
   play = false,
   ratio = '4 / 3',
   src,
@@ -31,6 +33,7 @@ const grounds: Record<string, string> = {
   ink: 'linear-gradient(155deg, #16283b 0%, #0e2336 55%, #081824 130%)',
 };
 const dark = accent === 'violet' || accent === 'ink';
+import T from './T.astro';
 const stroke = dark ? 'rgba(255,255,255,0.42)' : 'rgba(20,30,45,0.34)';
 const strokeSoft = dark ? 'rgba(255,255,255,0.2)' : 'rgba(20,30,45,0.16)';
 const mint = dark ? '#edb43f' : '#123c5e'; // yellow pop on dark panels, navy on light
@@ -100,7 +103,7 @@ const mint = dark ? '#edb43f' : '#123c5e'; // yellow pop on dark panels, navy on
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
     </button>
   )}
-  {label && <span class="mp-label">{label}</span>}
+  {label && <span class="mp-label">{labelKo ? <T en={label} ko={labelKo} /> : label}</span>}
 </div>
 
 <style>

@@ -4,33 +4,38 @@ import PageHero from '../components/PageHero.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Button from '../components/Button.astro';
 import MediaPanel from '../components/MediaPanel.astro';
+import T from '../components/T.astro';
 
 const steps = [
-  { n: '01', title: 'Tell us your goals', copy: 'Share the subject, the level, and what you are working toward. A test score, a predicted grade, or simply steadier confidence.' },
-  { n: '02', title: 'We match you by hand', copy: 'We read your goals and choose a verified tutor who fits, not the first name in a list. You see their results before you meet.' },
-  { n: '03', title: 'Meet your tutor', copy: 'Your first lesson is a real lesson. If the fit is not right, we rematch you, no questions asked.' },
-  { n: '04', title: 'Follow the plan', copy: 'Weekly lessons build on each other, with notes and next steps after every session so progress is something you can see.' },
+  { n: '01', title: 'Tell us your goals', titleKo: '목표를 알려주세요', copy: 'Share the subject, the level, and what you are working toward. A test score, a predicted grade, or simply steadier confidence.', copyKo: '과목과 학년, 이루고 싶은 목표를 알려주세요. 시험 점수나 예상 등급, 또는 꾸준한 자신감도 좋습니다.' },
+  { n: '02', title: 'We match you by hand', titleKo: '직접 매칭합니다', copy: 'We read your goals and choose a verified tutor who fits, not the first name in a list. You see their results before you meet.', copyKo: '명단의 첫 사람을 고르는 대신 목표를 읽고 잘 맞는 검증된 선배를 직접 찾습니다. 만나기 전에 실제 성적을 확인할 수 있습니다.' },
+  { n: '03', title: 'Meet your tutor', titleKo: '선배를 만납니다', copy: 'Your first lesson is a real lesson. If the fit is not right, we rematch you, no questions asked.', copyKo: '첫 만남부터 실제 수업을 진행합니다. 잘 맞지 않으면 이유를 묻지 않고 다시 매칭해 드립니다.' },
+  { n: '04', title: 'Follow the plan', titleKo: '계획을 이어갑니다', copy: 'Weekly lessons build on each other, with notes and next steps after every session so progress is something you can see.', copyKo: '매주 수업이 앞선 내용을 이어가고, 수업 뒤 노트와 다음 단계가 남아 성장을 눈으로 확인할 수 있습니다.' },
 ];
 
 const inclusions = [
-  { title: 'A live one to one lesson', copy: 'On video, with a shared whiteboard for working through problems together.' },
-  { title: 'The lesson recorded', copy: 'Disclosed and saved, so a student can review any moment later.' },
-  { title: 'Notes in your inbox', copy: 'What you covered, what to practise, and what comes next, after every session.' },
-  { title: 'Homework and feedback', copy: 'Set between lessons and marked in a way that teaches, not just corrects.' },
+  { title: 'A live one to one lesson', titleKo: '실시간 일대일 수업', copy: 'On video, with a shared whiteboard for working through problems together.', copyKo: '영상과 공유 화이트보드로 문제를 함께 풀어갑니다.' },
+  { title: 'The lesson recorded', titleKo: '복습할 수 있는 녹화', copy: 'Disclosed and saved, so a student can review any moment later.', copyKo: '녹화 사실을 미리 알리고 저장해, 필요한 장면을 나중에 다시 볼 수 있습니다.' },
+  { title: 'Notes in your inbox', titleKo: '수업 뒤 도착하는 노트', copy: 'What you covered, what to practise, and what comes next, after every session.', copyKo: '배운 내용과 연습할 것, 다음 단계를 매 수업 뒤 정리해 드립니다.' },
+  { title: 'Homework and feedback', titleKo: '과제와 피드백', copy: 'Set between lessons and marked in a way that teaches, not just corrects.', copyKo: '수업 사이 과제를 내고, 정답만 고치는 것이 아니라 배울 수 있도록 피드백합니다.' },
 ];
 ---
 <Base title="How it works — Seonbae" active="/how-it-works">
   <PageHero
     eyebrow="How it works"
+    eyebrowKo="이용 방법"
     bg="cream"
     illo="climb"
     illoPos="right"
     copy="Finding the right tutor should feel simple and honest. Here is the whole shape of it, from the first message to a weekly rhythm that holds."
+    copyKo="좋은 선배를 찾는 과정은 단순하고 솔직해야 합니다. 첫 문의부터 꾸준한 주간 수업까지, 전체 과정을 안내합니다."
     ctaLabel="Find a tutor"
+    ctaLabelKo="선배 찾기"
     secondaryLabel="See pricing"
+    secondaryLabelKo="요금 보기"
     secondaryHref="/pricing"
   >
-    Let's find the tutor who fits, then get to <span class="mark">work</span>.
+    <T en="Let's find the tutor who fits, then get to work." ko="잘 맞는 선배를 찾고, 함께 시작해 볼게요." />
   </PageHero>
 
   <section class="section bg-white">
@@ -40,8 +45,8 @@ const inclusions = [
           <article class="step reveal" data-delay={`${i * 60}ms`}>
             <span class="step__n">{s.n}</span>
             <div class="step__body">
-              <h2 class="step__title">{s.title}</h2>
-              <p class="body">{s.copy}</p>
+              <h2 class="step__title"><T en={s.title} ko={s.titleKo} /></h2>
+              <p class="body"><T en={s.copy} ko={s.copyKo} /></p>
             </div>
           </article>
         ))}
@@ -52,11 +57,11 @@ const inclusions = [
   <section class="section bg-cream">
     <div class="container split">
       <div class="reveal">
-        <Eyebrow label="Every lesson" />
-        <h2 class="h2">What every lesson includes.</h2>
-        <p class="lead" style="margin-top:18px">The same four things, every time, whether you book one lesson or a standing weekly slot.</p>
+        <Eyebrow label="Every lesson" labelKo="모든 수업" />
+        <h2 class="h2"><T en="What every lesson includes." ko="모든 수업에 포함되는 것." /></h2>
+        <p class="lead" style="margin-top:18px"><T en="The same four things, every time, whether you book one lesson or a standing weekly slot." ko="한 번만 예약해도, 매주 정기 수업을 해도 같은 네 가지를 제공합니다." /></p>
         <div class="incl-media" style="margin-top:26px">
-          <MediaPanel scene="call" accent="mint" ratio="16 / 7" label="One to one, on video" />
+          <MediaPanel scene="call" accent="mint" ratio="16 / 7" label="One to one, on video" labelKo="영상으로 만나는 일대일 수업" />
         </div>
       </div>
       <div class="incl-grid reveal" data-delay="80ms">
@@ -66,8 +71,8 @@ const inclusions = [
               <svg viewBox="0 0 20 20" width="18" height="18"><path d="M5 10.5l3 3 7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
             <div>
-              <h3 class="incl-title">{f.title}</h3>
-              <p class="body">{f.copy}</p>
+              <h3 class="incl-title"><T en={f.title} ko={f.titleKo} /></h3>
+              <p class="body"><T en={f.copy} ko={f.copyKo} /></p>
             </div>
           </article>
         ))}
@@ -79,15 +84,15 @@ const inclusions = [
     <div class="container">
       <div class="verify-teaser has-contour reveal">
         <div class="verify-teaser__text">
-          <Eyebrow label="Verification" />
-          <h2 class="h2">A tutor reaches our registry only once we have held the score report.</h2>
-          <p class="lead" style="margin-top:16px">Every credential is checked against the real document before a tutor ever meets a student. That is the part we will not skip.</p>
+          <Eyebrow label="Verification" labelKo="검증" />
+          <h2 class="h2"><T en="A tutor reaches our registry only once we have held the score report." ko="성적표를 직접 확인한 뒤에만 선배 명부에 등록합니다." /></h2>
+          <p class="lead" style="margin-top:16px"><T en="Every credential is checked against the real document before a tutor ever meets a student. That is the part we will not skip." ko="학생을 만나기 전에 모든 자격을 실제 서류와 대조합니다. 이 과정은 절대 생략하지 않습니다." /></p>
           <div class="cta-row" style="margin-top:26px">
-            <Button href="/verification" label="How we verify" variant="secondary" arrow="diag" />
+            <Button href="/verification" label="How we verify" labelKo="검증 방식 보기" variant="secondary" arrow="diag" />
           </div>
         </div>
         <div class="verify-teaser__media">
-          <MediaPanel scene="desk" accent="violet" ratio="5 / 4" label="Held in hand" />
+          <MediaPanel scene="desk" accent="violet" ratio="5 / 4" label="Held in hand" labelKo="직접 확인한 서류" />
         </div>
       </div>
     </div>

@@ -2,19 +2,25 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import T from '../components/T.astro';
 
-const subjects = ['IB Diploma', 'Advanced Placement', 'A Level', 'IGCSE', 'Standardized Tests', 'English and Writing', 'Not sure yet'];
-const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 'Adult learner'];
+const subjects = [
+  ['IB Diploma', 'IB 디플로마'], ['Advanced Placement', 'AP'], ['A Level', 'A레벨'],
+  ['IGCSE', 'IGCSE'], ['Standardized Tests', '표준화 시험'], ['English and Writing', '영어·글쓰기'], ['Not sure yet', '아직 잘 모르겠어요'],
+];
+const levels = [['Lower secondary', '중등 과정'], ['IGCSE', 'IGCSE'], ['IB or A Level', 'IB 또는 A레벨'], ['University prep', '대학 입시 준비'], ['Adult learner', '성인 학습자']];
 ---
 <Base title="Contact — Seonbae" active="/contact" showConversion={false}>
   <PageHero
     eyebrow="Contact"
+    eyebrowKo="문의"
     bg="cream"
     compact={true}
     copy="The more you tell us, the better the match. Share what you are working toward and we will reply within one business day."
+    copyKo="상황을 자세히 알려주실수록 더 잘 맞는 선배를 찾을 수 있습니다. 목표를 남겨주시면 영업일 기준 하루 안에 답변드리겠습니다."
     contour={true}
   >
-    Tell us what you would like help <span class="mark">with</span>.
+    <T en="Tell us what you would like help with." ko="어떤 도움이 필요한지 알려주세요." />
   </PageHero>
 
   <section class="section bg-white" style="padding-top:clamp(20px,3vw,40px)">
@@ -23,71 +29,71 @@ const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="form-grid">
           <div class="form-field">
-            <label for="student">Student name <span class="req">*</span></label>
-            <input class="form-control" id="student" name="student" type="text" required placeholder="Who are the lessons for?" />
+            <label for="student"><T en="Student name" ko="학생 이름" /> <span class="req">*</span></label>
+            <input class="form-control" id="student" name="student" type="text" required data-placeholder-en="Who are the lessons for?" data-placeholder-ko="수업을 받을 학생 이름" />
           </div>
           <div class="form-field">
-            <label for="email">Parent or learner email <span class="req">*</span></label>
+            <label for="email"><T en="Parent or learner email" ko="학부모 또는 학생 이메일" /> <span class="req">*</span></label>
             <input class="form-control" id="email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
           </div>
         </div>
 
         <div class="form-grid">
           <div class="form-field">
-            <label for="level">Grade or level</label>
+            <label for="level"><T en="Grade or level" ko="학년·과정" /></label>
             <select class="form-control" id="level" name="level">
-              <option value="" selected>Select a level</option>
-              {levels.map((l) => <option value={l}>{l}</option>)}
+              <option value="" selected data-label-en="Select a level" data-label-ko="과정을 선택하세요">과정을 선택하세요</option>
+              {levels.map((l) => <option value={l[0]} data-label-en={l[0]} data-label-ko={l[1]}>{l[1]}</option>)}
             </select>
           </div>
           <div class="form-field">
-            <label for="subject">Subject</label>
+            <label for="subject"><T en="Subject" ko="과목" /></label>
             <select class="form-control" id="subject" name="subject">
-              <option value="" selected>Select a subject</option>
-              {subjects.map((s) => <option value={s}>{s}</option>)}
+              <option value="" selected data-label-en="Select a subject" data-label-ko="과목을 선택하세요">과목을 선택하세요</option>
+              {subjects.map((s) => <option value={s[0]} data-label-en={s[0]} data-label-ko={s[1]}>{s[1]}</option>)}
             </select>
           </div>
         </div>
 
         <div class="form-field">
-          <label for="goal">What is the goal?</label>
-          <input class="form-control" id="goal" name="goal" type="text" placeholder="A grade, a test score, or steadier confidence" />
+          <label for="goal"><T en="What is the goal?" ko="학습 목표" /></label>
+          <input class="form-control" id="goal" name="goal" type="text" data-placeholder-en="A grade, a test score, or steadier confidence" data-placeholder-ko="목표 등급, 시험 점수 또는 자신감 회복" />
         </div>
 
         <div class="form-field">
-          <label for="times">Preferred times</label>
-          <input class="form-control" id="times" name="times" type="text" placeholder="Which evenings or weekends suit you, and your time zone" />
+          <label for="times"><T en="Preferred times" ko="희망 시간" /></label>
+          <input class="form-control" id="times" name="times" type="text" data-placeholder-en="Which evenings or weekends suit you, and your time zone" data-placeholder-ko="가능한 평일 저녁이나 주말, 거주 지역의 시간대" />
         </div>
 
         <div class="form-field">
-          <label for="context">Anything else</label>
-          <textarea class="form-control" id="context" name="context" placeholder="Recent grades, a deadline coming up, or a subject that has been a struggle"></textarea>
+          <label for="context"><T en="Anything else" ko="추가로 알려주실 내용" /></label>
+          <textarea class="form-control" id="context" name="context" data-placeholder-en="Recent grades, a deadline coming up, or a subject that has been a struggle" data-placeholder-ko="최근 성적, 다가오는 마감일 또는 어려움을 겪는 과목"></textarea>
         </div>
 
         <button type="submit" class="btn btn--primary btn--lg contact-submit">
-          <span>Send message</span>
+          <span><T en="Send message" ko="문의 보내기" /></span>
           <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
 
         <p class="form-done" role="status" hidden data-done>
-          <strong>Thank you.</strong> We have your details and will reply within one business day with next steps.
+          <strong><T en="Thank you." ko="감사합니다." /></strong> <T en="We have your details and will reply within one business day with next steps." ko="내용을 확인했으며 영업일 기준 하루 안에 다음 단계를 안내해 드리겠습니다." />
         </p>
       </form>
 
       <aside class="contact-aside">
         <div class="contact-card">
-          <Eyebrow label="Standing facts" />
+          <Eyebrow label="Standing facts" labelKo="기본 안내" />
           <ul class="fact-list">
-            <li><span class="fact-k">Email</span><span class="fact-v">admissions@seonbaetutor.com</span></li>
-            <li><span class="fact-k">Reply time</span><span class="fact-v">Within one business day</span></li>
-            <li><span class="fact-k">Based in</span><span class="fact-v">Songdo, Incheon · lessons worldwide</span></li>
-            <li><span class="fact-k">Languages</span><span class="fact-v">Korean and English</span></li>
+            <li><span class="fact-k"><T en="Email" ko="이메일" /></span><span class="fact-v">admissions@seonbaetutor.com</span></li>
+            <li><span class="fact-k"><T en="Reply time" ko="답변 시간" /></span><span class="fact-v"><T en="Within one business day" ko="영업일 기준 하루 안" /></span></li>
+            <li><span class="fact-k"><T en="Based in" ko="운영 지역" /></span><span class="fact-v"><T en="Songdo, Incheon · lessons worldwide" ko="인천 송도 · 전 세계 온라인 수업" /></span></li>
+            <li><span class="fact-k"><T en="Languages" ko="언어" /></span><span class="fact-v"><T en="Korean and English" ko="한국어·영어" /></span></li>
           </ul>
         </div>
         <div class="contact-card contact-card--soft">
-          <h2 class="h3" style="font-size:1.25rem">Ready to start?</h2>
-          <p class="body" style="margin-top:10px">If you already know what you need, the matching form is the fastest way in.</p>
-          <a href="/get-matched" class="textlink" style="margin-top:14px">Get matched
+          <h2 class="h3" style="font-size:1.25rem"><T en="Ready to start?" ko="바로 시작할까요?" /></h2>
+          <p class="body" style="margin-top:10px"><T en="If you already know what you need, the matching form is the fastest way in." ko="필요한 내용을 알고 있다면 매칭 신청서가 가장 빠른 방법입니다." /></p>
+          <a href="/get-matched" class="textlink" style="margin-top:14px"><T en="Get matched" ko="매칭 시작하기" />
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
@@ -122,14 +128,17 @@ const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const btn = form?.querySelector('.contact-submit') as HTMLButtonElement | null;
   const btnLabel = btn?.querySelector('span:first-child') as HTMLElement | null;
+  const language = () => (document.documentElement.dataset.lang === 'ko' ? 'ko' : 'en');
+  const localized = (en: string, ko: string) => (language() === 'ko' ? ko : en);
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validate(form)) return;
 
     const original = btnLabel?.textContent ?? '';
+    let keepDisabled = false;
     if (btn) btn.disabled = true;
-    if (btnLabel) btnLabel.textContent = 'Sending…';
+    if (btnLabel) btnLabel.textContent = localized('Sending…', '전송 중…');
 
     try {
       const mode = await submitForm(form, 'New enquiry from seonbaetutor.com');
@@ -137,12 +146,16 @@ const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 
       if (done) {
         done.textContent =
           mode === 'email'
-            ? 'Your email app is opening with your answers filled in. Send it and we will reply within one business day.'
-            : 'Thank you. We will reply within one business day.';
+            ? localized(
+                'Your email app is opening with your answers filled in. Send it and we will reply within one business day.',
+                '작성 내용이 담긴 이메일 앱을 열고 있습니다. 전송해 주시면 영업일 기준 하루 안에 답변드리겠습니다.',
+              )
+            : localized('Thank you. We will reply within one business day.', '감사합니다. 영업일 기준 하루 안에 답변드리겠습니다.');
         done.hidden = false;
         done.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       if (mode === 'posted') {
+        keepDisabled = true;
         form.querySelectorAll('input, select, textarea, .contact-submit').forEach((el) => {
           if (el instanceof HTMLElement && !el.closest('.form-done')) (el as HTMLInputElement).disabled = true;
         });
@@ -150,12 +163,15 @@ const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 
     } catch {
       const done = form.querySelector('[data-done]') as HTMLElement | null;
       if (done) {
-        done.textContent = 'Something went wrong. Please email admissions@seonbaetutor.com and we will pick it up straight away.';
+        done.textContent = localized(
+          'Something went wrong. Please email admissions@seonbaetutor.com and we will pick it up straight away.',
+          '문제가 발생했습니다. admissions@seonbaetutor.com으로 이메일을 보내주시면 바로 확인하겠습니다.',
+        );
         done.hidden = false;
       }
     } finally {
-      if (btn && !btn.disabled) btn.disabled = false;
-      if (btnLabel) btnLabel.textContent = original;
+      if (btn && !keepDisabled) btn.disabled = false;
+      if (btnLabel && !keepDisabled) btnLabel.textContent = original;
     }
   });
 </script>

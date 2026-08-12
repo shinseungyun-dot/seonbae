@@ -13,8 +13,8 @@ const t = (en: string, ko: string): Pair => ({ en, ko });
 // ----- Shared chrome (header, utility bar, footer, ticker, CTA) -------------
 export const ui = {
   utilLeft: t(
-    'Verified tutors from Seoul National University, Korea University, and Yonsei University',
-    '서울대학교, 고려대학교, 연세대학교 출신의 검증된 선배',
+    'EDUCATION TO THE WORLD',
+    'EDUCATION TO THE WORLD',
   ),
   utilRight: t('Replies within one business day', '영업일 기준 하루 안에 답장'),
   findTutor: t('Find a tutor', '선배 찾기'),

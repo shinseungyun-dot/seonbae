@@ -1,5 +1,8 @@
 ---
-interface Props { label: string; tone?: 'ink' | 'light'; class?: string; }
-const { label, tone = 'ink', class: cls = '' } = Astro.props;
+import T from './T.astro';
+interface Props { label: string; labelKo?: string; tone?: 'ink' | 'light'; class?: string; }
+const { label, labelKo, tone = 'ink', class: cls = '' } = Astro.props;
 ---
-<span class={`eyebrow ${tone === 'light' ? 'eyebrow--light' : ''} ${cls}`}>{label}</span>
+<span class={`eyebrow ${tone === 'light' ? 'eyebrow--light' : ''} ${cls}`}>
+  {labelKo ? <T en={label} ko={labelKo} /> : label}
+</span>
