@@ -1,0 +1,12 @@
+.git
+.next
+.next-build
+.pnpm-store
+node_modules
+caveman
+imports
+prototypes
+dev-server.log
+dev-server-error.log
+tsconfig.tsbuildinfo
+manus-seonbae-redesign-prompt.txt
