@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import ChatPanel, { type PortalChatThread } from "./ChatPanel";
-import PortalHeader, { type PortalHeaderUser } from "./PortalHeader";
+import type { PortalHeaderUser } from "./PortalHeader";
 import { useSeonbaeLocale } from "../../utils/i18n/client";
 import styles from "./portal.module.css";
 
@@ -110,8 +110,6 @@ export default function PortalDashboard({
 
   return (
     <main className={styles.page}>
-      <PortalHeader user={user} />
-
       <section className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroCopy}>

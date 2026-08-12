@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSeonbaeLocale } from "../../utils/i18n/client";
 import PortalSidebar, { type PortalSidebarItem } from "./PortalSidebar";
 
@@ -12,12 +12,11 @@ export type PortalHeaderUser = {
 
 export default function PortalHeader({
   user,
-  active = "overview",
 }: {
   user: PortalHeaderUser;
-  active?: "overview" | "homework" | "tutors" | "family" | "reports" | "billing";
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const locale = useSeonbaeLocale();
   const l = (ko: string, en: string) => locale === "ko" ? ko : en;
 
@@ -38,19 +37,18 @@ export default function PortalHeader({
     {
       href: "/portal",
       label: user.role === "parent" ? l("가족 일정", "Family calendar") : l("오늘과 일정", "Overview"),
-      icon: user.role === "parent" ? "calendar" : "overview",
-      active: active === "overview",
+      active: pathname === "/portal" || pathname.startsWith("/portal/meeting/") || pathname.startsWith("/portal/consultation/"),
     },
-    { href: "/portal/homework", label: l("숙제", "Homework"), icon: "homework", active: active === "homework" },
+    { href: "/portal/homework", label: l("숙제", "Homework"), active: pathname.startsWith("/portal/homework") },
   ];
 
   if (user.role === "student") {
-    items.push({ href: "/portal/tutors", label: l("내 튜터", "My tutors"), icon: "tutors", active: active === "tutors" });
+    items.push({ href: "/portal/tutors", label: l("내 튜터", "My tutors"), active: pathname.startsWith("/portal/tutors") });
   } else {
     items.push(
-      { href: "/portal/family", label: l("학생 연결", "Students"), icon: "students", active: active === "family" },
-      { href: "/portal/reports", label: l("수업 리포트", "Reports"), icon: "reports", active: active === "reports" },
-      { href: "/portal/billing", label: l("결제", "Billing"), icon: "billing", active: active === "billing" },
+      { href: "/portal/family", label: l("학생 연결", "Students"), active: pathname.startsWith("/portal/family") },
+      { href: "/portal/reports", label: l("수업 리포트", "Reports"), active: pathname.startsWith("/portal/reports") },
+      { href: "/portal/billing", label: l("결제", "Billing"), active: pathname.startsWith("/portal/billing") },
     );
   }
 

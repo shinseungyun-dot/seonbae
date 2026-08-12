@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
-import PortalHeader from "../PortalHeader";
 import HomeworkList, { type HomeworkItem } from "./HomeworkList";
 import { PortalText } from "../PortalLocale";
 import styles from "./homework.module.css";
@@ -70,21 +69,11 @@ export default async function HomeworkPage() {
     };
   });
 
-  const portalUser = {
-    name:
-      profile?.full_name
-      || user.user_metadata?.full_name
-      || user.email?.split("@")[0]
-      || (isParent ? "보호자" : "학생"),
-    email: profile?.email || user.email || "",
-    role: isParent ? ("parent" as const) : ("student" as const),
-  };
   const openCount = assignments.filter((item) => item.status === "todo").length;
   const reviewCount = assignments.filter((item) => item.status === "submitted").length;
 
   return (
     <main className={styles.page}>
-      <PortalHeader user={portalUser} active="homework" />
       <section className={styles.shell}>
         <header className={styles.heading}>
           <div>

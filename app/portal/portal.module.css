@@ -153,3 +153,12 @@
 @media(prefers-reduced-motion:reduce){.page,.portalSidebar,.sidebarScrim,.sidebarBrand>span,.sidebarNav a>span,.sidebarUtility>span,.sidebarAccountLinks span,.sidebarIdentity{transition:none}}
 
 :global(html[data-theme="dark"]) .mobilePortalBar{background:rgba(17,27,34,.96);border-color:rgba(240,238,235,.16)}:global(html[data-theme="dark"]) .mobileBrand{color:#f3f0ea}:global(html[data-theme="dark"]) .mobileBrand small{color:#bdc5c4}:global(html[data-theme="dark"]) .mobileMenuButton{border-color:rgba(240,238,235,.16);background:#17262e;color:#f3f0ea}
+
+/* Persistent navigation polish: clearer mark, calmer vertical rhythm, instant route feedback. */
+.sidebarLogoBox,.mobileLogoBox{display:grid;flex:none;place-items:center;border:1px solid rgba(255,255,255,.72);border-radius:9px;background:#fffdf7;box-shadow:0 10px 24px -16px rgba(0,0,0,.8)}
+.sidebarBrand>.sidebarLogoBox{width:48px;height:48px;min-width:48px;opacity:1;transform:none;transition:none}.mobileLogoBox{width:40px;height:40px}.sidebarLogoBox img{width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 5px 8px rgba(21,48,63,.16))}.mobileLogoBox img{width:31px;height:31px;object-fit:contain}
+.sidebarBrand>span:not(.sidebarLogoBox){display:grid;min-width:135px;opacity:0;transform:translateX(-6px);transition:opacity .15s ease,transform .15s ease}.portalSidebar[data-expanded=true] .sidebarBrand>span:not(.sidebarLogoBox){opacity:1;transform:none}
+.sidebarNav{justify-content:center;gap:14px;margin-block:clamp(24px,6vh,64px)}.sidebarNav a{min-height:54px;padding-inline:17px;font-size:.84rem;transition:background .18s ease,color .18s ease,transform .18s ease,opacity .18s ease}.sidebarNav a[data-pending=true]::after{position:absolute;right:15px;width:6px;height:6px;border-radius:50%;background:#d6a02b;box-shadow:0 0 0 4px rgba(214,160,43,.16);content:"";animation:pendingPulse .8s ease-in-out infinite alternate}
+@keyframes pendingPulse{to{opacity:.42;transform:scale(.72)}}
+@media(max-width:860px){.portalSidebar .sidebarLogoBox{width:44px;height:44px}.portalSidebar .sidebarLogoBox img{width:34px;height:34px}.portalSidebar .sidebarNav{justify-content:flex-start;gap:8px;margin-block:18px}.mobileBrand>.mobileLogoBox{display:grid}}
+@media(prefers-reduced-motion:reduce){.sidebarNav a[data-pending=true]::after{animation:none}}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSeonbaeLocale } from "../../../utils/i18n/client";
 import PortalSidebar, { type PortalSidebarItem } from "../PortalSidebar";
 
@@ -12,12 +12,11 @@ export type TutorHeaderUser = {
 
 export default function TutorPortalHeader({
   tutor,
-  active = "overview",
 }: {
   tutor: TutorHeaderUser;
-  active?: "overview" | "homework" | "verification";
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const locale = useSeonbaeLocale();
   const l = (ko: string, en: string) => locale === "ko" ? ko : en;
 
@@ -31,9 +30,9 @@ export default function TutorPortalHeader({
   }
 
   const items: PortalSidebarItem[] = [
-    { href: "/portal/tutor", label: l("개요", "Overview"), icon: "overview", active: active === "overview" },
-    { href: "/portal/tutor/homework", label: l("숙제", "Homework"), icon: "homework", active: active === "homework" },
-    { href: "/portal/tutor/verification", label: l("자격 검증", "Verification"), icon: "verification", active: active === "verification" },
+    { href: "/portal/tutor", label: l("개요", "Overview"), active: pathname === "/portal/tutor" },
+    { href: "/portal/tutor/homework", label: l("숙제", "Homework"), active: pathname.startsWith("/portal/tutor/homework") },
+    { href: "/portal/tutor/verification", label: l("자격 검증", "Verification"), active: pathname.startsWith("/portal/tutor/verification") },
   ];
 
   return (

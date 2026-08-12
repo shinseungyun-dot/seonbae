@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
-import TutorPortalHeader from "../TutorPortalHeader";
 import TutorHomeworkClient, { type TutorHomeworkItem, type TutorStudent } from "./TutorHomeworkClient";
 import styles from "./tutor-homework.module.css";
 import { PortalText } from "../../PortalLocale";
@@ -69,15 +68,8 @@ export default async function TutorHomeworkPage() {
     feedback: row.feedback,
     gradedAt: row.graded_at,
   }));
-  const tutor = {
-    name: profile.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "튜터",
-    email: profile.email || user.email || "",
-    registryId: profile.tutor_registry_id,
-  };
-
   return (
     <main className={styles.page}>
-      <TutorPortalHeader tutor={tutor} active="homework" />
       <section className={styles.shell}>
         <header className={styles.heading}>
           <p>ASSIGNMENTS</p>

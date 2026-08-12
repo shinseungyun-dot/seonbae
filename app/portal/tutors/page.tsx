@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
-import PortalHeader from "../PortalHeader";
 import { PortalDateTime, PortalText } from "../PortalLocale";
 import styles from "./tutors.module.css";
 
@@ -48,15 +47,8 @@ export default async function StudentTutorsPage() {
     if (!current.nextSession && sessionTime.getTime() >= Date.now()) current.nextSession = sessionTime.toISOString();
     tutors.set(session.tutor_registry_id, current);
   }
-  const portalUser = {
-    name: profile.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "학생",
-    email: profile.email || user.email || "",
-    role: "student" as const,
-  };
-
   return (
     <main className={styles.page}>
-      <PortalHeader user={portalUser} active="tutors" />
       <section className={styles.shell}>
         <header className={styles.heading}><p>MY TUTORS</p><h1><PortalText ko="내 튜터" en="My tutors" /></h1><span><PortalText ko="이번 학기에 함께하는 튜터와 담당 과목을 확인합니다." en="See the tutors and subjects assigned to you this term." /></span></header>
         <div className={styles.grid}>

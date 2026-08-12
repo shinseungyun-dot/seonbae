@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
-import PortalHeader from "../PortalHeader";
 import ReportsContent, { type PortalReport } from "./ReportsContent";
 import styles from "../parent.module.css";
 
@@ -46,16 +45,6 @@ export default async function ReportsPage() {
         .order("session_date", { ascending: false })
     : { data: [] };
 
-  const portalUser = {
-    name:
-      profile.full_name
-      || user.user_metadata?.full_name
-      || user.email?.split("@")[0]
-      || "보호자",
-    email: profile.email || user.email || "",
-    role: "parent" as const,
-  };
-
   const reports: PortalReport[] = (sessions ?? []).map((session) => {
     const tutor = Array.isArray(session.tutors) ? session.tutors[0] : session.tutors;
     return {
@@ -72,7 +61,6 @@ export default async function ReportsPage() {
 
   return (
     <main className={styles.page}>
-      <PortalHeader user={portalUser} active="reports" />
       <ReportsContent reports={reports} studentCount={studentIds.length} />
     </main>
   );

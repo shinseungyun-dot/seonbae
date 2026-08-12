@@ -4,7 +4,6 @@ import Link from "next/link";
 import ChatPanel, { type PortalChatThread } from "../ChatPanel";
 import styles from "../portal.module.css";
 import { useSeonbaeLocale } from "../../../utils/i18n/client";
-import TutorPortalHeader from "./TutorPortalHeader";
 
 export type TutorPortalSession = {
   id: number;
@@ -58,8 +57,6 @@ export default function TutorPortalDashboard({
 
   return (
     <main className={styles.page}>
-      <TutorPortalHeader tutor={tutor} />
-
       <section className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroCopy}>

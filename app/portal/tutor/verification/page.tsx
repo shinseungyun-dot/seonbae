@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
-import TutorPortalHeader from "../TutorPortalHeader";
 import CredentialSubmissionForm, { type TutorCredential } from "./CredentialSubmissionForm";
 import styles from "./verification.module.css";
 import { PortalText } from "../../PortalLocale";
@@ -27,15 +26,8 @@ export default async function TutorVerificationPage() {
     .eq("tutor_id", user.id)
     .order("created_at", { ascending: false });
   const credentials = (rows ?? []) as TutorCredential[];
-  const tutor = {
-    name: profile.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "튜터",
-    email: profile.email || user.email || "",
-    registryId: profile.tutor_registry_id,
-  };
-
   return (
     <main className={styles.page}>
-      <TutorPortalHeader tutor={tutor} active="verification" />
       <section className={styles.shell}>
         <header className={styles.heading}>
           <div><p>VERIFICATION</p><h1><PortalText ko="자격 검증" en="Credential verification" /></h1><span><PortalText ko="재학·졸업 증명, 자격증과 시험 성적 원본을 제출합니다." en="Submit enrollment, degree, certificate, and test-score documents." /></span></div>

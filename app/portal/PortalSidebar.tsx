@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
+import { usePathname } from "next/navigation";
 import {
   List,
   SidebarSimple,
@@ -9,20 +10,9 @@ import {
 } from "@phosphor-icons/react";
 import styles from "./portal.module.css";
 
-export type PortalIconName =
-  | "overview"
-  | "calendar"
-  | "homework"
-  | "tutors"
-  | "students"
-  | "reports"
-  | "billing"
-  | "verification";
-
 export type PortalSidebarItem = {
   href: string;
   label: string;
-  icon: PortalIconName;
   active?: boolean;
 };
 
@@ -56,6 +46,8 @@ export default function PortalSidebar({
 }) {
   const [expanded, setExpanded] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -75,13 +67,43 @@ export default function PortalSidebar({
     return () => document.documentElement.classList.remove("portal-shell-collapsed");
   }, [expanded]);
 
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!pendingHref) return;
+    const timeout = window.setTimeout(() => setPendingHref(null), 10000);
+    return () => window.clearTimeout(timeout);
+  }, [pendingHref]);
+
   const closeMobile = () => setMobileOpen(false);
+
+  function matchesPendingPath(itemHref: string) {
+    if (!pendingHref) return false;
+    if (itemHref === "/portal") return pendingHref === "/portal";
+    if (itemHref === "/portal/tutor") return pendingHref === "/portal/tutor";
+    return pendingHref === itemHref || pendingHref.startsWith(`${itemHref}/`);
+  }
+
+  function startNavigation(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    closeMobile();
+    if (
+      href === pathname
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) return;
+    setPendingHref(href);
+  }
 
   return (
     <>
       <header className={styles.mobilePortalBar}>
         <Link href={homeHref} className={styles.mobileBrand}>
-          <img src="/logo.png" alt="" width="32" height="32" />
+          <span className={styles.mobileLogoBox}><img src="/logo.png" alt="" width="32" height="32" /></span>
           <span><b>Seonbae</b><small>{roleLabel}</small></span>
         </Link>
         <button
@@ -110,10 +132,11 @@ export default function PortalSidebar({
         className={styles.portalSidebar}
         data-expanded={expanded}
         data-mobile-open={mobileOpen}
+        aria-busy={Boolean(pendingHref)}
       >
         <div className={styles.sidebarHeader}>
           <Link href={homeHref} className={styles.sidebarBrand} onClick={closeMobile}>
-            <img src="/logo.png" alt="" width="40" height="40" />
+            <span className={styles.sidebarLogoBox}><img src="/logo.png" alt="" width="40" height="40" /></span>
             <span><b>Seonbae</b><small>{roleLabel}</small></span>
           </Link>
           <button
@@ -132,9 +155,10 @@ export default function PortalSidebar({
             <Link
               key={item.href}
               href={item.href}
-              aria-current={item.active ? "page" : undefined}
+              aria-current={(pendingHref ? matchesPendingPath(item.href) : item.active) ? "page" : undefined}
+              data-pending={matchesPendingPath(item.href) || undefined}
               title={expanded ? undefined : item.label}
-              onClick={closeMobile}
+              onClick={(event) => startNavigation(event, item.href)}
             >
               <span>{item.label}</span>
             </Link>

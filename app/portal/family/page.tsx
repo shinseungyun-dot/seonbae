@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
-import PortalHeader from "../PortalHeader";
 import { type LinkedStudent } from "./FamilyLinkClient";
 import FamilyPageContent from "./FamilyPageContent";
 import styles from "../parent.module.css";
@@ -42,19 +41,8 @@ export default async function FamilyPage() {
     phone: maskPhone(student.phone),
   }));
 
-  const portalUser = {
-    name:
-      profile.full_name
-      || user.user_metadata?.full_name
-      || user.email?.split("@")[0]
-      || "보호자",
-    email: profile.email || user.email || "",
-    role: "parent" as const,
-  };
-
   return (
     <main className={styles.page}>
-      <PortalHeader user={portalUser} active="family" />
       <FamilyPageContent linkedStudents={linkedStudents} />
     </main>
   );

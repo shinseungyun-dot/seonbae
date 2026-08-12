@@ -5,7 +5,6 @@ import {
   BILLING_ACCESS_COOKIE,
   readBillingAccess,
 } from "../../../utils/auth/portal-otp";
-import PortalHeader from "../PortalHeader";
 import { type BillingLineItem } from "./BillingClient";
 import BillingPageContent from "./BillingPageContent";
 import styles from "../parent.module.css";
@@ -75,19 +74,8 @@ export default async function BillingPage() {
     }
   }
 
-  const portalUser = {
-    name:
-      profile.full_name
-      || user.user_metadata?.full_name
-      || user.email?.split("@")[0]
-      || "보호자",
-    email: profile.email || user.email || "",
-    role: "parent" as const,
-  };
-
   return (
     <main className={styles.page}>
-      <PortalHeader user={portalUser} active="billing" />
       <BillingPageContent
         locked={!access}
         accessExpiresAt={access?.expiresAt ?? null}
