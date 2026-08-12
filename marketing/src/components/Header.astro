@@ -66,28 +66,18 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
 
     <div class="header-actions">
       <LangToggle class="header-lang" />
-      <a href="/login?next=/portal" class="header-utility auth-skeleton" data-auth-portal aria-busy="true"><span data-auth-portal-label></span></a>
-      <a href="/login" class="header-utility" data-auth-login hidden><T en="Log in" ko="로그인" /></a>
-      <a href="/login?mode=signup" class="header-signup" data-auth-signup hidden><T en="Sign up" ko="회원가입" /></a>
-      <div class="header-account">
-        <a href="/get-matched" class="btn btn--primary header-cta">
-          <span><T en="Consultation" ko="상담 신청" /></span>
-          <span class="btn__disc" aria-hidden="true">
-            <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </a>
-        <button type="button" class="btn btn--primary header-cta account-trigger" data-auth-identity aria-expanded="false" aria-controls="desktop-account-menu" hidden>
-          <span data-auth-name></span>
-          <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M5 7.5 10 12.5l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-        <div class="account-menu" id="desktop-account-menu" data-auth-menu hidden>
-          <a href="/my-page#info" role="menuitem"><T en="My information" ko="내 정보" /></a>
-          <a href="/my-page#policies" role="menuitem"><T en="Policies" ko="정책" /></a>
-          <a href="/my-page#settings" role="menuitem"><T en="Settings" ko="설정" /></a>
-          <span class="account-menu__line"></span>
-          <button type="button" role="menuitem" data-auth-logout><T en="Log out" ko="로그아웃" /></button>
-        </div>
-      </div>
+      <a href="/get-matched" class="btn btn--primary header-cta">
+        <span><T en="Consultation" ko="상담 신청" /></span>
+        <span class="btn__disc" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <a href="/login" class="btn btn--primary header-auth auth-pending" data-auth-primary aria-busy="true" aria-hidden="true" tabindex="-1">
+        <span data-auth-primary-label></span>
+        <span class="btn__disc" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
       <button type="button" class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
         <span></span><span></span><span></span>
       </button>
@@ -117,15 +107,12 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
           <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a href="/login?next=/portal" class="btn btn--secondary btn--lg drawer-btn auth-skeleton" data-auth-portal aria-busy="true">
-        <span data-auth-portal-label></span>
+      <a href="/login" class="btn btn--secondary btn--lg drawer-btn auth-pending" data-auth-primary aria-busy="true" aria-hidden="true" tabindex="-1">
+        <span data-auth-primary-label></span>
+        <span class="btn__disc" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
       </a>
-      <div class="drawer-auth" data-auth-signed-out hidden>
-        <a href="/login" data-auth-login hidden><T en="Log in" ko="로그인" /></a>
-        <a href="/login?mode=signup" data-auth-signup hidden><T en="Sign up" ko="회원가입" /></a>
-      </div>
-      <a href="/my-page" class="drawer-tutorlink" data-auth-identity-link hidden><span data-auth-name></span></a>
-      <button type="button" class="drawer-logout" data-auth-logout hidden><T en="Log out" ko="로그아웃" /></button>
       <a href="/become-a-tutor" class="drawer-tutorlink"><T en={ui.becomeTutor.en} ko={ui.becomeTutor.ko} /></a>
       <LangToggle class="drawer-lang" />
     </div>
@@ -268,95 +255,10 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   .mega-all:hover { gap: 9px; }
 
   .header-actions { display: flex; align-items: center; gap: 10px; }
-  .header-account { position: relative; }
-  .header-utility {
-    font-size: 0.86rem;
-    font-weight: 600;
-    color: var(--ink);
-    padding: 8px 6px;
-    transition: color 0.16s ease;
-    white-space: nowrap;
-  }
-  .header-utility:hover { color: var(--violet); }
-  .site-header:not(.is-solid) .header-utility { color: var(--on-dark); }
-  .header-signup {
-    display: inline-flex;
-    min-height: 40px;
-    align-items: center;
-    padding: 0 13px;
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    color: var(--ink);
-    font-size: 0.84rem;
-    font-weight: 650;
-    white-space: nowrap;
-    transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
-  }
-  .header-signup:hover { border-color: var(--violet); color: var(--violet); }
-  .site-header:not(.is-solid) .header-signup { border-color: rgba(255,255,255,.32); color: var(--on-dark); }
-  .site-header:not(.is-solid) .header-signup:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.65); color: #fff; }
-
-  .auth-skeleton { min-width: 52px; }
-  .auth-skeleton [data-auth-portal-label] {
-    display: block;
-    width: 46px;
-    height: 11px;
-    border-radius: var(--r-pill);
-    background: color-mix(in srgb, currentColor 16%, transparent);
-  }
-  .account-trigger { min-width: 132px; justify-content: space-between; }
-  .account-menu {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    width: 190px;
-    padding: 8px;
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    box-shadow: var(--shadow-md);
-    z-index: 30;
-  }
-  .account-menu a,
-  .account-menu button {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--ink);
-    text-align: left;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-  .account-menu a:hover,
-  .account-menu button:hover { background: var(--violet-soft); color: var(--violet); }
-  .account-menu__line { display: block; height: 1px; margin: 5px 4px; background: var(--line); }
-  .drawer-logout {
-    min-height: 44px;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    cursor: pointer;
-  }
+  .header-auth { min-width: 124px; justify-content: space-between; }
+  .auth-pending { visibility: hidden; pointer-events: none; }
 
   .drawer-btn { width: 100%; justify-content: space-between; }
-  .drawer-auth { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-  .drawer-auth a {
-    min-height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    color: var(--ink);
-    font-weight: 650;
-  }
-  .drawer-auth a:last-child { border-color: var(--violet); color: var(--violet); }
   .drawer-tutorlink {
     display: inline-flex;
     font-weight: 600;
@@ -442,8 +344,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   @media (max-width: 1180px) {
     .nav-desktop { display: none; }
     .menu-toggle { display: flex; }
-    .header-cta { display: none; }
-    .header-utility, .header-signup { display: none; }
+    .header-cta, .header-auth { display: none; }
     .header-lang { display: none; }
   }
   @media (min-width: 1181px) {
