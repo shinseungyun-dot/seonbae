@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 import { useSeonbaeLocale } from "../../utils/i18n/client";
-import styles from "./portal.module.css";
+import PortalSidebar, { type PortalSidebarItem } from "./PortalSidebar";
 
 export type PortalHeaderUser = {
   name: string;
@@ -20,13 +18,8 @@ export default function PortalHeader({
   active?: "overview" | "homework" | "tutors" | "family" | "reports" | "billing";
 }) {
   const router = useRouter();
-  const profileMenuRef = useRef<HTMLDetailsElement>(null);
   const locale = useSeonbaeLocale();
   const l = (ko: string, en: string) => locale === "ko" ? ko : en;
-
-  function setProfileMenuOpen(open: boolean) {
-    if (profileMenuRef.current) profileMenuRef.current.open = open;
-  }
 
   async function signOut() {
     try {
@@ -41,105 +34,46 @@ export default function PortalHeader({
     }
   }
 
-  const portalLabel = user.role === "parent"
-    ? l("보호자 포털", "FAMILY PORTAL")
-    : l("학생 포털", "STUDENT PORTAL");
+  const items: PortalSidebarItem[] = [
+    {
+      href: "/portal",
+      label: user.role === "parent" ? l("가족 일정", "Family calendar") : l("오늘과 일정", "Overview"),
+      icon: user.role === "parent" ? "calendar" : "overview",
+      active: active === "overview",
+    },
+    { href: "/portal/homework", label: l("숙제", "Homework"), icon: "homework", active: active === "homework" },
+  ];
+
+  if (user.role === "student") {
+    items.push({ href: "/portal/tutors", label: l("내 튜터", "My tutors"), icon: "tutors", active: active === "tutors" });
+  } else {
+    items.push(
+      { href: "/portal/family", label: l("학생 연결", "Students"), icon: "students", active: active === "family" },
+      { href: "/portal/reports", label: l("수업 리포트", "Reports"), icon: "reports", active: active === "reports" },
+      { href: "/portal/billing", label: l("결제", "Billing"), icon: "billing", active: active === "billing" },
+    );
+  }
 
   return (
-    <>
-    <div className={styles.utilityBar}>
-      <div>
-        <span>EDUCATION TO THE WORLD</span>
-        <Link href="/">{l("웹사이트로", "Back to website")} <i aria-hidden="true">↗</i></Link>
-      </div>
-    </div>
-    <header className={styles.topbar}>
-      <Link className={styles.brand} href="/">
-        <img src="/logo.png" alt="" width="36" height="36" />
-        <span>
-          <b>Seonbae</b>
-          <small>{portalLabel}</small>
-        </span>
-      </Link>
-
-      <nav
-        className={styles.portalNav}
-        aria-label={user.role === "parent" ? l("보호자 포털 메뉴", "Parent portal menu") : l("학생 포털 메뉴", "Student portal menu")}
-      >
-          <Link href="/portal" aria-current={active === "overview" ? "page" : undefined}>
-            {user.role === "parent" ? l("가족 일정", "Family calendar") : l("오늘 · 일정", "Overview")}
-          </Link>
-          <Link href="/portal/homework" aria-current={active === "homework" ? "page" : undefined}>
-            {l("숙제", "Homework")}
-          </Link>
-          {user.role === "student" && (
-            <Link href="/portal/tutors" aria-current={active === "tutors" ? "page" : undefined}>
-              {l("내 튜터", "My tutors")}
-            </Link>
-          )}
-          {user.role === "parent" && (
-            <>
-          <Link href="/portal/family" aria-current={active === "family" ? "page" : undefined}>
-            {l("학생 연결", "Students")}
-          </Link>
-          <Link href="/portal/reports" aria-current={active === "reports" ? "page" : undefined}>
-            {l("수업 리포트", "Reports")}
-          </Link>
-          <Link href="/portal/billing" aria-current={active === "billing" ? "page" : undefined}>
-            {l("결제", "Billing")}
-          </Link>
-            </>
-          )}
-      </nav>
-
-      <div className={styles.account}>
-        <details
-          ref={profileMenuRef}
-          className={styles.profileMenu}
-          onMouseEnter={() => setProfileMenuOpen(true)}
-          onMouseLeave={() => setProfileMenuOpen(false)}
-          onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-              setProfileMenuOpen(false);
-            }
-          }}
-        >
-          <summary
-            onClick={(event) => {
-              if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <span className={styles.avatar}>{initials(user.name)}</span>
-            <span className={styles.accountMeta}>
-              <small>{l("로그인 계정", "Signed in")}</small>
-              <b>{user.name}</b>
-            </span>
-            <span className={styles.profileChevron} aria-hidden="true">▾</span>
-          </summary>
-          <div>
-            <Link href="/my-page#info">{l("내 정보", "My information")}</Link>
-            <Link href="/my-page#policies">{l("정책", "Policies")}</Link>
-            <Link href="/my-page#settings">{l("설정", "Settings")}</Link>
-            <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
-          </div>
-        </details>
-        <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
-      </div>
-    </header>
-    </>
+    <PortalSidebar
+      roleLabel={user.role === "parent" ? l("보호자 포털", "Family portal") : l("학생 포털", "Student portal")}
+      navigationLabel={user.role === "parent" ? l("보호자 포털 메뉴", "Parent portal menu") : l("학생 포털 메뉴", "Student portal menu")}
+      homeHref="/portal"
+      user={{ name: user.name, email: user.email }}
+      items={items}
+      labels={{
+        expand: l("사이드바 펼치기", "Expand sidebar"),
+        collapse: l("사이드바 접기", "Collapse sidebar"),
+        open: l("포털 메뉴 열기", "Open portal menu"),
+        close: l("포털 메뉴 닫기", "Close portal menu"),
+        website: l("웹사이트로", "Back to website"),
+        account: l("로그인 계정", "Signed in"),
+        information: l("내 정보", "My information"),
+        policies: l("정책", "Policies"),
+        settings: l("설정", "Settings"),
+        signOut: l("로그아웃", "Log out"),
+      }}
+      onSignOut={signOut}
+    />
   );
-}
-
-function initials(value: string) {
-  const clean = value.trim();
-  if (!clean) return "선";
-  if (/^[가-힣]/.test(clean)) return clean.slice(-2);
-  return clean
-    .split(/\s+/)
-    .map((word) => word[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 }
