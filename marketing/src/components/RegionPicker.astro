@@ -1,0 +1,167 @@
+---
+import { regions, DEFAULT_REGION } from '../data/regions';
+
+// Lets a family abroad read prices in their own currency and see what a Seoul
+// lesson time means where they are. The choice is remembered and applies to
+// every page. Billing stays in KRW, which the panel says plainly.
+---
+<div class="rp">
+  <button type="button" class="rp__btn" aria-expanded="false" aria-haspopup="true">
+    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">
+      <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" />
+    </svg>
+    <span data-rp-label>South Korea</span>
+    <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="rp__menu" role="menu" hidden>
+    <p class="rp__head">Where are you studying?</p>
+    <div class="rp__grid">
+      {regions.map((r) => (
+        <button type="button" role="menuitemradio" class="rp__opt" data-region={r.code} aria-checked={r.code === DEFAULT_REGION ? 'true' : 'false'}>
+          <span class="rp__country">{r.country}</span>
+          <span class="rp__cur">{r.currency}</span>
+        </button>
+      ))}
+    </div>
+    <p class="rp__note">Prices are shown as a guide in your currency. Every lesson is billed in Korean won.</p>
+  </div>
+</div>
+
+<style>
+  .rp { position: relative; }
+  .rp__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 2px;
+    opacity: 0.9;
+  }
+  .rp__btn:hover { opacity: 1; }
+  .rp__menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    z-index: 120;
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    background: var(--white);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+    padding: 14px;
+    /* The utility bar sets nowrap on its right cluster; the panel must wrap. */
+    white-space: normal;
+  }
+  .rp__head { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  .rp__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 4px; }
+  .rp__opt {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.14s ease;
+  }
+  .rp__opt:hover { background: var(--violet-soft); }
+  .rp__opt[aria-checked='true'] { background: var(--violet); }
+  .rp__opt[aria-checked='true'] .rp__country,
+  .rp__opt[aria-checked='true'] .rp__cur { color: #fff; }
+  .rp__country { font-size: 0.88rem; font-weight: 500; color: var(--ink); min-width: 0; }
+  .rp__cur { font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
+  .rp__note { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line-soft); font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+</style>
+
+<script>
+  import { regions, findRegion, DEFAULT_REGION } from '../data/regions';
+
+  const KEY = 'seonbae-region';
+  const read = () => {
+    try { return localStorage.getItem(KEY) || DEFAULT_REGION; } catch { return DEFAULT_REGION; }
+  };
+
+  const money = (krw: number, code: string): string => {
+    const r = findRegion(code);
+    if (r.code === 'KR') return '';
+    const value = krw / r.krwPerUnit;
+    // Round to something a person would say out loud rather than to the cent.
+    const rounded = value >= 1000 ? Math.round(value / 100) * 100 : Math.round(value);
+    return `${r.symbol}${rounded.toLocaleString('en-US', { maximumFractionDigits: r.decimals })}`;
+  };
+
+  const clock = (tz: string): string =>
+    new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz }).format(new Date());
+
+  /** Rewrites every price and clock on the page for the chosen region. */
+  const apply = (code: string) => {
+    const r = findRegion(code);
+
+    document.querySelectorAll<HTMLElement>('[data-krw]').forEach((el) => {
+      const krw = Number(el.dataset.krw || '0');
+      let alt = el.querySelector<HTMLElement>('.alt-price');
+      const text = money(krw, code);
+      if (!text) { alt?.remove(); return; }
+      if (!alt) {
+        alt = document.createElement('span');
+        alt.className = 'alt-price';
+        el.appendChild(alt);
+      }
+      alt.textContent = ` ≈ ${text}`;
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-clock]').forEach((el) => {
+      const seoul = clock('Asia/Seoul');
+      el.textContent = r.code === 'KR'
+        ? `Seoul is ${seoul} right now`
+        : `Seoul is ${seoul} right now, ${clock(r.timezone)} where you are`;
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-rp-label]').forEach((el) => { el.textContent = r.country; });
+    document.querySelectorAll<HTMLElement>('.rp__opt').forEach((b) => {
+      b.setAttribute('aria-checked', String(b.dataset.region === code));
+    });
+  };
+
+  const current = read();
+  apply(current);
+  // Keep the clocks honest without hammering the main thread.
+  setInterval(() => apply(read()), 30000);
+
+  document.querySelectorAll<HTMLElement>('.rp').forEach((rp) => {
+    const btn = rp.querySelector<HTMLButtonElement>('.rp__btn');
+    const menu = rp.querySelector<HTMLElement>('.rp__menu');
+    const setOpen = (open: boolean) => {
+      if (!btn || !menu) return;
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    };
+
+    btn?.addEventListener('click', () => setOpen(menu?.hidden ?? true));
+    rp.querySelectorAll<HTMLButtonElement>('.rp__opt').forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const code = opt.dataset.region ?? DEFAULT_REGION;
+        try { localStorage.setItem(KEY, code); } catch {}
+        apply(code);
+        setOpen(false);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!rp.contains(e.target as Node)) setOpen(false);
+    });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  });
+</script>

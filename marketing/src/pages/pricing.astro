@@ -1,0 +1,224 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import PricingCard from '../components/PricingCard.astro';
+import FAQ from '../components/FAQ.astro';
+import RateBrowser from '../components/RateBrowser.astro';
+import { won } from '../lib/format';
+import { priceRange, pricePoints, rates, type CurriculumSlug } from '../data/rates';
+const plans = (await getCollection('plans')).sort((a, b) => a.data.order - b.data.order);
+
+// Everything below is derived from the per-subject rate sheet, so no number on
+// this page can drift away from what a family is actually quoted.
+const { min: FLOOR, max: CEILING } = priceRange();
+const points = pricePoints();
+
+const curricula: { slug: CurriculumSlug; label: string }[] = [
+  { slug: 'ib-diploma', label: 'IB Diploma' },
+  { slug: 'advanced-placement', label: 'Advanced Placement' },
+  { slug: 'a-level', label: 'A Level' },
+  { slug: 'igcse', label: 'IGCSE' },
+  { slug: 'standardized-tests', label: 'Tests' },
+  { slug: 'english-writing', label: 'English' },
+];
+
+const included = [
+  'The lesson itself, one hour at a time',
+  'A verified tutor chosen by hand for your subject',
+  'Written lesson notes after every session',
+  'A recording of the lesson to review',
+  'Rematch after the first lesson if the fit is wrong',
+];
+const neverCharged = [
+  'Registration or sign-up fees',
+  'Matching or placement fees',
+  'Lesson packages bought up front',
+  'Cancellations made 24 hours ahead',
+  'A minimum term or contract',
+];
+
+const faqs = [
+  { q: 'How does billing work?', a: 'Everything is billed monthly. On a monthly plan you are charged on the same date every month, in advance, for the hours you have set. By the hour, you are charged on the 1st for the hours you used. No packages, no long contracts.' },
+  { q: 'Can I cancel a lesson?', a: 'Yes. Cancel for free up to 24 hours before and the hour returns to your pool for the month. Cancel later or miss a lesson and it is charged, because the tutor still holds and prepares the time.' },
+  { q: 'What if the tutor is not the right fit?', a: 'Your first lesson comes with a rematch guarantee, no questions asked. If a lesson falls short because of us, we re-teach it or refund it.' },
+  { q: 'How are tutors matched?', a: 'By hand. We read your subject, level, and goals and choose a verified tutor who fits. You see their real results before the first lesson.' },
+  { q: 'Do prices change by subject?', a: 'Yes. Each subject has its own hourly price, from ' + won(FLOOR) + ' to ' + won(CEILING) + '. IB Physics and IB History are not the same rate, so we publish every subject rather than a single starting figure.' },
+  { q: 'Are there discounts or referral credits?', a: 'Refer a family or a tutor and you both benefit. We keep pricing simple and skip bundle discounts at launch, so the rate you see is the honest one.' },
+];
+---
+<Base title="Pricing — Seonbae" active="/pricing">
+  <PageHero
+    eyebrow="Pricing"
+    bg="white"
+    compact={true}
+    copy="Every subject has its own hourly price, published in full below. Pay for the lessons ahead, nothing more, billed monthly for the hours you use."
+    align="center"
+  >
+    One price per subject, <span class="mark">published</span>.
+  </PageHero>
+
+  <!-- The whole rate sheet, searchable. Nothing is quoted as a curriculum
+       average, because families do not buy a curriculum, they buy a subject. -->
+  <section class="section bg-white" style="padding-top:clamp(28px,4vw,52px)">
+    <div class="container">
+      <div class="rates-head reveal">
+        <div>
+          <Eyebrow label="Rate card" />
+          <h2 class="h2">Find your subject, see its price.</h2>
+        </div>
+        <div class="rates-head__note">
+          <p class="body">Every one of the {rates.length} subjects we teach sits at one of {points.length} hourly prices, from {won(FLOOR)} to {won(CEILING)}. Search below, or pick a curriculum.</p>
+          <ul class="pts" aria-label="The hourly price points we use">
+            {points.map((p) => <li class="pt" data-krw={p}>{won(p)}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <RateBrowser curricula={curricula} showTabs={true} showCurriculumHeadings={true} id="all-rates" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Two ways to work with us. The billing switch sits with the plans it -->
+  <!-- changes, not floating above the page. -->
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="plans-head reveal">
+        <div>
+          <Eyebrow label="Two ways to book" />
+          <h2 class="h2">Same tutors. Same rate. Your choice of rhythm.</h2>
+        </div>
+        <p class="plans-head__note">Both are billed monthly, and both use the subject rate above. The only difference is whether your hours are set in advance.</p>
+      </div>
+      <div class="plans" id="pricing-plans">
+        {plans.map((p) => (
+          <div class="reveal"><PricingCard entry={p} /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The ledger: what the rate buys, and what it never adds. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="ledger reveal">
+        <div class="ledger__col">
+          <h2 class="ledger__h">In the hourly rate</h2>
+          <ul class="ledger__list ledger__list--yes">
+            {included.map((i) => <li>{i}</li>)}
+          </ul>
+        </div>
+        <div class="ledger__col">
+          <h2 class="ledger__h">Never charged</h2>
+          <ul class="ledger__list ledger__list--no">
+            {neverCharged.map((i) => <li>{i}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream" id="faq">
+    <div class="container faq-wrap">
+      <div class="faq-head reveal">
+        <Eyebrow label="Questions" />
+        <h2 class="h2">Answers before you ask.</h2>
+        <p class="body" style="margin-top:14px">Still unsure? Write to <a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a> and a person answers.</p>
+      </div>
+      <div class="reveal" style="margin-top:8px">
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ----- Rate card head --------------------------------------------------- */
+  .rates-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    gap: clamp(20px, 4vw, 64px);
+    align-items: end;
+    padding-bottom: 26px;
+    margin-bottom: clamp(22px, 3vw, 34px);
+    border-bottom: 2px solid var(--ink);
+  }
+  .rates-head .h2 { margin-top: 12px; }
+  .rates-head__note { max-width: 48ch; }
+  .pts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .pt {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.86rem;
+    color: var(--violet);
+    background: var(--violet-soft);
+    border-radius: var(--r-sm);
+    padding: 6px 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ----- Plans ------------------------------------------------------------ */
+  .plans-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    align-items: end;
+    gap: 20px clamp(24px, 4vw, 56px);
+    margin-bottom: clamp(24px, 3.5vw, 40px);
+  }
+  .plans-head .h2 { margin-top: 12px; }
+  .plans-head__note { color: var(--muted); font-size: 0.98rem; line-height: 1.55; max-width: 40ch; }
+  /* Two equal cards: no featured tile stretched across an odd column split. */
+  .plans { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: stretch; }
+  @media (min-width: 860px) {
+    .plans { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ----- Ledger ----------------------------------------------------------- */
+  .ledger {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 5vw, 80px);
+  }
+  .ledger__h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.28rem;
+    letter-spacing: -0.02em;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .ledger__list li {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    align-items: start;
+    gap: 4px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .ledger__list li::before {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+  .ledger__list--yes li::before { content: "+"; color: var(--violet); }
+  .ledger__list--no li { color: var(--muted); }
+  .ledger__list--no li::before { content: "–"; color: var(--muted-soft); }
+
+  /* ----- FAQ -------------------------------------------------------------- */
+  .faq-wrap { max-width: 860px; }
+  .faq-head { margin-bottom: clamp(20px, 3vw, 32px); }
+  .faq-head .h2 { margin-top: 12px; }
+  .faq-head a { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (max-width: 900px) {
+    .rates-head { grid-template-columns: 1fr; align-items: start; }
+    .plans-head { grid-template-columns: 1fr; align-items: start; }
+    .ledger { grid-template-columns: 1fr; }
+  }
+</style>

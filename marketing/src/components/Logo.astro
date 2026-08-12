@@ -1,0 +1,53 @@
+---
+// Seonbae wordmark + mark. Uses the real brand PNG the moment it is dropped in
+// at public/logo.png; until then it falls back to the built-in mark so nothing
+// looks broken. tone: "ink" (light backgrounds) | "light" (dark hero/footer).
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+interface Props {
+  tone?: 'ink' | 'light';
+  href?: string;
+  class?: string;
+}
+const { tone = 'ink', href = '/', class: cls = '' } = Astro.props;
+const wordColor = tone === 'light' ? 'var(--on-dark)' : 'var(--ink)';
+const archColor = tone === 'light' ? '#f0eeeb' : '#123c5e';
+const waterColor = tone === 'light' ? '#8fb4d6' : '#5b8fc7';
+const hasLogo = fs.existsSync(fileURLToPath(new URL('../../public/logo.png', import.meta.url)));
+---
+
+<a href={href} class={`logo ${cls}`} aria-label={href === '/' ? 'Seonbae home' : 'About Seonbae'}>
+  {hasLogo ? (
+    <img src="/logo.png" alt="Seonbae" class:list={['logo__img', { 'logo__img--light': tone === 'light' }]} width="36" height="36" />
+  ) : (
+    <svg class="logo__mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
+      <g fill="none" stroke={archColor} stroke-width="2.6" stroke-linecap="round">
+        <path d="M8 19 A11 11 0 0 1 32 19" />
+        <path d="M8 19 L8 21.5" />
+        <path d="M32 19 L32 21.5" />
+      </g>
+      <line x1="5.5" y1="23" x2="34.5" y2="23" stroke={archColor} stroke-width="1.6" stroke-linecap="round" opacity="0.5" />
+      <path d="M10 27.5 A9 9 0 0 0 30 27.5" fill="none" stroke={waterColor} stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1.5 4" opacity="0.95" />
+    </svg>
+  )}
+  <span class="logo__word" style={`color:${wordColor}`}>Seonbae</span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .logo__mark, .logo__img { flex: none; }
+  .logo__img { width: 36px; height: 36px; object-fit: contain; }
+  /* On dark surfaces, show the mark as a clean white silhouette until a light
+     logo variant is supplied. */
+  .logo__img--light { filter: brightness(0) invert(1); }
+  .logo__word {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.32rem;
+    letter-spacing: -0.03em;
+  }
+</style>

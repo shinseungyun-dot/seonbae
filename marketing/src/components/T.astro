@@ -1,0 +1,19 @@
+---
+// Bilingual text. Renders BOTH languages inline; global CSS (html[data-lang])
+// shows only the active one, so the header toggle switches language instantly
+// with no page reload. Korean automatically gets the hangul font (.kr).
+//
+//   <h1 class="display"><T en="Hello" ko="안녕하세요" /></h1>
+//   <T en="Read" ko="읽기" tag="span" />
+//
+// Use `tag` when the pair must be block level on its own (e.g. two <p>).
+interface Props {
+  en: string;
+  ko: string;
+  tag?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+const { en, ko, tag = 'span', class: cls = '' } = Astro.props;
+const Tag = tag as any;
+---
+<Tag data-l="en" class={cls}>{en}</Tag><Tag data-l="ko" class:list={['kr', cls]}>{ko}</Tag>

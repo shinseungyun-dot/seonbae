@@ -1,0 +1,5 @@
+---
+interface Props { label: string; tone?: 'ink' | 'light'; class?: string; }
+const { label, tone = 'ink', class: cls = '' } = Astro.props;
+---
+<span class={`eyebrow ${tone === 'light' ? 'eyebrow--light' : ''} ${cls}`}>{label}</span>

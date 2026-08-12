@@ -1,0 +1,149 @@
+---
+// Placeholder media in the brand's pastel language. Swap for real photography
+// later by dropping an <img> into the slot (or passing `src`).
+// Scenes evoke live online learning without generic stock imagery.
+interface Props {
+  scene?: 'call' | 'desk' | 'figure' | 'rings' | 'notes';
+  accent?: 'mint' | 'lavender' | 'butter' | 'violet' | 'ink';
+  label?: string;
+  play?: boolean;
+  ratio?: string; // e.g. "4 / 3"
+  src?: string;
+  alt?: string;
+  class?: string;
+}
+const {
+  scene = 'call',
+  accent = 'lavender',
+  label,
+  play = false,
+  ratio = '4 / 3',
+  src,
+  alt = '',
+  class: cls = '',
+} = Astro.props;
+
+const grounds: Record<string, string> = {
+  mint: 'linear-gradient(155deg, #efe7d8 0%, #e4d7c1 70%, #d6c5a6 130%)',
+  lavender: 'linear-gradient(155deg, #f3ddd2 0%, #eec7b6 70%, #dda184 130%)',
+  butter: 'linear-gradient(155deg, #f9edc9 0%, #f2d996 70%, #ecc86a 130%)',
+  violet: 'linear-gradient(155deg, #1a466b 0%, #123c5e 60%, #0c2740 130%)',
+  ink: 'linear-gradient(155deg, #16283b 0%, #0e2336 55%, #081824 130%)',
+};
+const dark = accent === 'violet' || accent === 'ink';
+const stroke = dark ? 'rgba(255,255,255,0.42)' : 'rgba(20,30,45,0.34)';
+const strokeSoft = dark ? 'rgba(255,255,255,0.2)' : 'rgba(20,30,45,0.16)';
+const mint = dark ? '#edb43f' : '#123c5e'; // yellow pop on dark panels, navy on light
+---
+<div class={`mp ${cls}`} style={`--ground:${grounds[accent]}; aspect-ratio:${ratio}`}>
+  {src ? (
+    <img src={src} alt={alt} class="mp-img" />
+  ) : (
+    <div class="mp-art" aria-hidden="true">
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+        {scene === 'call' && (
+          <g>
+            <rect x="40" y="52" width="320" height="150" rx="18" fill="none" stroke={stroke} stroke-width="2.4"/>
+            <circle cx="120" cy="120" r="30" fill="none" stroke={stroke} stroke-width="2.4"/>
+            <path d="M92 150c6-16 50-16 56 0" fill="none" stroke={stroke} stroke-width="2.4" stroke-linecap="round"/>
+            <rect x="196" y="92" width="128" height="12" rx="6" fill={strokeSoft}/>
+            <rect x="196" y="118" width="98" height="12" rx="6" fill={strokeSoft}/>
+            <rect x="196" y="144" width="112" height="12" rx="6" fill={strokeSoft}/>
+            <rect x="150" y="222" width="100" height="34" rx="17" fill="none" stroke={mint} stroke-width="2.6"/>
+            <circle cx="176" cy="239" r="6" fill={mint}/>
+            <path d="M196 233l14 6-14 6z" fill={mint}/>
+          </g>
+        )}
+        {scene === 'desk' && (
+          <g>
+            <rect x="70" y="46" width="180" height="210" rx="12" fill="none" stroke={stroke} stroke-width="2.4"/>
+            {[86, 116, 146, 176, 206].map((y) => (
+              <line x1="92" y1={y} x2="228" y2={y} stroke={strokeSoft} stroke-width="2.4" stroke-linecap="round"/>
+            ))}
+            <circle cx="300" cy="90" r="34" fill="none" stroke={mint} stroke-width="2.6"/>
+            <path d="M286 90l10 10 20-22" fill="none" stroke={mint} stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="266" y="150" width="70" height="70" rx="14" fill="none" stroke={stroke} stroke-width="2.4"/>
+          </g>
+        )}
+        {scene === 'figure' && (
+          <g>
+            <circle cx="200" cy="118" r="46" fill="none" stroke={stroke} stroke-width="2.6"/>
+            <path d="M128 262c8-52 136-52 144 0" fill="none" stroke={stroke} stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M150 70c30-26 70-26 100 0" fill="none" stroke={strokeSoft} stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="322" cy="66" r="12" fill={mint}/>
+          </g>
+        )}
+        {scene === 'rings' && (
+          <g fill="none" stroke={stroke} stroke-width="2.2">
+            <circle cx="200" cy="150" r="30"/>
+            <circle cx="200" cy="150" r="66"/>
+            <circle cx="200" cy="150" r="102"/>
+            <circle cx="200" cy="150" r="138"/>
+            <circle cx="200" cy="48" r="7" fill={mint} stroke="none"/>
+          </g>
+        )}
+        {scene === 'notes' && (
+          <g>
+            <path d="M40 200c60-40 120 40 180 0s120-40 140 0" fill="none" stroke={stroke} stroke-width="2.6"/>
+            <path d="M40 150c60-40 120 40 180 0s120-40 140 0" fill="none" stroke={strokeSoft} stroke-width="2.4"/>
+            <path d="M40 250c60-40 120 40 180 0s120-40 140 0" fill="none" stroke={strokeSoft} stroke-width="2.4"/>
+            <circle cx="200" cy="90" r="26" fill="none" stroke={mint} stroke-width="2.6"/>
+            <path d="M188 90l8 8 16-18" fill="none" stroke={mint} stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        )}
+      </svg>
+    </div>
+  )}
+
+  {play && (
+    <button type="button" class="mp-play" aria-label="Play video preview">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+    </button>
+  )}
+  {label && <span class="mp-label">{label}</span>}
+</div>
+
+<style>
+  .mp {
+    position: relative;
+    width: 100%;
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    background: var(--ground);
+    isolation: isolate;
+  }
+  .mp-img { width: 100%; height: 100%; object-fit: cover; }
+  .mp-art { position: absolute; inset: 0; }
+  .mp-art svg { width: 100%; height: 100%; }
+  .mp-label {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: var(--r-pill);
+    backdrop-filter: blur(4px);
+  }
+  .mp-play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--violet);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(12, 12, 12, 0.22);
+    transition: transform 0.16s ease, background 0.16s ease;
+  }
+  .mp-play svg { width: 30px; height: 30px; margin-left: 3px; }
+  .mp-play:hover { transform: scale(1.06); }
+</style>

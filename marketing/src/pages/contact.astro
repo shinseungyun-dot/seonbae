@@ -1,0 +1,161 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+const subjects = ['IB Diploma', 'Advanced Placement', 'A Level', 'IGCSE', 'Standardized Tests', 'English and Writing', 'Not sure yet'];
+const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 'Adult learner'];
+---
+<Base title="Contact — Seonbae" active="/contact" showConversion={false}>
+  <PageHero
+    eyebrow="Contact"
+    bg="cream"
+    compact={true}
+    copy="The more you tell us, the better the match. Share what you are working toward and we will reply within one business day."
+    contour={true}
+  >
+    Tell us what you would like help <span class="mark">with</span>.
+  </PageHero>
+
+  <section class="section bg-white" style="padding-top:clamp(20px,3vw,40px)">
+    <div class="container contact-layout">
+      <form class="contact-form" id="contact-form" novalidate>
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="student">Student name <span class="req">*</span></label>
+            <input class="form-control" id="student" name="student" type="text" required placeholder="Who are the lessons for?" />
+          </div>
+          <div class="form-field">
+            <label for="email">Parent or learner email <span class="req">*</span></label>
+            <input class="form-control" id="email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="level">Grade or level</label>
+            <select class="form-control" id="level" name="level">
+              <option value="" selected>Select a level</option>
+              {levels.map((l) => <option value={l}>{l}</option>)}
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="subject">Subject</label>
+            <select class="form-control" id="subject" name="subject">
+              <option value="" selected>Select a subject</option>
+              {subjects.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="goal">What is the goal?</label>
+          <input class="form-control" id="goal" name="goal" type="text" placeholder="A grade, a test score, or steadier confidence" />
+        </div>
+
+        <div class="form-field">
+          <label for="times">Preferred times</label>
+          <input class="form-control" id="times" name="times" type="text" placeholder="Which evenings or weekends suit you, and your time zone" />
+        </div>
+
+        <div class="form-field">
+          <label for="context">Anything else</label>
+          <textarea class="form-control" id="context" name="context" placeholder="Recent grades, a deadline coming up, or a subject that has been a struggle"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg contact-submit">
+          <span>Send message</span>
+          <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+        <p class="form-done" role="status" hidden data-done>
+          <strong>Thank you.</strong> We have your details and will reply within one business day with next steps.
+        </p>
+      </form>
+
+      <aside class="contact-aside">
+        <div class="contact-card">
+          <Eyebrow label="Standing facts" />
+          <ul class="fact-list">
+            <li><span class="fact-k">Email</span><span class="fact-v">admissions@seonbaetutor.com</span></li>
+            <li><span class="fact-k">Reply time</span><span class="fact-v">Within one business day</span></li>
+            <li><span class="fact-k">Based in</span><span class="fact-v">Songdo, Incheon · lessons worldwide</span></li>
+            <li><span class="fact-k">Languages</span><span class="fact-v">Korean and English</span></li>
+          </ul>
+        </div>
+        <div class="contact-card contact-card--soft">
+          <h2 class="h3" style="font-size:1.25rem">Ready to start?</h2>
+          <p class="body" style="margin-top:10px">If you already know what you need, the matching form is the fastest way in.</p>
+          <a href="/get-matched" class="textlink" style="margin-top:14px">Get matched
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr); gap: clamp(28px, 5vw, 72px); align-items: start; max-width: 1080px; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .contact-submit { align-self: flex-start; margin-top: 8px; }
+  .form-done {
+    background: var(--mint-surface);
+    color: #003a6c;
+    padding: 16px 20px;
+    border-radius: var(--r-md);
+    font-size: 0.98rem;
+  }
+  .contact-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-xl); padding: clamp(22px, 2.6vw, 28px); margin-bottom: 16px; }
+  .contact-card--soft { background: var(--p2); border-color: transparent; }
+  .fact-list { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+  .fact-list li { display: flex; flex-direction: column; gap: 2px; }
+  .fact-k { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .fact-v { font-weight: 500; color: var(--ink); font-size: 0.95rem; }
+  @media (max-width: 860px) { .contact-layout { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { submitForm, validate } from '../lib/forms';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const btn = form?.querySelector('.contact-submit') as HTMLButtonElement | null;
+  const btnLabel = btn?.querySelector('span:first-child') as HTMLElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate(form)) return;
+
+    const original = btnLabel?.textContent ?? '';
+    if (btn) btn.disabled = true;
+    if (btnLabel) btnLabel.textContent = 'Sending…';
+
+    try {
+      const mode = await submitForm(form, 'New enquiry from seonbaetutor.com');
+      const done = form.querySelector('[data-done]') as HTMLElement | null;
+      if (done) {
+        done.textContent =
+          mode === 'email'
+            ? 'Your email app is opening with your answers filled in. Send it and we will reply within one business day.'
+            : 'Thank you. We will reply within one business day.';
+        done.hidden = false;
+        done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (mode === 'posted') {
+        form.querySelectorAll('input, select, textarea, .contact-submit').forEach((el) => {
+          if (el instanceof HTMLElement && !el.closest('.form-done')) (el as HTMLInputElement).disabled = true;
+        });
+      }
+    } catch {
+      const done = form.querySelector('[data-done]') as HTMLElement | null;
+      if (done) {
+        done.textContent = 'Something went wrong. Please email admissions@seonbaetutor.com and we will pick it up straight away.';
+        done.hidden = false;
+      }
+    } finally {
+      if (btn && !btn.disabled) btn.disabled = false;
+      if (btnLabel) btnLabel.textContent = original;
+    }
+  });
+</script>

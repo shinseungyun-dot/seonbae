@@ -1,0 +1,370 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TutorCard from '../components/TutorCard.astro';
+import TutorPlaceholder from '../components/TutorPlaceholder.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+
+const tutors = (await getCollection('tutors')).sort((a, b) => a.data.order - b.data.order);
+
+const catMap: Record<string, string> = { IB: 'ib', AP: 'ap', 'A Level': 'alevel', IGCSE: 'igcse', SAT: 'tests', ACT: 'tests' };
+const withCats = tutors.map((t) => {
+  const cats = new Set<string>();
+  t.data.levels.forEach((l) => { if (catMap[l]) cats.add(catMap[l]); });
+  return { entry: t, cats: [...cats] };
+});
+
+// Counts drive the rail, so a family can see how deep each curriculum runs
+// before they click anything.
+const count = (key: string) => (key === 'all' ? withCats.length : withCats.filter((t) => t.cats.includes(key)).length);
+const filters = [
+  { key: 'all', label: 'All tutors' },
+  { key: 'ib', label: 'IB Diploma' },
+  { key: 'ap', label: 'Advanced Placement' },
+  { key: 'alevel', label: 'A Level' },
+  { key: 'igcse', label: 'IGCSE' },
+  { key: 'tests', label: 'SAT and ACT' },
+].map((f) => ({ ...f, n: count(f.key) }));
+
+const universities = [...new Set(tutors.map((t) => t.data.university))];
+
+// No profile goes on this page until a real tutor has cleared verification, so
+// the page has an honest pre-launch state rather than sample people.
+const roster = withCats.length > 0;
+---
+<Base title="Tutors — Seonbae" active="/tutors">
+  <PageHero
+    eyebrow="Tutors"
+    bg="white"
+    compact={true}
+    copy="Browse the roster and pick the tutor you want, or tell us your subject and we will choose for you. Every profile shows the real results we have verified, so you can judge for yourself before you book."
+    ctaLabel="Get matched"
+    secondaryLabel="How we verify"
+    secondaryHref="/verification"
+  >
+    Meet tutors who know how to teach, not just <span class="mark">explain</span>.
+  </PageHero>
+
+  <!-- Directory layout: a standing index on the left, the roster on the right.
+       Deliberately unlike the stacked sections used elsewhere on the site. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="roster">
+        <aside class="rail reveal is-in">
+          <h2 class="rail__title">Curriculum</h2>
+          <div class="rail__list" role="group" aria-label="Filter tutors by curriculum">
+            {filters.map((f, i) => (
+              <button type="button" class="rail__btn" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>
+                <span class="rail__label">{f.label}</span>
+                {roster && <span class="rail__n">{f.n}</span>}
+              </button>
+            ))}
+          </div>
+
+          <div class="rail__note">
+            <span class="rail__note-k">Every profile on this page</span>
+            <ul class="rail__facts">
+              <li>Score report read by us</li>
+              <li>Enrolment confirmed in writing</li>
+              <li>Background check cleared</li>
+            </ul>
+            <a href="/verification" class="textlink rail__link">Our standard
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </aside>
+
+        <div class="roster__main">
+          <div class="roster__bar reveal is-in">
+            <p class="roster__count"><strong id="tutor-count">{roster ? withCats.length : 6}</strong> <span>{roster ? 'tutors listed' : 'places in the founding cohort'}</span></p>
+            <p class="roster__unis">{roster ? universities.join(' · ') : 'Seoul National University · Korea University · Yonsei University'}</p>
+          </div>
+
+          <div class="tutor-grid is-loading" id="tutor-grid" aria-busy="true">
+            {[1, 2, 3, 4].map((n) => (
+              <div class="tutor-cell reveal is-in"><TutorPlaceholder index={n} /></div>
+            ))}
+          </div>
+
+          <p class="roster__note" id="roster-note" hidden>Only active, verified records from the Seonbae registry appear here. <a href="/verification">See the standard</a>, or <a href="/become-a-tutor">apply to teach</a>.</p>
+          <p class="no-match" hidden>No tutors in that category yet. Try another, or <a href="/get-matched">tell us what you need</a>.</p>
+          <p class="sr-only" role="status" aria-live="polite" id="tutor-live"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A flat band rather than another card, so the roster stays the page's -->
+  <!-- only object of attention. -->
+  <section class="section section--tight bg-cream">
+    <div class="container">
+      <div class="closing reveal">
+        <div class="closing__say">
+          <Eyebrow label="Not sure who to pick" />
+          <h2 class="h2">Tell us the subject. We will choose.</h2>
+          <p class="lead" style="margin-top:16px">Matching is done by hand. Send us the curriculum, the level, and what is going wrong, and we will put forward the tutor we would choose for our own family.</p>
+        </div>
+        <div class="closing__do">
+          <Button href="/get-matched" label="Get matched" variant="primary" size="lg" arrow="diag" />
+          <Button href="/how-it-works" label="How matching works" variant="text" arrow="right" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ----- Directory grid --------------------------------------------------- */
+  .roster {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: clamp(32px, 4.5vw, 72px);
+    align-items: start;
+  }
+  .rail { position: sticky; top: 104px; }
+  .rail__title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rail__list { display: flex; flex-direction: column; }
+  .rail__btn {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 0;
+    border: none;
+    border-bottom: 1px solid var(--line-soft);
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--muted);
+    transition: color 0.16s ease;
+  }
+  .rail__label { font-weight: 500; font-size: 0.98rem; }
+  .rail__n { font-family: var(--display); font-size: 0.82rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .rail__btn:hover { color: var(--ink); }
+  .rail__btn[aria-pressed='true'] { color: var(--violet); }
+  .rail__btn[aria-pressed='true'] .rail__label { font-weight: 700; }
+  .rail__btn[aria-pressed='true'] .rail__n { color: var(--violet); }
+  /* The active row is marked on the rule itself — no pill, no fill. */
+  .rail__btn[aria-pressed='true'] { border-bottom-color: var(--violet); }
+
+  .rail__note { margin-top: 34px; padding-top: 22px; border-top: 2px solid var(--ink); }
+  .rail__note-k { display: block; font-family: var(--display); font-weight: 700; font-size: 0.98rem; letter-spacing: -0.01em; }
+  .rail__facts { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .rail__facts li { position: relative; padding-left: 20px; font-size: 0.88rem; color: var(--muted); line-height: 1.45; }
+  .rail__facts li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.42em;
+    width: 9px;
+    height: 5px;
+    border-left: 1.8px solid var(--violet);
+    border-bottom: 1.8px solid var(--violet);
+    transform: rotate(-45deg);
+  }
+  .rail__link { margin-top: 16px; font-size: 0.9rem; }
+
+  /* ----- Roster ----------------------------------------------------------- */
+  .roster__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding-bottom: 16px;
+    margin-bottom: clamp(18px, 2vw, 26px);
+    border-bottom: 2px solid var(--ink);
+  }
+  .roster__count { font-size: 0.95rem; color: var(--muted); }
+  .roster__count strong { font-family: var(--display); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin-right: 4px; font-variant-numeric: tabular-nums; }
+  .roster__unis { font-size: 0.85rem; color: var(--muted); }
+
+  .tutor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: clamp(16px, 1.8vw, 22px); }
+  .tutor-grid.is-loading { opacity: 0.72; }
+  .tutor-cell.is-hidden { display: none; }
+  .live-tutor-card { display: flex; flex-direction: column; min-height: 100%; overflow: hidden; }
+  .live-tutor-card__visual {
+    position: relative;
+    min-height: 190px;
+    padding: 24px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--violet);
+    color: #fff;
+  }
+  .live-tutor-card__visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 28%, rgba(15, 40, 54, 0.72)); }
+  .live-tutor-card__banner { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.28; }
+  .live-tutor-card__photo { position: relative; z-index: 2; width: 76px; height: 76px; border-radius: 50%; border: 2px solid rgba(255,255,255,.76); background: rgba(255,255,255,.18); object-fit: cover; display: grid; place-items: center; font-family: var(--display); font-size: 1.45rem; font-weight: 800; }
+  .live-tutor-card__verified { position: absolute; z-index: 2; top: 18px; right: 18px; padding: 5px 9px; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,.42); background: rgba(15,40,54,.42); font-size: .72rem; font-weight: 700; }
+  .live-tutor-card__body { display: flex; flex: 1; flex-direction: column; padding: 24px; }
+  .live-tutor-card__id { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+  .live-tutor-card__id h3 { font-size: 1.28rem; }
+  .live-tutor-card__id span { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .live-tutor-card__uni { margin-top: 5px; color: var(--muted); font-size: .92rem; }
+  .live-tutor-card__score { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  .live-tutor-card__score strong { display: block; font-family: var(--display); font-size: 2.25rem; line-height: 1; color: var(--violet); }
+  .live-tutor-card__score span { display: block; margin-top: 6px; color: var(--muted); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
+  .live-tutor-card__action { margin-top: 22px; }
+  .roster__note { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 0.95rem; line-height: 1.55; max-width: 68ch; }
+  .roster__note a { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+  .no-match { margin-top: 24px; color: var(--muted); }
+  .no-match a { color: var(--violet); text-decoration: underline; }
+
+  /* ----- Closing band ----------------------------------------------------- */
+  .closing {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) auto;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: end;
+    padding-top: 30px;
+    border-top: 2px solid var(--ink);
+  }
+  .closing__do { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+
+  @media (max-width: 1000px) {
+    .roster { grid-template-columns: 1fr; }
+    .rail { position: static; }
+    .rail__list { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+    .rail__btn {
+      width: auto;
+      padding: 9px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+    }
+    .rail__btn[aria-pressed='true'] { border-color: var(--violet); background: var(--violet-soft); }
+    .rail__note { display: none; }
+  }
+  @media (max-width: 820px) {
+    .tutor-grid { grid-template-columns: 1fr; }
+    .closing { grid-template-columns: 1fr; align-items: start; }
+  }
+</style>
+
+<script>
+  const buttons = [...document.querySelectorAll('.rail__btn')] as HTMLButtonElement[];
+  const noMatch = document.querySelector('.no-match') as HTMLElement | null;
+  const countEl = document.getElementById('tutor-count');
+  const staticFilterCounts: Record<string, number> = { all: 0, ib: 0, ap: 0, alevel: 0, igcse: 0, tests: 0 };
+
+  type Tutor = {
+    registry_id: string;
+    name: string;
+    exam: string;
+    score: string;
+    category?: string;
+    tier?: string;
+    university?: string;
+    university_en?: string;
+    photo_url?: string | null;
+    banner_url?: string | null;
+  };
+  let cells: HTMLElement[] = [];
+
+  const categoryFor = (tutor: Tutor) => {
+    const value = `${tutor.exam} ${tutor.category || ''}`.toUpperCase();
+    if (value.includes('IB')) return 'ib';
+    if (value.includes('AP')) return 'ap';
+    if (value.includes('A LEVEL') || value.includes('A-LEVEL')) return 'alevel';
+    if (value.includes('IGCSE')) return 'igcse';
+    return 'tests';
+  };
+  const escapeHtml = (value: unknown) => String(value ?? '')
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+  const safeAsset = (value: unknown) => {
+    const url = String(value || '');
+    return /^(\/|https:\/\/)/.test(url) ? escapeHtml(url) : '';
+  };
+  const initials = (name: string) => escapeHtml(name.trim().slice(0, 1).toUpperCase() || 'S');
+
+  const filterRoster = (btn: HTMLButtonElement) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      const f = btn.dataset.filter ?? 'all';
+      let shown = 0;
+      cells.forEach((cell) => {
+        const cats = cell.dataset.cats ?? '';
+        const match = f === 'all' || cats.split(' ').includes(f);
+        cell.classList.toggle('is-hidden', !match);
+        if (match) shown++;
+      });
+      if (countEl) countEl.textContent = String(shown);
+      if (noMatch) noMatch.hidden = shown > 0;
+      const live = document.getElementById('tutor-live');
+      if (live) live.textContent = `${shown} tutor${shown === 1 ? '' : 's'} listed in ${btn.querySelector('.rail__label')?.textContent ?? 'this category'}`;
+    });
+  };
+  buttons.forEach(filterRoster);
+
+  const renderTutors = (tutors: Tutor[]) => {
+    const grid = document.getElementById('tutor-grid');
+    if (!grid) return;
+    grid.classList.remove('is-loading');
+    grid.removeAttribute('aria-busy');
+    grid.innerHTML = tutors.map((tutor) => {
+      const banner = safeAsset(tutor.banner_url);
+      const photo = safeAsset(tutor.photo_url);
+      const visual = banner ? `<img class="live-tutor-card__banner" src="${banner}" alt="" loading="lazy" />` : '';
+      const avatar = photo
+        ? `<img class="live-tutor-card__photo" src="${photo}" alt="Portrait of ${escapeHtml(tutor.name)}" loading="lazy" />`
+        : `<span class="live-tutor-card__photo" aria-label="Photo pending">${initials(tutor.name)}</span>`;
+      return `<div class="tutor-cell" data-cats="${categoryFor(tutor)}">
+        <article class="live-tutor-card card">
+          <div class="live-tutor-card__visual">${visual}${avatar}<span class="live-tutor-card__verified">Verified</span></div>
+          <div class="live-tutor-card__body">
+            <div class="live-tutor-card__id"><h3>${escapeHtml(tutor.name)}</h3><span>${escapeHtml(tutor.registry_id)}</span></div>
+            <p class="live-tutor-card__uni">${escapeHtml(tutor.university || tutor.university_en || '')}</p>
+            <p class="live-tutor-card__score"><strong>${escapeHtml(tutor.score)}</strong><span>${escapeHtml(tutor.exam)}</span></p>
+            <a class="textlink live-tutor-card__action" href="/get-matched?tutor=${encodeURIComponent(tutor.name)}">Request this tutor
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>`;
+    }).join('');
+    cells = [...grid.querySelectorAll('.tutor-cell')] as HTMLElement[];
+    Object.keys(staticFilterCounts).forEach((key) => { staticFilterCounts[key] = 0; });
+    staticFilterCounts.all = tutors.length;
+    tutors.forEach((tutor) => { staticFilterCounts[categoryFor(tutor)] += 1; });
+    buttons.forEach((button) => {
+      let badge = button.querySelector('.rail__n') as HTMLElement | null;
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'rail__n';
+        button.append(badge);
+      }
+      badge.textContent = String(staticFilterCounts[button.dataset.filter || 'all'] || 0);
+    });
+    if (countEl) countEl.textContent = String(tutors.length);
+    const countLabel = document.querySelector('.roster__count span');
+    if (countLabel) countLabel.textContent = 'tutors listed';
+    const universities = [...new Set(tutors.map((tutor) => tutor.university_en || tutor.university).filter(Boolean))];
+    const universityLine = document.querySelector('.roster__unis');
+    if (universityLine && universities.length) universityLine.textContent = universities.join(' · ');
+    const note = document.getElementById('roster-note');
+    if (note) note.hidden = tutors.length > 0;
+    if (noMatch) noMatch.hidden = tutors.length > 0;
+  };
+
+  fetch('/api/tutors', { cache: 'no-store', headers: { Accept: 'application/json' } })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error('Tutor directory unavailable')))
+    .then((rows) => renderTutors(Array.isArray(rows) ? rows : []))
+    .catch(() => {
+      renderTutors([]);
+      const note = document.getElementById('roster-note');
+      if (note) { note.hidden = false; note.textContent = 'The live tutor registry is temporarily unavailable. Please try again shortly.'; }
+    });
+</script>

@@ -1,0 +1,361 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+
+const checks = [
+  { title: 'The score report itself', copy: 'Not a claim in a profile. We ask for the original document and read it before anything else moves.' },
+  { title: 'The university', copy: 'Enrolment or a degree from Seoul National University, Korea University, or Yonsei University, confirmed in writing.' },
+  { title: 'A teaching sample', copy: 'A short lesson so we can see how a tutor explains, not just what they scored.' },
+  { title: 'A background check', copy: 'Checks for offences against minors before any tutor meets a student. Our COO leads safeguarding.' },
+];
+
+// Minimums, not targets. A tutor teaches a subject only if they hold the top
+// grade in that subject, so these read as requirements rather than as scores.
+const standard = [
+  { exam: 'IB Diploma', req: 'A 7 in every subject they teach' },
+  { exam: 'Advanced Placement', req: 'A 5 in every subject they teach' },
+  { exam: 'A Level', req: 'An A* in every subject they teach' },
+  { exam: 'IGCSE', req: 'An A* in every subject they teach' },
+  { exam: 'SAT', req: '1500 at minimum' },
+  { exam: 'IELTS', req: '8.0 at minimum' },
+];
+
+const steps = [
+  { n: '01', t: 'Apply', c: 'A tutor applies through a student society or a referral from someone already on the platform.' },
+  { n: '02', t: 'Documents held', c: 'We collect and read the real score reports and proof of university. Nothing is taken on trust.' },
+  { n: '03', t: 'Teach a sample', c: 'A short teaching sample shows us how they explain a hard idea simply.' },
+  { n: '04', t: 'Reach the registry', c: 'Only after a background check does a tutor appear where a family can find them.' },
+];
+---
+<Base title="Verification — Seonbae" active="/verification">
+  <PageHero
+    eyebrow="Verification"
+    bg="white"
+    copy="Trust is the whole product. A tutor reaches our registry only once we have held the score report in our hands, and never before."
+    ctaLabel="Get matched"
+    secondaryLabel="Meet the tutors"
+    secondaryHref="/tutors"
+  >
+    We hold the proof before we ever list a <span class="mark">tutor</span>.
+  </PageHero>
+
+  <!-- One sheet, not four cards: the page's argument is that a real document
+       exists, so the section is shaped like a document. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="dossier reveal">
+        <div class="dossier__head">
+          <div>
+            <Eyebrow label="Held on file" />
+            <h2 class="dossier__title">Four things we hold before a tutor is listed.</h2>
+          </div>
+          <!-- A rectangular ink stamp rather than a seal: double rule, flat
+               caps, set a couple of degrees off square. Reads like something
+               pressed onto a document, which is what the sheet is imitating. -->
+          <span class="stamp" aria-hidden="true">
+            <span class="stamp__box">
+              <span class="stamp__word">Verified</span>
+              <span class="stamp__meta">Seonbae · held on file</span>
+            </span>
+          </span>
+        </div>
+
+        <ol class="dossier__list">
+          {checks.map((c, i) => (
+            <li class="hold">
+              <span class="hold__n" aria-hidden="true">{`0${i + 1}`}</span>
+              <h3 class="hold__t">{c.title}</h3>
+              <p class="hold__c">{c.copy}</p>
+            </li>
+          ))}
+        </ol>
+
+        <p class="dossier__foot">Held on file, not taken on trust. Every item above is checked by a person before a profile goes live.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The entry requirement, stated as requirements rather than as a scoreboard
+       of numbers. A contained panel, so the dark does not swallow the page. -->
+  <section class="section section--tight bg-white">
+    <div class="container">
+      <div class="sp reveal">
+        <div class="sp__intro">
+          <div>
+            <Eyebrow label="Entry requirement" tone="light" />
+            <h2 class="sp__title">The floor, not the ceiling.</h2>
+          </div>
+          <p class="sp__copy">A tutor is approved for a subject only if they hold the top grade in that subject. These are the minimums every Seonbae tutor has already cleared, and most sit well above them.</p>
+        </div>
+        <dl class="sp__list">
+          {standard.map((s) => (
+            <div class="sp__row">
+              <dt class="sp__exam">{s.exam}</dt>
+              <dd class="sp__req">{s.req}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="sp__note">Each requirement is checked against the original document before a tutor is listed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The sequence gets a literal spine, so the order is impossible to miss. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="spine-head reveal">
+        <Eyebrow label="The process" />
+        <h2 class="h2">From application to the registry.</h2>
+      </div>
+
+      <ol class="spine">
+        {steps.map((s, i) => (
+          <li class={`stop ${i % 2 === 0 ? 'stop--l' : 'stop--r'} reveal`} data-delay={`${i * 70}ms`}>
+            <span class="stop__dot" aria-hidden="true"></span>
+            <div class="stop__card">
+              <span class="stop__n">{s.n}</span>
+              <h3 class="stop__t">{s.t}</h3>
+              <p class="body">{s.c}</p>
+            </div>
+          </li>
+        ))}
+        <li class="stop stop--end">
+          <span class="stop__dot stop__dot--end" aria-hidden="true"></span>
+          <div class="stop__card"><p class="stop__end">Listed. A family can now find them.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--tight bg-white">
+    <div class="container">
+      <div class="safe reveal">
+        <div class="safe__head">
+          <Eyebrow label="Safeguarding and privacy" />
+          <h2 class="h2" style="margin-top:12px">Careful with children, careful with data.</h2>
+        </div>
+        <dl class="safe__list">
+          <div class="safe__row">
+            <dt>Lessons are recorded, and disclosed</dt>
+            <dd>Every lesson is recorded so a student can review it and so we can uphold our standards. Families always know a lesson is being recorded.</dd>
+          </div>
+          <div class="safe__row">
+            <dt>Your data, on request, gone</dt>
+            <dd>Ask us to delete your data and we remove it within two days, keeping only the records the law requires us to hold.</dd>
+          </div>
+          <div class="safe__row">
+            <dt>Questions about safeguarding</dt>
+            <dd>Our Chief Operating Officer owns this personally. Write to <a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a> and it reaches him.</dd>
+          </div>
+        </dl>
+        <div class="safe__cta">
+          <Button href="/tutors" label="Meet the verified tutors" variant="secondary" arrow="diag" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ----- Dossier sheet ---------------------------------------------------- */
+  .dossier {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    padding: clamp(28px, 4vw, 60px);
+    box-shadow: var(--shadow-sm);
+  }
+  .dossier__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(20px, 4vw, 48px);
+    align-items: start;
+    padding-bottom: 26px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dossier__title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    margin-top: 14px;
+    max-width: 20ch;
+  }
+  .stamp { flex: none; padding: 6px 4px; }
+  .stamp__box {
+    display: inline-block;
+    padding: 12px 20px 11px;
+    border: 2px solid var(--violet);
+    box-shadow: inset 0 0 0 1px rgba(18, 60, 94, 0.26);
+    border-radius: 3px;
+    color: var(--violet);
+    text-align: center;
+    transform: rotate(-2.5deg);
+    opacity: 0.85;
+  }
+  .stamp__word {
+    display: block;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .stamp__meta {
+    display: block;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(18, 60, 94, 0.3);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .dossier__list { margin-top: 4px; }
+  .hold {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(14px, 2.5vw, 36px);
+    align-items: baseline;
+    padding: clamp(20px, 2.4vw, 28px) 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .hold:last-child { border-bottom: none; }
+  .hold__n { font-family: var(--display); font-weight: 800; font-size: 0.92rem; color: var(--violet); }
+  .hold__t { font-family: var(--display); font-weight: 700; font-size: 1.16rem; letter-spacing: -0.018em; line-height: 1.2; }
+  .hold__c { color: var(--muted); font-size: 0.99rem; line-height: 1.58; }
+  .dossier__foot {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* ----- Entry requirement panel ------------------------------------------ */
+  .sp {
+    background: var(--footer);
+    color: var(--on-dark);
+    border-radius: var(--r-xl);
+    padding: clamp(30px, 4vw, 52px);
+  }
+  .sp__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(18px, 4vw, 56px);
+    align-items: end;
+    padding-bottom: clamp(24px, 3vw, 34px);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .sp__title {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    color: var(--on-dark);
+    margin-top: 14px;
+  }
+  .sp__copy { color: var(--on-dark-soft); font-size: 1rem; line-height: 1.6; max-width: 46ch; }
+  .sp__note {
+    margin-top: clamp(20px, 3vw, 30px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line-dark);
+    font-size: 0.86rem;
+    color: var(--on-dark-soft);
+  }
+
+  /* Three across, two down: fills the panel instead of leaving a hole under
+     the second column. */
+  .sp__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 34px) clamp(20px, 4vw, 48px);
+    margin-top: clamp(24px, 3vw, 34px);
+  }
+  .sp__row { padding-left: 14px; border-left: 2px solid var(--yellow-soft); }
+  .sp__exam {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.015em;
+    color: var(--on-dark);
+  }
+  .sp__req { margin-top: 4px; color: var(--on-dark-soft); font-size: 0.93rem; line-height: 1.45; }
+
+  /* ----- Process spine ---------------------------------------------------- */
+  .spine-head { margin-bottom: clamp(28px, 4vw, 52px); }
+  .spine-head .h2 { margin-top: 12px; }
+  .spine { position: relative; padding-block: 4px; }
+  .spine::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    margin-left: -1px;
+    background: linear-gradient(180deg, var(--violet-soft), var(--violet) 12%, var(--violet) 88%, transparent);
+  }
+  .stop { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding-block: clamp(10px, 1.6vw, 20px); }
+  .stop__dot {
+    position: absolute;
+    left: 50%;
+    top: clamp(24px, 3vw, 34px);
+    width: 13px;
+    height: 13px;
+    margin-left: -6.5px;
+    border-radius: 50%;
+    background: var(--violet);
+    box-shadow: 0 0 0 5px var(--white);
+  }
+  .stop__dot--end { background: var(--white); border: 2px solid var(--violet); }
+  .stop--l .stop__card { grid-column: 1; text-align: right; padding-right: clamp(28px, 4vw, 56px); }
+  .stop--r .stop__card { grid-column: 2; padding-left: clamp(28px, 4vw, 56px); }
+  .stop--end .stop__card { grid-column: 1; text-align: right; padding-right: clamp(28px, 4vw, 56px); }
+  .stop__n { font-family: var(--display); font-weight: 800; font-size: 0.9rem; color: var(--violet); letter-spacing: 0.04em; }
+  .stop__t { font-family: var(--display); font-weight: 700; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing: -0.02em; margin: 8px 0 10px; }
+  .stop__card .body { max-width: 38ch; }
+  .stop--r .stop__card .body { margin-right: auto; }
+  .stop--l .stop__card .body, .stop--end .stop__card .body { margin-left: auto; }
+  .stop__end { font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--violet); }
+
+  /* ----- Safeguarding ----------------------------------------------------- */
+  .safe { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .safe__head { position: sticky; top: 112px; }
+  .safe__list { border-top: 2px solid var(--ink); }
+  .safe__row { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(14px, 3vw, 36px); padding: 22px 0; border-bottom: 1px solid var(--line-soft); }
+  .safe__row dt { font-family: var(--display); font-weight: 700; font-size: 1.02rem; letter-spacing: -0.015em; line-height: 1.3; }
+  .safe__row dd { color: var(--muted); font-size: 0.99rem; line-height: 1.58; }
+  .safe__row dd a { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+  .safe__cta { grid-column: 2; margin-top: 26px; }
+
+  @media (max-width: 900px) {
+    .dossier__head { grid-template-columns: 1fr; }
+    .stamp__box { padding: 10px 15px 9px; }
+    .stamp__meta { font-size: 0.6rem; }
+    .hold { grid-template-columns: 2.5rem minmax(0, 1fr); row-gap: 8px; }
+    .hold__c { grid-column: 2; }
+    .sp__intro { grid-template-columns: 1fr; align-items: start; }
+    .sp__list { grid-template-columns: 1fr 1fr; }
+
+    .spine::before { left: 7px; }
+    .stop { grid-template-columns: 1fr; }
+    .stop__dot { left: 7px; top: 22px; }
+    .stop--l .stop__card,
+    .stop--r .stop__card,
+    .stop--end .stop__card { grid-column: 1; text-align: left; padding: 0 0 0 34px; }
+    .stop--l .stop__card .body, .stop--end .stop__card .body { margin-left: 0; }
+
+    .safe { grid-template-columns: 1fr; }
+    .safe__head { position: static; }
+    .safe__row { grid-template-columns: 1fr; row-gap: 8px; }
+    .safe__cta { grid-column: 1; }
+  }
+</style>

@@ -1,0 +1,704 @@
+/* ==========================================================================
+   Seonbae — global design system
+   Template composition kept; palette moved to the Seonbae brand:
+   Ateneo Blue primary (matches the logo), warm off-white ground, soft
+   blue / coral / amber pastel surfaces, Sea Buckthorn + Miami Coral warm
+   accents. Inter throughout (eduvet-inspired), Gothic A1 for hangul.
+   Note: the --violet* token NAMES are kept for continuity but now hold the
+   brand BLUE, so every component picked up the new primary with no edits.
+   ========================================================================== */
+
+/* ----- Fonts ------------------------------------------------------------- */
+/* Self-hosted so first paint never waits on a third-party server. One variable
+   file covers every weight we use (54KB for both subsets). */
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ----- Design tokens ----------------------------------------------------- */
+:root {
+  /* Grounds — light, fresh, a touch of warmth */
+  --canvas: #fbf7ef;        /* warm cream ground, light and warm */
+  --canvas-2: #ece5d5;      /* deeper warm sand, for banding */
+  --white: #fffdf7;         /* warm paper white */
+  --hero: #fefaef;          /* hero ground, same tint as the page heroes */
+  --ink: #201e19;           /* warm near-black — all body + heading text */
+  --footer: #15303f;        /* deep navy */
+
+  /* Primary navy (token names kept so every component inherits it) */
+  --violet: #163a51;        /* deep, restrained navy — primary action + controls */
+  --violet-deep: #0f2836;   /* hover / pressed */
+  --violet-soft: #e7e1d2;   /* warm-neutral tint for navy badges + fills */
+
+  /* Warm-academic surfaces: honey-cream + sage + sand, used with restraint.
+     Legacy token names kept so every component inherits the new values. */
+  --mint-surface: #efe7d3;  /* warm sand chip (icon badges, avatars) */
+  --lavender: #dde7db;      /* sage surface */
+  --butter: #fbeed8;        /* honey-cream surface, lighter */
+  --sage: #dde7db;          /* sage */
+  --sage-ink: #47654a;      /* readable sage text */
+  --lilac: #f7e9cf;         /* honey-cream */
+
+  /* Accents — a refined gold + a warm clay for the artwork */
+  --mint: #d6a02b;          /* honey/gold accent (name kept) */
+  --yellow: #d6a02b;        /* gold */
+  --yellow-soft: #f2e1b3;   /* soft honey */
+  --highlight: rgba(214,160,43,0.40); /* honey highlighter behind key words */
+  --red: #c1663a;           /* warm clay — illustrations only */
+  --coral: #c1663a;         /* name kept (dots, stars) */
+  --mist: #e5ddcd;          /* neutral tint */
+
+  /* Section tints */
+  --bg-yellow: #fefaef;     /* honey, lifted close to white */
+  --bg-mint: #edf2ea;
+  --bg-sand: #fcf8f0;       /* warm beige band */
+  --bg-blue: #eaf0e7;
+  --bg-peach: #faf2da;
+
+  /* Text */
+  --muted: #565759;         /* neutral grey body copy (no blue cast) */
+  --muted-soft: #86847f;
+  --on-dark: #f0eeeb;
+  --on-dark-soft: rgba(240, 238, 235, 0.68);
+
+  /* Lines + shadow */
+  --line: rgba(19, 24, 27, 0.10);
+  --line-soft: rgba(19, 24, 27, 0.06);
+  --line-dark: rgba(240, 238, 235, 0.16);
+  --shadow-sm: 0 1px 2px rgba(10, 26, 47, 0.05), 0 6px 16px rgba(10, 26, 47, 0.06);
+  --shadow-md: 0 2px 4px rgba(10, 26, 47, 0.05), 0 18px 40px rgba(10, 26, 47, 0.10);
+  --shadow-lift: 0 3px 6px rgba(10, 26, 47, 0.07), 0 26px 54px rgba(10, 26, 47, 0.14);
+
+  /* Radii — tightened one step. Softer corners read consumer; these read like
+     a considered document, which is what the price point asks for. */
+  --r-xl: 14px;
+  --r-lg: 11px;
+  --r-md: 9px;
+  --r-sm: 6px;
+  --r-pill: 999px;
+
+  /* Rhythm */
+  --container: 1280px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --section-y: clamp(64px, 9vw, 132px);
+
+  /* Type — DM Sans (friendly-but-professional), Newsreader italic for
+     editorial accents, Pretendard for Korean. */
+  --display: 'Hanken Grotesk', 'Pretendard Variable', system-ui, -apple-system, sans-serif;
+  --body: 'Hanken Grotesk', 'Pretendard Variable', system-ui, -apple-system, sans-serif;
+  --kr: 'Pretendard Variable', 'Apple SD Gothic Neo', var(--body);
+  --serif: 'Hanken Grotesk', 'Pretendard Variable', system-ui, sans-serif;
+}
+
+/* ----- Reset ------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--body);
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+picture,
+video { display: block; max-width: 100%; }
+
+img { height: auto; }
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a { color: inherit; text-decoration: none; }
+
+ul, ol { list-style: none; padding: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ----- Typography -------------------------------------------------------- */
+h1, h2, h3, h4, h5 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+}
+
+.display {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(2.6rem, 5.6vw, 4.7rem);
+  line-height: 1.03;
+  letter-spacing: -0.012em;
+}
+
+.h2 {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.012em;
+}
+
+.h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.card-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.9vw, 1.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.28rem);
+  line-height: 1.55;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.body {
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+}
+
+p a { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+
+.kr { font-family: var(--kr); }
+
+/* ----- Bilingual toggle -------------------------------------------------- */
+/* Every translatable string is rendered twice (see components/T.astro); we
+   show only the active language. Default (no flag / English) hides Korean. */
+html[data-lang='en'] [data-l='ko'],
+html:not([data-lang='ko']) [data-l='ko'] { display: none !important; }
+html[data-lang='ko'] [data-l='en'] { display: none !important; }
+
+/* Korean sets its own breaking + a touch looser tracking on big display type,
+   which is optimised for Latin. Keeps words whole (keep-all) rather than
+   breaking mid-syllable-run. */
+:lang(ko), [data-l='ko'], .kr { word-break: keep-all; }
+.display [data-l='ko'],
+.h2 [data-l='ko'],
+.h3 [data-l='ko'],
+h1 [data-l='ko'],
+h2 [data-l='ko'],
+h3 [data-l='ko'] { letter-spacing: -0.01em; }
+
+/* ----- Eyebrow ----------------------------------------------------------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  flex: none;
+}
+.eyebrow--light { color: var(--yellow-soft); }
+.eyebrow--light::before { background: currentColor; }
+
+/* Yellow hand-drawn oval, wrapped around one meaningful word */
+/* One accent-coloured word in major headings (eduvet-style, replaces the
+   hand-drawn oval which read too playful). */
+.mark {
+  color: var(--ink);
+  font-style: normal;
+  background-image: linear-gradient(180deg, transparent 58%, var(--highlight) 58%, var(--highlight) 94%, transparent 94%);
+  padding: 0 0.05em;
+  border-radius: 1px;
+}
+
+/* ----- Layout ------------------------------------------------------------ */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section { padding-block: var(--section-y); }
+.section--tight { padding-block: clamp(44px, 6vw, 80px); }
+
+.bg-cream { background: var(--canvas); }
+.bg-white { background: var(--white); }
+.bg-blue { background: var(--bg-blue); }
+.bg-peach { background: var(--bg-peach); }
+.bg-mint { background: var(--bg-mint); }
+.bg-yellow { background: var(--bg-yellow); }
+.bg-sand { background: var(--bg-sand); }
+.bg-ink { background: var(--ink); color: var(--on-dark); }
+.bg-ink h1, .bg-ink h2, .bg-ink h3, .bg-ink h4 { color: var(--on-dark); }
+
+/* ----- PageHero — warm & welcoming, Khan-style soft background shapes ----- */
+.phero { position: relative; overflow: hidden; padding-block: clamp(56px, 8vw, 116px) clamp(44px, 6vw, 76px); }
+.phero--compact { padding-block: clamp(44px, 6vw, 82px) clamp(32px, 4vw, 54px); }
+.phero .container { position: relative; z-index: 1; }
+.phero__inner { max-width: 820px; }
+.phero--center .phero__inner { max-width: 720px; margin-inline: auto; text-align: center; }
+.phero--center .cta-row { justify-content: center; }
+.phero__title { font-weight: 700; font-size: clamp(2.5rem, 5vw, 4.1rem); line-height: 1.04; margin-top: 18px; }
+.phero__copy { margin-top: 20px; max-width: 40rem; }
+.phero--center .phero__copy { margin-inline: auto; }
+.phero__cta { margin-top: 32px; }
+
+/* Four shapes at four sizes, weighted to the right where the text is not, and
+   spaced so no two overlap at the same value. Multiply keeps them sitting in
+   the ground rather than floating on top of it. */
+/* Five arrangements, seeded per page in PageHero.astro. Sizes and positions
+   are set per scene so shapes never stack on each other or crowd the heading,
+   and no two pages open on the same picture. */
+.phero__blob {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  aspect-ratio: 1;
+}
+
+/* s1 — one large shoulder right, a small counterweight low left */
+.phero--s1 .phero__blob--a { width: clamp(300px, 34vw, 500px); background: var(--p1); border-radius: 46% 54% 62% 38% / 44% 43% 57% 56%; top: -30%; right: -6%; }
+.phero--s1 .phero__blob--b { width: clamp(130px, 15vw, 210px); background: var(--p2); border-radius: 58% 42% 45% 55% / 55% 54% 46% 45%; bottom: -22%; right: 24%; }
+.phero--s1 .phero__blob--c { width: clamp(90px, 10vw, 140px); background: var(--p4); border-radius: 62% 38% 40% 60% / 42% 62% 38% 58%; bottom: 10%; left: -5%; }
+.phero--s1 .phero__blob--d { display: none; }
+
+/* s2 — a tall right column, nothing on the left so the heading breathes */
+.phero--s2 .phero__blob--a { width: clamp(260px, 30vw, 430px); background: var(--p2); border-radius: 52% 48% 38% 62% / 40% 58% 42% 60%; top: -26%; right: 4%; }
+.phero--s2 .phero__blob--b { width: clamp(160px, 19vw, 270px); background: var(--p6); border-radius: 40% 60% 58% 42% / 62% 38% 62% 38%; bottom: -34%; right: -6%; }
+.phero--s2 .phero__blob--c { width: clamp(80px, 9vw, 120px); background: var(--p4); border-radius: 66% 34% 42% 58% / 38% 64% 36% 62%; top: 22%; right: 30%; }
+.phero--s2 .phero__blob--d { display: none; }
+
+/* s3 — split: one shape each corner, well apart */
+.phero--s3 .phero__blob--a { width: clamp(240px, 27vw, 400px); background: var(--p6); border-radius: 58% 42% 46% 54% / 38% 60% 40% 62%; top: -28%; right: 2%; }
+.phero--s3 .phero__blob--b { width: clamp(150px, 17vw, 240px); background: var(--p3); border-radius: 44% 56% 62% 38% / 58% 40% 60% 42%; bottom: -26%; left: -8%; }
+.phero--s3 .phero__blob--c { width: clamp(70px, 8vw, 110px); background: var(--p5); border-radius: 60% 40% 44% 56% / 44% 58% 42% 56%; top: 14%; right: 34%; }
+.phero--s3 .phero__blob--d { display: none; }
+
+/* s4 — low band, weight under the copy rather than beside the heading */
+.phero--s4 .phero__blob--a { width: clamp(280px, 32vw, 460px); background: var(--p3); border-radius: 50% 50% 40% 60% / 42% 56% 44% 58%; bottom: -40%; right: 6%; }
+.phero--s4 .phero__blob--b { width: clamp(140px, 16vw, 220px); background: var(--p1); border-radius: 62% 38% 52% 48% / 56% 44% 56% 44%; top: -18%; right: 20%; }
+.phero--s4 .phero__blob--c { width: clamp(90px, 10vw, 140px); background: var(--p4); border-radius: 42% 58% 60% 40% / 60% 42% 58% 40%; top: 30%; left: -6%; }
+.phero--s4 .phero__blob--d { display: none; }
+
+/* s5 — three small marks, no dominant shape */
+.phero--s5 .phero__blob--a { width: clamp(190px, 22vw, 320px); background: var(--p5); border-radius: 56% 44% 42% 58% / 40% 60% 40% 60%; top: -20%; right: 8%; }
+.phero--s5 .phero__blob--b { width: clamp(130px, 15vw, 200px); background: var(--p2); border-radius: 46% 54% 64% 36% / 60% 38% 62% 40%; bottom: -24%; right: 28%; }
+.phero--s5 .phero__blob--c { width: clamp(110px, 13vw, 170px); background: var(--p1); border-radius: 64% 36% 40% 60% / 38% 62% 38% 62%; bottom: 6%; left: -7%; }
+.phero--s5 .phero__blob--d { display: none; }
+
+.phero__dots {
+  position: absolute; z-index: 0; pointer-events: none;
+  width: 168px; height: 108px; right: 7%; top: 26%;
+  background-image: radial-gradient(var(--violet) 1.5px, transparent 1.6px);
+  background-size: 17px 17px; opacity: 0.13;
+}
+@media (max-width: 820px) {
+  /* One shape only on a phone: anything more crowds the heading. */
+  .phero__blob--b, .phero__blob--c, .phero__blob--d, .phero__dots { display: none; }
+  .phero .phero__blob--a { top: auto; bottom: -16%; right: -24%; left: auto; width: clamp(220px, 62vw, 320px); }
+}
+
+/* ----- Buttons ----------------------------------------------------------- */
+.btn {
+  --disc: #ffffff;
+  --disc-ink: #0c0c0c;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1;
+  padding: 9px 10px 9px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, filter 0.16s ease;
+  white-space: nowrap;
+}
+.btn__disc {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--disc);
+  color: var(--disc-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  transition: transform 0.16s ease;
+}
+.btn__disc svg { width: 15px; height: 15px; }
+.btn:hover { transform: translateY(-1px); }
+.btn:hover .btn__disc { transform: translateX(2px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary {
+  background: var(--violet);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 58, 108, 0.24);
+}
+.btn--primary:hover { background: var(--violet-deep); box-shadow: 0 10px 26px rgba(0, 58, 108, 0.30); }
+.btn--primary .btn__disc { --disc: #ffffff; --disc-ink: #0c0c0c; }
+
+.btn--secondary {
+  background: var(--white);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.btn--secondary:hover { border-color: rgba(12, 12, 12, 0.2); }
+.btn--secondary .btn__disc { --disc: var(--violet); --disc-ink: #ffffff; }
+
+.btn--ghost-dark {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--on-dark);
+  border-color: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
+}
+.btn--ghost-dark:hover { background: rgba(255, 255, 255, 0.16); }
+.btn--ghost-dark .btn__disc { --disc: #ffffff; --disc-ink: #0c0c0c; }
+
+.btn--lg { font-size: 1.02rem; padding: 12px 12px 12px 26px; }
+.btn--lg .btn__disc { width: 34px; height: 34px; }
+
+/* Text link with small arrow */
+.textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+  transition: gap 0.16s ease, color 0.16s ease;
+}
+.textlink svg { width: 16px; height: 16px; }
+.textlink:hover { gap: 0.65em; color: var(--violet); }
+.textlink--light { color: var(--on-dark); }
+.textlink--light:hover { color: var(--mint); }
+
+/* ----- Cards ------------------------------------------------------------- */
+.card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-sm);
+}
+/* Six light pastels that sit together on the warm ground. One per curriculum,
+   so no two cards in the subjects grid repeat a colour. */
+/* Built out from the two colours the brand already owns, mint and honey, with
+   companions that sit in the same warm, low-chroma family. `--p*` are card
+   surfaces (quiet enough to read a price on); `--b*` are the marker blobs,
+   which carry the colour so the surface does not have to. */
+:root {
+  --p1: #eaf0e6; /* mint */
+  --p2: #f8f2e2; /* honey */
+  --p3: #f3eee3; /* warm sand */
+  --p4: #f6ece5; /* soft clay */
+  --p5: #eceff4; /* pale sky */
+  --p6: #e8f1ed; /* seafoam */
+
+  --b1: #cadfc0; /* mint */
+  --b2: #f0dda9; /* honey */
+  --b3: #e4d6bc; /* warm sand */
+  --b4: #ecd0c1; /* soft clay */
+  --b5: #cbd8e7; /* pale sky */
+  --b6: #c6ded4; /* seafoam */
+}
+.surface-p1 { background: var(--p1); }
+.surface-p2 { background: var(--p2); }
+.surface-p3 { background: var(--p3); }
+.surface-p4 { background: var(--p4); }
+.surface-p5 { background: var(--p5); }
+.surface-p6 { background: var(--p6); }
+
+.surface-mint { background: var(--mint-surface); }
+.surface-lavender { background: var(--lavender); }
+.surface-butter { background: var(--butter); }
+.surface-sage { background: var(--sage); }
+.surface-lilac { background: var(--lilac); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: rgba(12, 12, 12, 0.06);
+  color: var(--ink);
+}
+.pill--violet { background: var(--violet-soft); color: var(--violet); }
+.pill--outline { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+.pill--light { background: rgba(255, 255, 255, 0.14); color: var(--on-dark); }
+
+/* ----- Contour decoration ------------------------------------------------ */
+.contour {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.contour svg { position: absolute; width: 100%; height: 100%; opacity: 0.5; }
+.has-contour { position: relative; }
+.has-contour > * { position: relative; z-index: 1; }
+
+/* ----- Metric ------------------------------------------------------------ */
+.metric-value {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 3.6vw, 3.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ink);
+}
+.metric-label {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ----- Media placeholder (swap for real photography) --------------------- */
+.media {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--lavender);
+  isolation: isolate;
+}
+.media::after {
+  /* faint grain so empty photo slots still read as intentional */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(12, 12, 12, 0.05) 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.5;
+  z-index: 2;
+  pointer-events: none;
+}
+.media img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
+
+/* ----- Reveal on scroll -------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: opacity, transform;
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* ----- Grid helpers ------------------------------------------------------ */
+.grid { display: grid; gap: clamp(16px, 2vw, 28px); }
+.two-col { grid-template-columns: repeat(2, 1fr); }
+.three-col { grid-template-columns: repeat(3, 1fr); }
+.four-col { grid-template-columns: repeat(4, 1fr); }
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+}
+
+.stack-sm { display: flex; flex-direction: column; gap: 12px; }
+.stack-md { display: flex; flex-direction: column; gap: 20px; }
+.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+/* ----- Responsive -------------------------------------------------------- */
+@media (max-width: 1080px) {
+  .four-col { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  .three-col { grid-template-columns: 1fr; }
+  .split { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .four-col { grid-template-columns: 1fr 1fr; }
+}
+
+/* ----- Forms ------------------------------------------------------------- */
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label { font-size: 0.82rem; font-weight: 600; color: var(--muted); letter-spacing: 0.01em; }
+.form-field .req { color: var(--violet); }
+.form-control {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-family: var(--body);
+  font-size: 0.96rem;
+  color: var(--ink);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.form-control::placeholder { color: var(--muted-soft); }
+.form-control:focus {
+  outline: none;
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px var(--violet-soft);
+}
+textarea.form-control { resize: vertical; min-height: 104px; line-height: 1.5; }
+select.form-control {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.8 4.7 6 7.9l3.2-3.2' fill='none' stroke='%2386847f' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 11px 11px;
+  padding-right: 38px;
+}
+.field-hint { margin-top: 7px; font-size: 0.84rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+/* Approximate local price, appended next to a won price by the region picker. */
+.alt-price {
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: 0.78em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Visible to screen readers only. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Honeypot: off-screen for people, irresistible to bots. */
+.hp {
+  position: absolute !important;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Choice chips (radio/checkbox styled as pills) */
+.choice { position: relative; cursor: pointer; }
+.choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.choice span {
+  display: block;
+  padding: 12px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: all 0.14s ease;
+}
+.choice input:checked + span {
+  border-color: var(--violet);
+  background: var(--violet-soft);
+  color: var(--violet);
+  font-weight: 600;
+}
+.choice input:focus-visible + span { box-shadow: 0 0 0 3px var(--violet-soft); }
+
+.seg {
+  display: inline-flex;
+  padding: 5px;
+  background: rgba(12, 12, 12, 0.05);
+  border-radius: var(--r-pill);
+  gap: 4px;
+}
+.seg button {
+  border: none;
+  background: none;
+  padding: 9px 20px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+.seg button[aria-selected="true"] {
+  background: var(--white);
+  color: var(--violet);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ----- Reduced motion ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}

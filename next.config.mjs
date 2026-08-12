@@ -12,7 +12,55 @@ const nextConfig = {
       beforeFiles: [
         {
           source: "/",
-          destination: "/index.html",
+          destination: "/marketing/index.html",
+        },
+        {
+          source: "/about",
+          destination: "/marketing/about/index.html",
+        },
+        {
+          source: "/become-a-tutor",
+          destination: "/marketing/become-a-tutor/index.html",
+        },
+        {
+          source: "/contact",
+          destination: "/marketing/contact/index.html",
+        },
+        {
+          source: "/get-matched",
+          destination: "/marketing/get-matched/index.html",
+        },
+        {
+          source: "/how-it-works",
+          destination: "/marketing/how-it-works/index.html",
+        },
+        {
+          source: "/pricing",
+          destination: "/marketing/pricing/index.html",
+        },
+        {
+          source: "/resources",
+          destination: "/marketing/resources/index.html",
+        },
+        {
+          source: "/resources/:slug",
+          destination: "/marketing/resources/:slug/index.html",
+        },
+        {
+          source: "/subjects",
+          destination: "/marketing/subjects/index.html",
+        },
+        {
+          source: "/subjects/:slug",
+          destination: "/marketing/subjects/:slug/index.html",
+        },
+        {
+          source: "/tutors",
+          destination: "/marketing/tutors/index.html",
+        },
+        {
+          source: "/verification",
+          destination: "/marketing/verification/index.html",
         },
       ],
     };

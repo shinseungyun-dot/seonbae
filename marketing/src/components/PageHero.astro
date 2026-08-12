@@ -1,0 +1,60 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Button from './Button.astro';
+
+// One warm, welcoming hero (Khan-style soft background shapes) that each page
+// tints differently and pairs with its own distinct body layout.
+interface Props {
+  eyebrow: string;
+  copy?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  align?: 'left' | 'center';
+  bg?: 'cream' | 'white' | 'yellow' | 'mint';
+  illo?: string;
+  illoPos?: string;
+  compact?: boolean;
+}
+const {
+  eyebrow,
+  copy,
+  ctaLabel,
+  ctaHref = '/get-matched',
+  secondaryLabel,
+  secondaryHref = '/how-it-works',
+  align = 'left',
+  bg = 'cream',
+  compact = false,
+} = Astro.props;
+const bgClass = { cream: 'bg-cream', white: 'bg-white', yellow: 'bg-yellow', mint: 'bg-mint' }[bg];
+
+// Every page got the same three shapes in the same three places, which read as
+// a template. Seed an arrangement off the path so each page is laid out
+// differently but always the same way on repeat visits.
+const path = Astro.url.pathname;
+let seed = 0;
+for (const ch of path) seed = (seed * 31 + ch.charCodeAt(0)) % 5;
+const scene = `phero--s${seed + 1}`;
+---
+<section class:list={['phero', bgClass, scene, { 'phero--center': align === 'center', 'phero--compact': compact }]}>
+  <span class="phero__blob phero__blob--a" aria-hidden="true"></span>
+  <span class="phero__blob phero__blob--b" aria-hidden="true"></span>
+  <span class="phero__blob phero__blob--c" aria-hidden="true"></span>
+  <span class="phero__blob phero__blob--d" aria-hidden="true"></span>
+  <span class="phero__dots" aria-hidden="true"></span>
+  <div class="container">
+    <div class="phero__inner reveal is-in">
+      <Eyebrow label={eyebrow} />
+      <h1 class="display phero__title"><slot /></h1>
+      {copy && <p class="lead phero__copy">{copy}</p>}
+      {ctaLabel && (
+        <div class="cta-row phero__cta">
+          <Button href={ctaHref} label={ctaLabel} variant="primary" size="lg" arrow="diag" />
+          {secondaryLabel && <Button href={secondaryHref} label={secondaryLabel} variant="text" arrow="right" />}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

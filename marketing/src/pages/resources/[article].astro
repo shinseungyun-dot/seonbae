@@ -1,0 +1,89 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import Button from '../../components/Button.astro';
+import MediaPanel from '../../components/MediaPanel.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import { formatDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const resources = await getCollection('resources');
+  return resources.map((entry) => ({ params: { article: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const r = entry.data;
+const { Content } = await render(entry);
+
+const related = (await getCollection('resources'))
+  .filter((x) => x.id !== entry.id)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+<Base title={`${r.title} — Seonbae`} description={r.excerpt} active="/resources">
+  <article>
+    <header class="article-head">
+      <div class="container article-head__inner reveal is-in">
+        <a href="/resources" class="back-link">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All resources
+        </a>
+        <span class="pill pill--violet article-cat">{r.category}</span>
+        <h1 class="display article-title">{r.title}</h1>
+        <p class="lead article-excerpt">{r.excerpt}</p>
+        <p class="article-meta">{r.author} · {formatDate(r.date)} · {r.readingTime} min read</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="article-cover reveal is-in">
+        <MediaPanel scene="notes" accent={r.accent} ratio="21 / 9" />
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="article-body prose reveal">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div>
+          <Eyebrow label="Keep reading" />
+          <h2 class="h2">More resources.</h2>
+        </div>
+        <Button href="/resources" label="All resources" variant="text" arrow="right" />
+      </div>
+      <div class="grid three-col">
+        {related.map((x) => <div class="reveal"><ResourceCard entry={x} variant="standard" /></div>)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .article-head { background: var(--canvas); padding-block: clamp(40px, 6vw, 76px) clamp(24px, 3vw, 40px); }
+  .article-head__inner { max-width: 760px; margin-inline: auto; text-align: center; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-bottom: 20px; }
+  .back-link svg { width: 16px; height: 16px; }
+  .back-link:hover { color: var(--violet); }
+  .article-cat { margin-bottom: 18px; }
+  .article-title { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+  .article-excerpt { margin-top: 18px; }
+  .article-meta { margin-top: 20px; color: var(--muted-soft); font-size: 0.9rem; }
+
+  .article-cover { max-width: 960px; margin: 8px auto 0; }
+
+  .article-body { max-width: 680px; margin: clamp(36px, 5vw, 64px) auto clamp(48px, 7vw, 96px); }
+  .prose :global(p) { color: var(--muted); font-size: 1.14rem; line-height: 1.75; margin-bottom: 1.3em; }
+  .prose :global(p:first-child) { font-size: 1.3rem; line-height: 1.6; color: var(--ink); }
+  .prose :global(h2) { font-size: 1.6rem; margin: 1.6em 0 0.6em; }
+  .prose :global(a) { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: clamp(28px, 4vw, 44px); flex-wrap: wrap; }
+  .sec-head .h2 { margin-top: 12px; }
+</style>

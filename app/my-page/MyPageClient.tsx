@@ -49,7 +49,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
         headers: { Accept: "application/json" },
       });
     } finally {
-      router.replace("/#/ko/home");
+      router.replace("/");
       router.refresh();
     }
   }
@@ -81,7 +81,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
         return;
       }
 
-      router.replace(result.destination || "/#/ko/home");
+      router.replace(result.destination || "/");
       router.refresh();
     } catch {
       setMessage("요청을 처리하지 못했습니다. 네트워크 연결을 확인해 주세요.");
@@ -93,7 +93,7 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/#/ko/home">
+        <Link className={styles.brand} href="/">
           <img src="/seonbae-logo-antique.png" alt="" />
           <span>
             <b>선배</b>

@@ -1,3 +1,7 @@
+packages:
+  - marketing
+
 allowBuilds:
   '@zoom/meetingsdk': false
+  esbuild: true
   sharp: true

@@ -1,0 +1,413 @@
+---
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 'Adult learner'];
+const subjects = ['IB Diploma', 'Advanced Placement', 'A Level', 'IGCSE', 'Standardized Tests', 'English and Writing', 'Not sure yet'];
+const prefs = [
+  { v: 'weekly', t: 'Weekly momentum', d: 'A standing slot with one tutor' },
+  { v: 'hourly', t: 'By the hour', d: 'Occasional, when I need it' },
+  { v: 'unsure', t: 'Not sure yet', d: 'Help me decide' },
+];
+const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
+---
+<Base title="Get matched — Seonbae" active="/get-matched" showConversion={false} heroDark={false}>
+  <section class="match-section">
+    <div class="container">
+      <div class="match-wrap">
+        <header class="match-head reveal is-in">
+          <Eyebrow label="Get matched" />
+          <h1 class="display match-title">Let's find the tutor who <span class="mark">fits</span>.</h1>
+          <p class="lead" style="margin-top:14px">Four short steps. It takes about a minute, and a real person reads every answer.</p>
+        </header>
+
+        <div class="match-card reveal is-in">
+          <div class="progress" id="progress" aria-hidden="true">
+            {stepLabels.map((l, i) => (
+              <div class={`progress-seg ${i === 0 ? 'is-active' : ''}`} data-seg={i + 1}>
+                <span class="progress-dot">{i + 1}</span>
+                <span class="progress-label">{l}</span>
+              </div>
+            ))}
+          </div>
+
+          <form id="match-form" novalidate>
+            <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <!-- Step 1 -->
+            <fieldset class="step is-current" data-step="1">
+              <legend class="step-legend">Who are the lessons for?</legend>
+              <div class="form-field">
+                <label for="m-student">Student name <span class="req">*</span></label>
+                <input class="form-control" id="m-student" name="student" type="text" required placeholder="First name is fine" />
+              </div>
+              <div class="form-field" style="margin-top:18px">
+                <span class="field-label">Level</span>
+                <div class="choice-grid">
+                  {levels.map((l, i) => (
+                    <label class="choice"><input type="radio" name="level" value={l} checked={i === 0} /><span>{l}</span></label>
+                  ))}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Step 2 -->
+            <fieldset class="step" data-step="2" hidden>
+              <legend class="step-legend">What subject, and what for?</legend>
+              <div class="form-field">
+                <span class="field-label">Subject</span>
+                <div class="choice-grid choice-grid--3">
+                  {subjects.map((s, i) => (
+                    <label class="choice"><input type="radio" name="subject" value={s} checked={i === 0} /><span>{s}</span></label>
+                  ))}
+                </div>
+              </div>
+              <div class="form-field" style="margin-top:20px">
+                <label for="m-goal">The goal <span class="req">*</span></label>
+                <input class="form-control" id="m-goal" name="goal" type="text" required placeholder="A predicted 7, a 1500 SAT, or steadier confidence" />
+              </div>
+            </fieldset>
+
+            <!-- Step 3 -->
+            <fieldset class="step" data-step="3" hidden>
+              <legend class="step-legend">When works, and how often?</legend>
+              <div class="form-field tutor-picker-field">
+                <label for="m-tutor-search">Preferred tutor</label>
+                <div class="tutor-picker" data-tutor-picker>
+                  <input type="hidden" name="preferredTutor" value="Manager consultation" data-tutor-value />
+                  <button type="button" class="form-control tutor-picker__trigger" id="m-tutor-search" aria-expanded="false" aria-controls="m-tutor-options">
+                    <span data-tutor-label>Consult with the team / 매니저와 상담</span>
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="tutor-picker__menu" id="m-tutor-options" hidden>
+                    <input class="form-control tutor-picker__search" type="search" placeholder="Search by name, university, or curriculum" aria-label="Search tutors" data-tutor-search />
+                    <div class="tutor-picker__options" role="listbox" data-tutor-options>
+                      <button type="button" class="tutor-option is-selected" role="option" aria-selected="true" data-value="Manager consultation" data-search="manager consultation team 매니저 상담">
+                        <span class="tutor-option__avatar">S</span>
+                        <span><strong>Consult with the team</strong><small>매니저와 상담 · We will recommend the right fit</small></span>
+                      </button>
+                    </div>
+                    <p class="tutor-picker__empty" data-tutor-empty hidden>No matching tutors in this curriculum.</p>
+                  </div>
+                </div>
+                <p class="field-hint">The list updates to tutors matching the curriculum selected above.</p>
+              </div>
+              <div class="form-field">
+                <label for="m-times">Preferred times</label>
+                <input class="form-control" id="m-times" name="times" type="text" placeholder="Weekday evenings, and your time zone" />
+                <p class="field-hint" data-clock>Seoul is 9:00 PM right now</p>
+              </div>
+              <div class="form-field" style="margin-top:20px">
+                <span class="field-label">How would you like to work?</span>
+                <div class="choice-grid choice-grid--3">
+                  {prefs.map((p, i) => (
+                    <label class="choice choice--rich"><input type="radio" name="preference" value={p.v} checked={i === 0} /><span><strong>{p.t}</strong><em>{p.d}</em></span></label>
+                  ))}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Step 4 -->
+            <fieldset class="step" data-step="4" hidden>
+              <legend class="step-legend">Where should we reach you?</legend>
+              <div class="form-field">
+                <label for="m-email">Email <span class="req">*</span></label>
+                <input class="form-control" id="m-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+              </div>
+              <div class="form-field" style="margin-top:18px">
+                <label for="m-note">Anything else we should know?</label>
+                <textarea class="form-control" id="m-note" name="note" placeholder="A deadline, a past struggle, or a tutor style that has worked before"></textarea>
+              </div>
+            </fieldset>
+
+            <div class="match-nav">
+              <button type="button" class="btn btn--secondary" id="btn-back" hidden>
+                <span class="btn__disc" aria-hidden="true" style="order:-1"><svg viewBox="0 0 20 20" fill="none"><path d="M16 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span>Back</span>
+              </button>
+              <button type="button" class="btn btn--primary btn--lg" id="btn-next">
+                <span>Continue</span>
+                <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+            </div>
+          </form>
+
+          <div class="match-done" id="match-done" role="status" hidden>
+            <span class="done-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12.5l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h2 class="h3">Thank you. We are on it.</h2>
+            <p class="body" id="match-done-note" style="margin-top:12px; max-width:46ch; margin-inline:auto">A real person will read your answers and reply within one business day with a verified tutor who fits, plus a couple of times to book a first lesson. That first lesson comes with a rematch guarantee.</p>
+            <div class="cta-row" style="justify-content:center; margin-top:24px">
+              <a href="/how-it-works" class="btn btn--secondary"><span>See what happens next</span><span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .match-section { background: var(--canvas); padding-block: clamp(40px, 6vw, 88px); min-height: 70vh; }
+  .match-wrap { max-width: 720px; margin-inline: auto; }
+  .match-head { text-align: center; margin-bottom: 30px; }
+  .match-head .eyebrow { justify-content: center; }
+  .match-title { font-size: clamp(2.2rem, 4.4vw, 3.4rem); margin-top: 14px; }
+
+  .match-card { background: var(--white); border: 1px solid var(--line-soft); border-radius: var(--r-xl); padding: clamp(24px, 3.5vw, 44px); box-shadow: var(--shadow-md); }
+
+  .progress { display: flex; gap: 6px; margin-bottom: 30px; }
+  .progress-seg { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; opacity: 0.5; transition: opacity 0.2s ease; }
+  .progress-seg::before { content: ""; position: absolute; top: 15px; left: -50%; width: 100%; height: 2px; background: var(--line); z-index: 0; }
+  .progress-seg:first-child::before { display: none; }
+  .progress-seg.is-active, .progress-seg.is-done { opacity: 1; }
+  .progress-dot {
+    position: relative; z-index: 1;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--violet-soft); color: var(--violet);
+    font-family: var(--display); font-weight: 700; font-size: 0.92rem;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .progress-seg.is-active .progress-dot, .progress-seg.is-done .progress-dot { background: var(--violet); color: #fff; }
+  .progress-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+
+  .step-legend { font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 2.4vw, 1.7rem); letter-spacing: -0.02em; margin-bottom: 22px; padding: 0; }
+  .step { border: none; padding: 0; margin: 0; animation: stepIn 0.28s ease; }
+  @keyframes stepIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .field-label { display: block; font-size: 0.86rem; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+
+  .choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .choice-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .choice--rich span { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; }
+  .choice--rich strong { font-weight: 700; }
+  .choice--rich em { font-style: normal; font-size: 0.82rem; color: var(--muted); }
+  .choice--rich input:checked + span em { color: var(--violet); }
+
+  .tutor-picker-field { margin-bottom: 20px; }
+  .tutor-picker { position: relative; }
+  .tutor-picker__trigger { display: flex; align-items: center; justify-content: space-between; text-align: left; cursor: pointer; }
+  .tutor-picker__trigger svg { width: 18px; height: 18px; flex: none; transition: transform 0.18s ease; }
+  .tutor-picker__trigger[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .tutor-picker__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    padding: 10px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+  }
+  .tutor-picker__search { margin-bottom: 8px; }
+  .tutor-picker__options { max-height: 280px; overflow-y: auto; display: grid; gap: 4px; }
+  .tutor-option {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    min-height: 64px;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+  .tutor-option:hover, .tutor-option.is-selected { background: var(--violet-soft); }
+  .tutor-option__avatar { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--mint-surface); color: var(--violet); font-weight: 800; overflow: hidden; }
+  .tutor-option__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .tutor-option strong, .tutor-option small { display: block; }
+  .tutor-option strong { font-size: 0.94rem; color: var(--ink); }
+  .tutor-option small { margin-top: 2px; color: var(--muted); font-size: 0.78rem; }
+  .tutor-picker__empty { padding: 12px; color: var(--muted); font-size: 0.86rem; }
+
+  .match-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 30px; }
+  .match-nav #btn-back[hidden] { display: none; }
+  .match-nav #btn-next { margin-left: auto; }
+
+  .match-done { text-align: center; padding: clamp(10px, 2vw, 24px) 0; }
+  .done-check { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--mint-surface); color: #003a6c; margin-bottom: 18px; }
+
+  @media (max-width: 560px) {
+    .choice-grid--3 { grid-template-columns: 1fr; }
+    .progress-label { display: none; }
+  }
+</style>
+
+<script>
+  import { submitForm } from '../lib/forms';
+
+  const form = document.getElementById('match-form') as HTMLFormElement | null;
+  const steps = [...(form?.querySelectorAll('.step') ?? [])] as HTMLElement[];
+  const segs = [...document.querySelectorAll('.progress-seg')] as HTMLElement[];
+  const back = document.getElementById('btn-back') as HTMLButtonElement | null;
+  const next = document.getElementById('btn-next') as HTMLButtonElement | null;
+  const done = document.getElementById('match-done') as HTMLElement | null;
+  const nextLabel = next?.querySelector('span:first-child') as HTMLElement | null;
+  let i = 0;
+
+  type Tutor = {
+    registry_id: string;
+    name: string;
+    exam: string;
+    score: string;
+    category?: string;
+    university?: string;
+    university_en?: string;
+    photo_url?: string | null;
+  };
+
+  const picker = document.querySelector('[data-tutor-picker]') as HTMLElement | null;
+  const pickerTrigger = picker?.querySelector('.tutor-picker__trigger') as HTMLButtonElement | null;
+  const pickerMenu = picker?.querySelector('.tutor-picker__menu') as HTMLElement | null;
+  const pickerOptions = picker?.querySelector('[data-tutor-options]') as HTMLElement | null;
+  const pickerSearch = picker?.querySelector('[data-tutor-search]') as HTMLInputElement | null;
+  const pickerValue = picker?.querySelector('[data-tutor-value]') as HTMLInputElement | null;
+  const pickerLabel = picker?.querySelector('[data-tutor-label]') as HTMLElement | null;
+  const pickerEmpty = picker?.querySelector('[data-tutor-empty]') as HTMLElement | null;
+  let tutors: Tutor[] = [];
+
+  const curriculumAliases: Record<string, string[]> = {
+    'IB Diploma': ['IB'],
+    'Advanced Placement': ['AP'],
+    'A Level': ['A LEVEL', 'A-LEVEL'],
+    IGCSE: ['IGCSE'],
+    'Standardized Tests': ['SAT', 'ACT', 'IELTS', 'TOEFL'],
+    'English and Writing': ['IELTS', 'TOEFL', 'ENGLISH'],
+  };
+
+  const activeCurriculum = () => (form?.querySelector('input[name="subject"]:checked') as HTMLInputElement | null)?.value || '';
+  const matchingTutors = () => {
+    const aliases = curriculumAliases[activeCurriculum()] || [];
+    if (!aliases.length) return tutors;
+    return tutors.filter((tutor) => {
+      const haystack = `${tutor.exam} ${tutor.category || ''}`.toUpperCase();
+      return aliases.some((alias) => haystack.includes(alias));
+    });
+  };
+
+  const initials = (name: string) => name.trim().slice(0, 1).toUpperCase() || 'S';
+  const renderTutorOptions = () => {
+    if (!pickerOptions) return;
+    pickerOptions.querySelectorAll('.tutor-option:not([data-value="Manager consultation"])').forEach((node) => node.remove());
+    const fragment = document.createDocumentFragment();
+    matchingTutors().forEach((tutor) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'tutor-option';
+      button.setAttribute('role', 'option');
+      button.setAttribute('aria-selected', 'false');
+      button.dataset.value = tutor.name;
+      button.dataset.search = `${tutor.name} ${tutor.university || ''} ${tutor.university_en || ''} ${tutor.exam} ${tutor.score}`.toLowerCase();
+      const avatar = tutor.photo_url
+        ? `<span class="tutor-option__avatar"><img src="${tutor.photo_url}" alt="" /></span>`
+        : `<span class="tutor-option__avatar">${initials(tutor.name)}</span>`;
+      button.innerHTML = `${avatar}<span><strong>${tutor.name}</strong><small>${tutor.university || tutor.university_en || ''} · ${tutor.exam} ${tutor.score}</small></span>`;
+      fragment.append(button);
+    });
+    pickerOptions.append(fragment);
+    if (pickerEmpty) pickerEmpty.hidden = matchingTutors().length > 0;
+    filterTutorOptions();
+  };
+
+  const filterTutorOptions = () => {
+    const query = pickerSearch?.value.trim().toLowerCase() || '';
+    pickerOptions?.querySelectorAll('.tutor-option').forEach((node) => {
+      const option = node as HTMLElement;
+      option.hidden = Boolean(query) && !(option.dataset.search || '').includes(query);
+    });
+  };
+
+  const setTutorMenu = (open: boolean) => {
+    if (!pickerTrigger || !pickerMenu) return;
+    pickerTrigger.setAttribute('aria-expanded', String(open));
+    pickerMenu.hidden = !open;
+    if (open) window.requestAnimationFrame(() => pickerSearch?.focus());
+  };
+
+  pickerTrigger?.addEventListener('click', () => setTutorMenu(Boolean(pickerMenu?.hidden)));
+  pickerSearch?.addEventListener('input', filterTutorOptions);
+  pickerOptions?.addEventListener('click', (event) => {
+    const option = (event.target as HTMLElement).closest('.tutor-option') as HTMLButtonElement | null;
+    if (!option) return;
+    pickerOptions.querySelectorAll('.tutor-option').forEach((node) => {
+      node.classList.remove('is-selected');
+      node.setAttribute('aria-selected', 'false');
+    });
+    option.classList.add('is-selected');
+    option.setAttribute('aria-selected', 'true');
+    if (pickerValue) pickerValue.value = option.dataset.value || 'Manager consultation';
+    if (pickerLabel) pickerLabel.textContent = option.querySelector('strong')?.textContent || option.dataset.value || '';
+    setTutorMenu(false);
+  });
+  document.addEventListener('click', (event) => {
+    if (picker && !picker.contains(event.target as Node)) setTutorMenu(false);
+  });
+  form?.querySelectorAll('input[name="subject"]').forEach((input) => input.addEventListener('change', () => {
+    if (pickerValue) pickerValue.value = 'Manager consultation';
+    if (pickerLabel) pickerLabel.textContent = 'Consult with the team / 매니저와 상담';
+    renderTutorOptions();
+  }));
+  fetch('/api/tutors', { cache: 'no-store', headers: { Accept: 'application/json' } })
+    .then((response) => response.ok ? response.json() : [])
+    .then((rows) => { tutors = Array.isArray(rows) ? rows : []; renderTutorOptions(); })
+    .catch(() => { tutors = []; renderTutorOptions(); });
+
+  const show = (n: number) => {
+    steps.forEach((s, idx) => { s.hidden = idx !== n; s.classList.toggle('is-current', idx === n); });
+    segs.forEach((s, idx) => {
+      s.classList.toggle('is-active', idx === n);
+      s.classList.toggle('is-done', idx < n);
+    });
+    if (back) back.hidden = n === 0;
+    if (nextLabel) nextLabel.textContent = n === steps.length - 1 ? 'Submit' : 'Continue';
+    i = n;
+  };
+
+  const validStep = () => {
+    const controls = steps[i].querySelectorAll('input[required], textarea[required]');
+    for (const c of controls) {
+      if (!(c as HTMLInputElement).checkValidity()) { (c as HTMLInputElement).reportValidity(); return false; }
+    }
+    return true;
+  };
+
+  next?.addEventListener('click', async () => {
+    if (!validStep()) return;
+    if (i < steps.length - 1) { show(i + 1); return; }
+
+    if (!form) return;
+    next.disabled = true;
+    if (nextLabel) nextLabel.textContent = 'Sending…';
+
+    let mode: 'posted' | 'email' = 'email';
+    let failed = false;
+    try {
+      mode = await submitForm(form, 'New matching request from seonbaetutor.com');
+    } catch {
+      failed = true;
+    }
+
+    next.disabled = false;
+    if (nextLabel) nextLabel.textContent = 'Submit';
+
+    const note = document.getElementById('match-done-note');
+    if (note) {
+      if (failed) {
+        note.textContent = 'Something went wrong on our side. Please email admissions@seonbaetutor.com with your subject and level, and we will match you straight away.';
+      } else if (mode === 'email') {
+        note.textContent = 'Your email app is opening with your answers filled in. Send it and a real person will reply within one business day with a verified tutor who fits, plus a couple of times to book a first lesson.';
+      }
+    }
+
+    form.hidden = true;
+    const prog = document.getElementById('progress');
+    if (prog) prog.hidden = true;
+    if (done) { done.hidden = false; done.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  });
+  back?.addEventListener('click', () => { if (i > 0) show(i - 1); });
+</script>

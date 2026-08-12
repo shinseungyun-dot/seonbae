@@ -7,6 +7,18 @@ node_modules/
 .next-build/
 out/
 
+# Imported reference archives and generated marketing output
+imports/
+marketing/dist/
+/public/marketing/
+/public/_astro/
+/public/fonts/
+/public/images/
+/public/favicon.png
+/public/favicon.svg
+/public/logo.png
+/public/site-auth.js
+
 # Environment variables
 .env*
 !.env.example

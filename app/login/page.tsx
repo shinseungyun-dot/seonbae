@@ -69,6 +69,20 @@ export default function LoginPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requestedAction = params.get("mode");
+    const requestedRole = params.get("role");
+    if (requestedAction === "signup") setAction("signup");
+    if (requestedRole === "student" || requestedRole === "parent" || requestedRole === "tutor") {
+      setAccountRole(requestedRole);
+    }
+    const requestedName = params.get("name");
+    const requestedEmail = params.get("email");
+    if (requestedName) setFullName(requestedName.slice(0, 80));
+    if (requestedEmail) setIdentifier(requestedEmail.slice(0, 254));
+  }, []);
+
   function updateRemember(checked: boolean) {
     setRemember(checked);
     try {
@@ -253,30 +267,26 @@ export default function LoginPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/#/ko/home" aria-label="선배 홈">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span className={styles.brandKo}>선배</span>
-          <span className={styles.brandRule} />
-          <span className={styles.brandEn}>
-            SEONBAE<small>EST. 2026</small>
-          </span>
+        <Link className={styles.brand} href="/" aria-label="Seonbae home">
+          <img src="/logo.png" alt="" />
+          <span className={styles.brandKo}>Seonbae</span>
         </Link>
-        <Link className={styles.back} href="/#/ko/home">
-          홈으로 돌아가기 <span aria-hidden="true">↗</span>
+        <Link className={styles.back} href="/">
+          홈으로 돌아가기 <span aria-hidden="true">→</span>
         </Link>
       </header>
 
       <section className={styles.authHero}>
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>SEONBAE LEARNING PORTAL</p>
+          <p className={styles.eyebrow}>SEONBAE PORTAL</p>
           <h1>
-            수업의 흐름을
+            수업과 일정을
             <br />
             <em>한곳에서.</em>
           </h1>
           <p className={styles.intro}>
-            예정된 수업, 담당 튜터, 수업 시간과 전달 사항을 한눈에 확인하세요.
-            상담에서 시작된 학습 계획이 실제 수업까지 끊기지 않도록 정리합니다.
+            예정된 수업, 담당 튜터, 학습 자료와 전달 사항을 한눈에 확인하세요.
+            학생, 보호자, 튜터에게 필요한 기능이 계정 유형에 맞게 열립니다.
           </p>
           <div className={styles.benefits}>
             <article>

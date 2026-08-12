@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import SubjectCard from '../../components/SubjectCard.astro';
+
+const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order - b.data.order);
+
+const levels = [
+  { label: 'Lower secondary', note: 'Grades 6 to 8' },
+  { label: 'IGCSE', note: 'Grades 9 to 10' },
+  { label: 'IB and A Level', note: 'Grades 11 to 12' },
+  { label: 'University prep', note: 'SAT, ACT, and beyond' },
+];
+---
+<Base title="Subjects — Seonbae" active="/subjects">
+  <PageHero
+    eyebrow="Subjects"
+    bg="yellow"
+    illo="climb"
+    illoPos="right"
+    copy="Every curriculum a Korean student abroad is likely to sit, taught by tutors who sat it first. Choose a subject to see how lessons are structured and who they are for."
+    ctaLabel="Find a tutor"
+    secondaryLabel="How it works"
+  >
+    Find support for the subject in front of <span class="mark">you</span>.
+  </PageHero>
+
+  <section class="section bg-white section--tight">
+    <div class="container">
+      <div class="levels reveal">
+        <span class="levels__label">Levels we cover</span>
+        <div class="levels__row">
+          {levels.map((l) => (
+            <span class="level-pill"><strong>{l.label}</strong><span>{l.note}</span></span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-white" style="padding-top:0">
+    <div class="container">
+      <div class="subject-grid-wrap">
+        {subjects.map((s) => (
+          <div class="reveal"><SubjectCard entry={s} variant="grid" /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .levels { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+  .levels__label { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-soft); font-weight: 600; }
+  .levels__row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .level-pill {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 10px 18px;
+    border-radius: var(--r-md);
+    background: var(--violet-soft);
+    line-height: 1.25;
+  }
+  .level-pill strong { font-family: var(--display); font-weight: 700; font-size: 0.98rem; color: var(--violet); }
+  .level-pill span { font-size: 0.8rem; color: var(--muted); }
+
+  .subject-grid-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+  @media (max-width: 700px) { .subject-grid-wrap { grid-template-columns: 1fr; } }
+</style>

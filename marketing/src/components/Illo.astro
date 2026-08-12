@@ -1,0 +1,166 @@
+---
+// Editorial metaphor illustrations. The printed grain now clips to the shapes
+// themselves (not a background rectangle), so each piece integrates directly
+// into a section with no frame. Palette: navy silhouettes, vermillion, one
+// yellow highlight, warm-wood ladder. One clear message each.
+//   bridge   → a 선배 bridges the gap to the next level
+//   telescope→ see the path ahead
+//   climb    → steady progress toward the goal
+//   standout → the verified one stands out
+interface Props { scene: 'bridge' | 'telescope' | 'climb' | 'standout'; class?: string; }
+const { scene, class: cls = '' } = Astro.props;
+
+const NAVY = '#163a51';
+const RED = '#c1663a';
+const RED_DK = '#a5542e';
+const YELLOW = '#d6a02b';
+const WOOD = '#c69355';
+const CREAM = '#f4efe3';
+const SHADOW = 'rgba(21,32,42,0.10)';
+const uid = scene;
+---
+<div class:list={['illo', `illo--${scene}`, cls]}>
+  {scene === 'bridge' && (
+    <svg viewBox="0 0 640 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A ladder bridges two towers; the one who climbed higher reaches back to help the next up">
+      <defs>
+        <filter id={`g-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0" result="grain" />
+          <feComposite in="grain" in2="SourceAlpha" operator="in" result="gc" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+        </filter>
+      </defs>
+      <ellipse cx="300" cy="440" rx="230" ry="14" fill={SHADOW} />
+      <g filter={`url(#g-${uid})`}>
+        <rect x="150" y="150" width="72" height="282" fill={RED} />
+        <rect x="150" y="150" width="72" height="12" fill={CREAM} />
+        <rect x="150" y="150" width="10" height="282" fill={RED_DK} opacity="0.55" />
+        <rect x="408" y="250" width="72" height="182" fill={RED} />
+        <rect x="408" y="250" width="72" height="12" fill={CREAM} />
+        <rect x="408" y="250" width="10" height="182" fill={RED_DK} opacity="0.55" />
+        <g stroke={WOOD} stroke-width="5.5" stroke-linecap="round" fill="none">
+          <line x1="214" y1="150" x2="470" y2="250" />
+          <line x1="226" y1="140" x2="482" y2="240" />
+          <line x1="240" y1="150" x2="248" y2="146" /><line x1="278" y1="164" x2="286" y2="160" />
+          <line x1="316" y1="178" x2="324" y2="174" /><line x1="354" y1="192" x2="362" y2="188" />
+          <line x1="392" y1="206" x2="400" y2="202" /><line x1="430" y1="220" x2="438" y2="216" />
+        </g>
+        <g fill={NAVY}>
+          <circle cx="182" cy="112" r="11" />
+          <path d="M170 126 C170 120 194 120 194 126 L191 158 L186 150 L182 178 L177 178 L176 150 L170 158 Z" />
+          <path d="M191 132 L214 148" stroke={NAVY} stroke-width="6" stroke-linecap="round" />
+          <circle cx="452" cy="214" r="9.5" />
+          <path d="M441 226 C441 221 463 221 463 226 L460 250 L455 250 L452 234 L449 250 L444 250 Z" />
+          <path d="M446 232 L470 250" stroke={NAVY} stroke-width="5" stroke-linecap="round" />
+        </g>
+      </g>
+    </svg>
+  )}
+
+  {scene === 'telescope' && (
+    <svg viewBox="0 0 680 460" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A person looks through a telescope toward the paths ahead">
+      <defs>
+        <filter id={`g-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0" result="grain" />
+          <feComposite in="grain" in2="SourceAlpha" operator="in" result="gc" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+        </filter>
+      </defs>
+      <g fill="none" stroke-linecap="round">
+        <path d="M150 250 C 330 244 440 120 636 96"  stroke={RED} stroke-width="2" />
+        <path d="M150 250 C 330 246 440 168 636 158" stroke={RED} stroke-width="2" />
+        <path d="M150 250 C 330 250 440 214 636 220" stroke={YELLOW} stroke-width="3.6" />
+        <path d="M150 250 C 330 254 440 262 636 288" stroke={RED} stroke-width="2" />
+        <path d="M150 250 C 330 258 440 306 636 356" stroke={RED} stroke-width="2" />
+      </g>
+      <circle cx="628" cy="220" r="12" fill={YELLOW} />
+      <ellipse cx="150" cy="397" rx="66" ry="7" fill={SHADOW} />
+      <g filter={`url(#g-${uid})`}>
+        <g fill={NAVY}>
+          <path d="M156 340 l7 56 h9 l-4 -56 z" />
+          <path d="M148 340 l-5 56 h9 l4 -52 z" />
+          <path d="M141 296 q11 -7 22 0 l3 46 q-14 7 -28 0 z" />
+          <circle cx="150" cy="282" r="12.5" />
+          <path d="M147 300 L120 276" stroke={NAVY} stroke-width="7.5" stroke-linecap="round" />
+          <rect x="96" y="258" width="30" height="9.5" rx="4.75" transform="rotate(-38 111 263)" />
+        </g>
+        <circle cx="99" cy="261" r="6" fill={RED} />
+      </g>
+    </svg>
+  )}
+
+  {scene === 'climb' && (
+    <svg viewBox="0 0 560 460" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A person climbs steps toward a goal flag">
+      <defs>
+        <filter id={`g-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0" result="grain" />
+          <feComposite in="grain" in2="SourceAlpha" operator="in" result="gc" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+        </filter>
+      </defs>
+      <g filter={`url(#g-${uid})`}>
+        <path d="M30 430 h90 v-46 h90 v-46 h90 v-46 h90 v-46 h90 v-46 h50 v322 z" fill={RED} />
+        <g>
+          <line x1="500" y1="200" x2="500" y2="150" stroke={NAVY} stroke-width="4" stroke-linecap="round" />
+          <path d="M500 152 l34 10 -34 10 z" fill={YELLOW} />
+        </g>
+        <g fill={NAVY} transform="translate(292 252)">
+          <circle cx="0" cy="-42" r="12" />
+          <path d="M-9 -28 q9 -6 18 0 l4 34 -16 4 z" />
+          <path d="M-2 8 l-20 22 8 8 22 -20 z" />
+          <path d="M7 6 l16 26 10 -7 -16 -30 z" />
+          <path d="M-7 -22 l-26 12 5 10 28 -11 z" />
+          <path d="M9 -20 l24 -6 3 10 -24 11 z" />
+        </g>
+      </g>
+    </svg>
+  )}
+
+  {scene === 'standout' && (
+    <svg viewBox="0 0 680 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People in a row; one stands out, lit by a warm spotlight">
+      <defs>
+        <filter id={`g-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0" result="grain" />
+          <feComposite in="grain" in2="SourceAlpha" operator="in" result="gc" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+        </filter>
+        <linearGradient id={`cone-${uid}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color={YELLOW} stop-opacity="0.92" />
+          <stop offset="0.7" stop-color={YELLOW} stop-opacity="0.42" />
+          <stop offset="1" stop-color={YELLOW} stop-opacity="0.12" />
+        </linearGradient>
+        <radialGradient id={`glow-${uid}`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#ffe08a" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#ffe08a" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <!-- the beam and the warm glow it casts on the lit figure -->
+      <path d="M289 58 h22 l82 300 h-186 z" fill={`url(#cone-${uid})`} />
+      <ellipse cx="300" cy="250" rx="78" ry="130" fill={`url(#glow-${uid})`} opacity="0.7" />
+      <ellipse cx="300" cy="356" rx="116" ry="22" fill={`url(#glow-${uid})`} />
+      <g filter={`url(#g-${uid})`}>
+        <g stroke={NAVY} stroke-width="2.4"><line x1="120" y1="8" x2="120" y2="52" /><line x1="300" y1="8" x2="300" y2="52" /><line x1="480" y1="8" x2="480" y2="52" /></g>
+        <g fill={NAVY}><path d="M104 52 h32 l-6 12 h-20 z" /><path d="M284 52 h30 l-5 12 h-20 z" /><path d="M464 52 h32 l-6 12 h-20 z" /></g>
+        <!-- figures in shadow, to the sides -->
+        <g fill={NAVY} opacity="0.82">
+          <g transform="translate(120 300) scale(2)"><circle cx="0" cy="0" r="6.6" /><path d="M-7.5 9 q7.5 -5 15 0 l2 20 -5 24 h-4 l-1.5 -18 -1.5 18 h-4 l-5 -24 z" /></g>
+          <g transform="translate(480 300) scale(2)"><circle cx="0" cy="0" r="6.6" /><path d="M-7.5 9 q7.5 -5 15 0 l2 20 -5 24 h-4 l-1.5 -18 -1.5 18 h-4 l-5 -24 z" /></g>
+        </g>
+      </g>
+      <!-- the lit figure: brighter, out of the grain, with a warm rim -->
+      <g transform="translate(300 297) scale(2.15)">
+        <circle cx="0" cy="0" r="6.8" fill="#3f6088" />
+        <path d="M-7.7 9 q7.7 -5 15.4 0 l2 20 -5 24 h-4 l-1.6 -18 -1.6 18 h-4 l-5 -24 z" fill="#3f6088" />
+        <path d="M-6.8 -1 a6.8 6.8 0 0 0 5 8.4 l1.6 20 M6.2 6 l-1.6 20" fill="none" stroke="#ffd873" stroke-width="1.1" stroke-linecap="round" opacity="0.85" />
+      </g>
+    </svg>
+  )}
+</div>
+
+<style>
+  .illo { display: block; width: 100%; }
+  .illo svg { width: 100%; height: auto; display: block; overflow: visible; }
+</style>

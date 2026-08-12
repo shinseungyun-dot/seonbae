@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MediaPanel from './MediaPanel.astro';
+import { formatDate } from '../lib/format';
+
+interface Props { entry: CollectionEntry<'resources'>; variant?: 'featured' | 'standard' | 'compact'; }
+const { entry, variant = 'standard' } = Astro.props;
+const r = entry.data;
+const href = `/resources/${entry.id}`;
+
+// Placeholder art, but matched to what the piece is about so the six cards do
+// not read as one repeated image. Swap for photography by passing `src`.
+const sceneFor: Record<string, 'call' | 'desk' | 'figure' | 'rings' | 'notes'> = {
+  'Study Skills': 'notes',
+  'Subject Help': 'desk',
+  'Test Prep': 'rings',
+  'Parent Guides': 'figure',
+  'Getting Started': 'call',
+};
+const scene = sceneFor[r.category] ?? 'notes';
+---
+<article class:list={['rcard', `rcard--${variant}`]}>
+  {variant !== 'compact' && (
+    <a href={href} class="rcard__media" tabindex="-1" aria-hidden="true">
+      <MediaPanel scene={scene} accent={r.accent} ratio={variant === 'featured' ? '16 / 10' : '3 / 2'} />
+      <span class="rcard__cat pill">{r.category}</span>
+    </a>
+  )}
+  <div class="rcard__body">
+    {variant === 'compact' && <span class="rcard__cat-inline">{r.category}</span>}
+    <h3 class={variant === 'featured' ? 'card-title' : 'rcard__title'}>
+      <a href={href}>{r.title}</a>
+    </h3>
+    {variant !== 'compact' && <p class="rcard__excerpt body">{r.excerpt}</p>}
+    <p class="rcard__meta">{r.author} · {formatDate(r.date)} · {r.readingTime} min read</p>
+  </div>
+</article>
+
+<style>
+  .rcard { display: flex; flex-direction: column; height: 100%; }
+  .rcard__media { position: relative; display: block; }
+  .rcard__cat {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink);
+    font-size: 0.74rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+  .rcard__body { padding-top: 18px; display: flex; flex-direction: column; flex: 1; }
+  .rcard__title { font-family: var(--display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; letter-spacing: -0.02em; }
+  .rcard__title a:hover, .card-title a:hover { color: var(--violet); }
+  .rcard__excerpt { margin-top: 10px; font-size: 0.98rem; flex: 1; }
+  .rcard__meta { margin-top: 16px; font-size: 0.85rem; color: var(--muted-soft); }
+
+  .rcard--featured .rcard__excerpt { font-size: 1.05rem; }
+
+  .rcard--compact { border-top: 1px solid var(--line); padding-top: 18px; }
+  .rcard__cat-inline {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+  }
+  .rcard--compact .rcard__title { font-size: 1.05rem; margin-top: 8px; }
+</style>

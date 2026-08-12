@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import Illo from '../components/Illo.astro';
+import T from '../components/T.astro';
+
+const criteria = [
+  { t: { en: 'You study at SKY', ko: 'SKY 재학생' }, c: { en: 'Current students of Seoul National University, Korea University, or Yonsei University.', ko: '서울대, 고려대, 연세대에 재학 중인 학생.' } },
+  { t: { en: 'You have the results', ko: '증명된 실력' }, c: { en: 'SAT 1500+, a 7 in your IB subject, IELTS 8.0+, or an equal top result.', ko: 'SAT 1500점 이상, IB 해당 과목 7점, IELTS 8.0 이상, 또는 그에 준하는 최상위 성적.' } },
+  { t: { en: 'You are verified', ko: '검증 절차' }, c: { en: 'We confirm enrolment, scores, and identity before you ever teach.', ko: '가르치기 전에 재학, 성적, 신원을 확인합니다.' } },
+];
+
+const steps = [
+  { n: '01', t: { en: 'Apply', ko: '지원' }, c: { en: 'Tell us your university, subjects, and results.', ko: '대학, 과목, 성적을 알려주세요.' } },
+  { n: '02', t: { en: 'Verify', ko: '검증' }, c: { en: 'We check enrolment, scores, and identity.', ko: '재학, 성적, 신원을 확인합니다.' } },
+  { n: '03', t: { en: 'Interview', ko: '인터뷰' }, c: { en: 'A short interview and a sample lesson.', ko: '짧은 인터뷰와 샘플 수업.' } },
+  { n: '04', t: { en: 'Teach', ko: '수업 시작' }, c: { en: 'Set your availability and take your first match.', ko: '가능 시간을 정하고 첫 매칭을 받습니다.' } },
+];
+
+const keep = [
+  { t: { en: 'Fair, fixed pay', ko: '공정하고 고정된 보수' }, c: { en: 'Each subject pays a set amount per hour. What you see is what you keep.', ko: '과목마다 시간당 정해진 금액. 보이는 그대로 받습니다.' } },
+  { t: { en: 'Always the full amount', ko: '언제나 전액' }, c: { en: 'Seonbae carries the currency spread, so you receive the full won amount.', ko: '환율 차이는 선배가 부담합니다. 언제나 원화 전액을 받습니다.' } },
+  { t: { en: 'Your schedule', ko: '나의 일정' }, c: { en: 'Set your own hours and subjects. Accept or decline each match.', ko: '가능 시간과 과목을 직접 정하고, 매칭을 수락하거나 거절합니다.' } },
+];
+---
+<Base title="Become a tutor — Seonbae" active="/become-a-tutor" description="Teach with Seonbae. Verified tutors from Seoul National University, Korea University, and Yonsei University, paid fairly for every lesson.">
+  <!-- Hero -->
+  <section class="section bt-hero">
+    <div class="container split">
+      <div class="reveal is-in">
+        <span class="eyebrow"><T en="Teach with Seonbae" ko="선배로 함께하기" /></span>
+        <h1 class="display bt-title"><T en="Be the " ko="누군가의 " /><span class="mark"><T en="선배" ko="선배" /></span><T en=" someone needed." ko="가 되어주세요." /></h1>
+        <p class="lead" style="margin-top:20px"><T en="Share the subject you topped, on your own schedule, and get paid fairly for every lesson. No admin, no chasing payments." ko="당신이 최고 성적을 받은 과목을, 원하는 시간에 가르치고, 매 수업마다 정당한 보수를 받으세요. 번거로운 행정도, 결제 독촉도 없습니다." /></p>
+        <div class="cta-row" style="margin-top:30px">
+          <a href="#apply" class="btn btn--primary btn--lg">
+            <span><T en="Apply to teach" ko="지원하기" /></span>
+            <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal is-in" data-delay="80ms">
+        <div class="illo-panel"><Illo scene="climb" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who we look for -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="sec-intro reveal">
+        <span class="eyebrow"><T en="Who we look for" ko="이런 분을 찾습니다" /></span>
+        <h2 class="h2"><T en="A high bar, and a fair one." ko="높지만, 공정한 기준." /></h2>
+      </div>
+      <div class="grid three-col">
+        {criteria.map((k) => (
+          <article class="bt-card reveal">
+            <h3 class="card-title"><T en={k.t.en} ko={k.t.ko} /></h3>
+            <p class="body"><T en={k.c.en} ko={k.c.ko} /></p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="sec-intro reveal">
+        <span class="eyebrow"><T en="How applying works" ko="지원 절차" /></span>
+        <h2 class="h2"><T en="Four steps to your first lesson." ko="첫 수업까지, 네 단계." /></h2>
+      </div>
+      <div class="grid four-col bt-steps">
+        {steps.map((s) => (
+          <div class="bt-step reveal">
+            <span class="bt-step__n">{s.n}</span>
+            <h3 class="bt-step__t"><T en={s.t.en} ko={s.t.ko} /></h3>
+            <p class="body"><T en={s.c.en} ko={s.c.ko} /></p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- What you keep -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="sec-intro reveal">
+        <span class="eyebrow"><T en="What you keep" ko="당신이 받는 것" /></span>
+        <h2 class="h2"><T en="Paid fairly, every time." ko="언제나 정당한 보수." /></h2>
+      </div>
+      <div class="grid three-col">
+        {keep.map((k) => (
+          <article class="bt-card surface-butter reveal">
+            <h3 class="card-title"><T en={k.t.en} ko={k.t.ko} /></h3>
+            <p class="body"><T en={k.c.en} ko={k.c.ko} /></p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Apply -->
+  <section class="section bg-cream" id="apply">
+    <div class="container">
+      <div class="bt-apply">
+        <div class="bt-apply__lede reveal">
+          <span class="eyebrow"><T en="Apply" ko="지원" /></span>
+          <h2 class="h2"><T en="Start your application." ko="지원을 시작하세요." /></h2>
+          <p class="lead" style="margin-top:16px"><T en="It takes two minutes. We reply within one business day." ko="2분이면 충분합니다. 영업일 기준 하루 안에 답장드립니다." /></p>
+        </div>
+        <form class="bt-form card reveal" data-delay="80ms" novalidate>
+          <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="form-field">
+            <label for="name"><T en="Full name" ko="이름" /></label>
+            <input id="name" name="name" class="form-control" type="text" required autocomplete="name" />
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="uni"><T en="University" ko="대학" /></label>
+              <select id="uni" name="university" class="form-control" required>
+                <option value="snu">Seoul National University</option>
+                <option value="ku">Korea University</option>
+                <option value="yonsei">Yonsei University</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="mail"><T en="Email" ko="이메일" /></label>
+              <input id="mail" name="email" class="form-control" type="email" required autocomplete="email" placeholder="you@email.com" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="subj"><T en="Subjects you can teach" ko="가르칠 수 있는 과목" /></label>
+            <input id="subj" name="subjects" class="form-control" type="text" required placeholder="IB Math AA, AP Calculus…" />
+          </div>
+          <button type="submit" class="btn btn--primary btn--lg bt-submit">
+            <span><T en="Submit application" ko="지원서 제출" /></span>
+            <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <p class="bt-done" role="status" hidden data-done><T en="Thanks. Your application is in, we will be in touch within one business day." ko="감사합니다. 지원서가 접수되었습니다. 영업일 기준 하루 안에 연락드릴게요." /></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bt-hero { padding-block: clamp(40px, 6vw, 92px); }
+  .bt-title { font-size: clamp(2.4rem, 5vw, 4rem); margin-top: 18px; }
+  .sec-intro { max-width: 720px; margin-bottom: clamp(30px, 4vw, 50px); }
+  .sec-intro .h2 { margin-top: 14px; }
+
+  .bt-card {
+    background: var(--white);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 2.6vw, 34px);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .bt-card.surface-butter { border-color: transparent; }
+
+  .bt-steps { margin-top: 8px; }
+  .bt-step { display: flex; flex-direction: column; gap: 8px; }
+  .bt-step__n { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--violet); background: var(--violet-soft); width: 42px; height: 42px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .bt-step__t { font-family: var(--display); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; }
+
+  .bt-apply { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .bt-form { padding: clamp(24px, 3vw, 38px); display: flex; flex-direction: column; gap: 16px; }
+  .bt-submit { width: 100%; justify-content: space-between; margin-top: 4px; }
+  .bt-done { font-size: 0.92rem; color: var(--violet); background: var(--violet-soft); padding: 12px 14px; border-radius: var(--r-sm); line-height: 1.5; }
+  @media (max-width: 860px) { .bt-apply { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { readForm, validate } from '../lib/forms';
+
+  const form = document.querySelector('.bt-form') as HTMLFormElement | null;
+  const btn = form?.querySelector('.bt-submit') as HTMLButtonElement | null;
+  const btnLabel = btn?.querySelector('span:first-child') as HTMLElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate(form)) return;
+
+    const original = btnLabel?.textContent ?? '';
+    if (btn) btn.disabled = true;
+    if (btnLabel) btnLabel.textContent = 'Sending…';
+
+    const draft = readForm(form);
+    try { sessionStorage.setItem('seonbae-tutor-application', JSON.stringify(draft)); } catch {}
+    const params = new URLSearchParams({ mode: 'signup', role: 'tutor' });
+    if (draft.name) params.set('name', draft.name);
+    if (draft.email) params.set('email', draft.email);
+    window.location.assign(`/login?${params.toString()}`);
+  });
+</script>

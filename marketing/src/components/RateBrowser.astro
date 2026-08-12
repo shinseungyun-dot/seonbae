@@ -1,0 +1,232 @@
+---
+import { groupedRatesFor, ratesFor, type CurriculumSlug } from '../data/rates';
+import { won } from '../lib/format';
+
+// A searchable, per-subject rate table. Prices are set per subject, never per
+// curriculum, so this is the only place a family ever reads a price.
+// Pass one curriculum for a subject page, or several for the pricing page.
+interface Props {
+  curricula: { slug: CurriculumSlug; label: string }[];
+  showTabs?: boolean;
+  showCurriculumHeadings?: boolean;
+  id?: string;
+  /** Background of the section this sits in, so the sticky header can match it. */
+  surface?: 'white' | 'cream';
+}
+const { curricula, showTabs = false, showCurriculumHeadings = false, id = 'rates', surface = 'white' } = Astro.props;
+const surfaceVar = surface === 'cream' ? 'var(--canvas)' : 'var(--white)';
+
+const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
+---
+<div class="rb" id={id} data-total={total} style={`--rb-bg:${surfaceVar}`}>
+  <div class="rb__head">
+  <div class="rb__bar">
+    <label class="rb__search">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.7"/><path d="M13.2 13.2L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <input type="search" class="rb__input" placeholder="Search a subject, for example Physics or Calculus" aria-label="Search subjects" />
+    </label>
+    <p class="rb__count"><span class="rb__n">{total}</span> subjects</p>
+  </div>
+
+  {showTabs && (
+    <div class="rb__tabs" role="group" aria-label="Filter by curriculum">
+      <button type="button" class="rb__tab" data-cur="all" aria-pressed="true">All</button>
+      {curricula.map((c) => (
+        <button type="button" class="rb__tab" data-cur={c.slug} aria-pressed="false">{c.label}</button>
+      ))}
+    </div>
+  )}
+  </div>
+
+  <div class="rb__body">
+    {curricula.map((c) => (
+      <section class="rb__cur" data-cur={c.slug}>
+        {showCurriculumHeadings && <h3 class="rb__cur-h">{c.label}</h3>}
+        {groupedRatesFor(c.slug).map((g) => (
+          <div class="rb__group">
+            <h4 class="rb__group-h">{g.group}</h4>
+            <ul class="rb__rows">
+              {g.items.map((r) => (
+                <li class="rb__row" data-name={r.name.toLowerCase()}>
+                  <span class="rb__name">{r.name}</span>
+                  <span class="rb__dots" aria-hidden="true"></span>
+                  <span class="rb__price" data-krw={r.price}>{won(r.price)}<span class="rb__unit">/ hr</span></span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+    ))}
+  </div>
+
+  <p class="rb__empty" hidden>No subject by that name yet. Tell us what you need and we will find a tutor for it.</p>
+
+  <!-- Spoken to screen readers whenever the result count changes. -->
+  <p class="sr-only" role="status" aria-live="polite" data-rb-live></p>
+</div>
+
+<style>
+  /* Search and curriculum tabs stay reachable while a long rate sheet scrolls. */
+  .rb__head {
+    position: sticky;
+    top: 76px;
+    z-index: 2;
+    padding-block: 14px;
+    background: var(--rb-bg);
+    box-shadow: 0 0 0 12px var(--rb-bg);
+  }
+  .rb__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; }
+  .rb__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 320px;
+    max-width: 460px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    border-radius: var(--r-pill);
+    color: var(--muted);
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .rb__search:focus-within { border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-soft); }
+  .rb__search svg { width: 18px; height: 18px; flex: none; }
+  .rb__input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    padding: 13px 0;
+    font-size: 0.98rem;
+    color: var(--ink);
+    min-width: 0;
+  }
+  .rb__input::placeholder { color: var(--muted-soft); }
+  .rb__count { font-size: 0.92rem; color: var(--muted); }
+  .rb__n { font-family: var(--display); font-weight: 800; font-size: 1.15rem; color: var(--ink); margin-right: 3px; font-variant-numeric: tabular-nums; }
+
+  .rb__tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .rb__tab {
+    border: 1px solid var(--line);
+    background: var(--white);
+    padding: 9px 17px;
+    border-radius: var(--r-pill);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .rb__tab:hover { border-color: rgba(12, 12, 12, 0.24); color: var(--ink); }
+  .rb__tab[aria-pressed='true'] { background: var(--violet); border-color: var(--violet); color: #fff; }
+
+  .rb__body { margin-top: clamp(22px, 3vw, 34px); }
+  .rb__cur.is-hidden, .rb__group.is-hidden, .rb__row.is-hidden { display: none; }
+  .rb__cur + .rb__cur { margin-top: clamp(26px, 3vw, 40px); }
+  .rb__cur-h {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--violet);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--violet-soft);
+    margin-bottom: 6px;
+  }
+  .rb__group { padding-top: 18px; }
+  .rb__group-h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    padding-bottom: 8px;
+  }
+  .rb__row {
+    display: grid;
+    grid-template-columns: auto minmax(12px, 1fr) auto;
+    align-items: baseline;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .rb__name { font-size: 0.99rem; color: var(--ink); }
+  .rb__dots { border-bottom: 1px dotted var(--line); transform: translateY(-3px); }
+  .rb__price {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--violet);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .rb__unit { font-family: var(--body); font-weight: 500; font-size: 0.78rem; color: var(--muted); margin-left: 5px; }
+  .rb__empty { margin-top: 26px; color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .rb__dots { display: none; }
+    .rb__row { grid-template-columns: minmax(0, 1fr) auto; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.rb').forEach((rb) => {
+    const input = rb.querySelector<HTMLInputElement>('.rb__input');
+    const tabs = [...rb.querySelectorAll<HTMLButtonElement>('.rb__tab')];
+    const curs = [...rb.querySelectorAll<HTMLElement>('.rb__cur')];
+    const empty = rb.querySelector<HTMLElement>('.rb__empty');
+    const countEl = rb.querySelector<HTMLElement>('.rb__n');
+    const live = rb.querySelector<HTMLElement>('[data-rb-live]');
+    let announce: ReturnType<typeof setTimeout>;
+
+    let active = 'all';
+
+    const apply = () => {
+      const q = (input?.value ?? '').trim().toLowerCase();
+      let shown = 0;
+
+      curs.forEach((cur) => {
+        // A search looks across every curriculum, so it overrides the tab.
+        const inScope = q ? true : active === 'all' || cur.dataset.cur === active;
+        let curShown = 0;
+
+        cur.querySelectorAll<HTMLElement>('.rb__group').forEach((group) => {
+          let groupShown = 0;
+          group.querySelectorAll<HTMLElement>('.rb__row').forEach((row) => {
+            const match = inScope && (!q || (row.dataset.name ?? '').includes(q));
+            row.classList.toggle('is-hidden', !match);
+            if (match) groupShown++;
+          });
+          group.classList.toggle('is-hidden', groupShown === 0);
+          curShown += groupShown;
+        });
+
+        cur.classList.toggle('is-hidden', curShown === 0);
+        shown += curShown;
+      });
+
+      if (countEl) countEl.textContent = String(shown);
+      if (empty) empty.hidden = shown > 0;
+
+      // Debounced so typing does not fire an announcement per keystroke.
+      clearTimeout(announce);
+      announce = setTimeout(() => {
+        if (live) live.textContent = shown === 0 ? 'No subjects found' : `${shown} subject${shown === 1 ? '' : 's'} found`;
+      }, 400);
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        active = tab.dataset.cur ?? 'all';
+        tabs.forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
+        if (input) input.value = '';
+        apply();
+      });
+    });
+
+    input?.addEventListener('input', apply);
+  });
+</script>

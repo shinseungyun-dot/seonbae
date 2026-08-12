@@ -56,3 +56,63 @@
 .days span{border-radius:8px}
 @media(max-width:900px){.authHero{min-height:auto;padding-top:64px}.heroCopy{max-width:720px}}
 @media(max-width:600px){.header{height:70px}.authHero{padding-top:46px}.heroCopy h1{font-size:3.25rem}}
+
+/* Final public-site visual system. Authentication behavior stays in React;
+   these overrides make the surface belong to the approved Astro design. */
+.page{
+  --navy:#15303f;
+  --blue:#163a51;
+  --paper:#fbf7ef;
+  --white:#fffdf7;
+  --red:#d6a02b;
+  --red-dark:#b8841b;
+  --ink:#201e19;
+  --muted:#565759;
+  background:#fbf7ef;
+  color:var(--ink);
+  font-family:"Hanken Grotesk","Pretendard Variable",Pretendard,system-ui,sans-serif;
+}
+.header{
+  height:76px;
+  padding:0 clamp(20px,5vw,64px);
+  background:rgba(251,247,239,.9);
+  border-bottom:1px solid rgba(19,24,27,.1);
+  backdrop-filter:blur(10px);
+}
+.brand{gap:9px}.brand img{width:36px;height:36px;border-radius:0}.brandKo{font-family:"Hanken Grotesk","Pretendard Variable",sans-serif;font-size:1.32rem;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+.back{font-size:.86rem;font-weight:600;color:var(--ink);border:0;padding:8px 0}.back:hover{color:var(--blue)}
+.authHero{
+  min-height:calc(100dvh - 76px);
+  grid-template-columns:minmax(0,1fr) minmax(390px,520px);
+  gap:clamp(38px,6vw,92px);
+  padding:clamp(52px,7vw,96px) clamp(20px,7vw,112px);
+  align-items:center;
+  overflow:visible;
+}
+.authHero::before{content:"";width:34vw;height:34vw;left:-8vw;bottom:-10vw;border-radius:50%;background:#efe7d3;opacity:.66}.authHero::after{display:none}
+.eyebrow{font:600 .78rem/1 "Hanken Grotesk","Pretendard Variable",sans-serif;letter-spacing:.16em;color:var(--blue);text-transform:uppercase;margin-bottom:18px}
+.heroCopy h1{font-family:"Hanken Grotesk","Pretendard Variable",sans-serif;font-size:clamp(3rem,5.4vw,5.6rem);font-weight:700;line-height:1.03;letter-spacing:-.035em;color:var(--ink)}
+.heroCopy h1 em{font-style:normal;color:var(--blue);background:linear-gradient(transparent 68%,rgba(214,160,43,.4) 0)}
+.intro{margin:24px 0 32px;max-width:60ch;font-size:1.03rem;line-height:1.68;color:var(--muted)}
+.benefits{border-top:1px solid rgba(19,24,27,.1)}.benefits article{border-bottom-color:rgba(19,24,27,.1)}.benefits article>span{color:var(--blue)}.benefits b{color:var(--ink)}.benefits p{color:var(--muted)}
+.loginSurface{
+  padding:clamp(28px,4vw,44px);
+  border:1px solid rgba(19,24,27,.08);
+  border-radius:14px;
+  background:var(--white);
+  box-shadow:0 2px 4px rgba(10,26,47,.05),0 18px 40px rgba(10,26,47,.1);
+}
+.formHeading h2{font-family:"Hanken Grotesk","Pretendard Variable",sans-serif;font-size:clamp(1.5rem,2.4vw,2.1rem);font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.formHeading>span{font-size:.92rem;color:var(--muted);margin-bottom:24px}.formBack{border-radius:6px;color:var(--blue);box-shadow:none}.formBack:hover{background:#e7e1d2;border-color:var(--blue)}
+.loginSurface label span,.accountRole legend{font-size:.82rem;color:var(--muted)}
+.loginSurface input{height:50px;border:1px solid rgba(19,24,27,.12);border-radius:6px;padding:0 14px;background:#fffdf7;color:var(--ink)}
+.loginSurface input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,58,81,.12)}
+.submit{height:52px;border-radius:9px;background:var(--blue);box-shadow:0 1px 2px rgba(10,26,47,.08);font-weight:700}.submit:hover{background:#0f2836;transform:translateY(-1px)}.submit span:last-child{border-radius:6px}
+.googleButton{height:50px;border-radius:9px;border-color:rgba(19,24,27,.12);box-shadow:none}.googleButton:hover{border-color:var(--blue);box-shadow:0 6px 16px rgba(10,26,47,.06)}
+.accountRole label,.passwordPolicy,.consentSummary,.consentAll,.reviewNotice{border-radius:9px}.accountRole label[data-selected=true]{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,58,81,.1)}.accountRole input,.loginSurface .remember input,.consentAll>input,.consentRow>input{accent-color:var(--blue)}
+.accountRole b,.passwordPolicy p,.consentSummary>b,.consentAll b{color:var(--ink)}.passwordPolicy,.consentSummary{background:#f6f1e7;border-color:rgba(19,24,27,.08)}
+.reviewNotice{background:#fbeed8;border-color:rgba(214,160,43,.34);border-left-color:#d6a02b}.reviewNotice b{color:#77560f}
+.formMessage{background:#fbeed8;color:#694b0a;border:1px solid rgba(214,160,43,.28)}
+.authFooter button,.recoveryLinks button,.legalLinks a{color:var(--blue)}
+@media(max-width:900px){.authHero{grid-template-columns:1fr;align-items:start}.heroCopy{max-width:720px}.loginSurface{max-width:600px;width:100%;justify-self:center}}
+@media(max-width:600px){.header{height:70px}.authHero{padding:42px 20px 64px}.heroCopy h1{font-size:2.75rem}.benefits{display:none}.intro{font-size:.96rem}.loginSurface{padding:24px}.back{font-size:.75rem}}

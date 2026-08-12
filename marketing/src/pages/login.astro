@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+---
+<Base title="Log in — Seonbae" active="/login" showConversion={false}>
+  <section class="auth">
+    <div class="auth-card reveal is-in">
+      <h1 class="h3 auth-title"><T en="Welcome back" ko="다시 오셨네요" /></h1>
+      <p class="auth-sub"><T en="Log in to manage lessons, schedules, and payments in one place." ko="수업, 일정, 결제를 한곳에서 관리하세요." /></p>
+
+      <form class="auth-form" novalidate>
+        <div class="form-field">
+          <label for="email"><T en="Email" ko="이메일" /></label>
+          <input id="email" class="form-control" type="email" autocomplete="email" placeholder="you@email.com" />
+        </div>
+        <div class="form-field">
+          <label for="pw"><T en="Password" ko="비밀번호" /></label>
+          <input id="pw" class="form-control" type="password" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <div class="auth-row">
+          <label class="auth-remember"><input type="checkbox" /> <span><T en="Keep me logged in" ko="로그인 유지" /></span></label>
+          <a href="#" class="auth-link"><T en="Forgot password?" ko="비밀번호 찾기" /></a>
+        </div>
+        <button type="submit" class="btn btn--primary btn--lg auth-submit">
+          <span><T en="Log in" ko="로그인" /></span>
+          <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <p class="auth-note" hidden data-note><T en="Accounts open with our first families this term. Get started to join the list." ko="이번 학기 첫 가족들과 함께 계정이 열립니다. 시작하기로 신청해 주세요." /></p>
+      </form>
+
+      <div class="auth-foot">
+        <p><T en="New to Seonbae?" ko="선배가 처음이신가요?" /> <a href="/get-matched"><T en="Get started" ko="시작하기" /></a></p>
+        <p><T en="Want to teach?" ko="가르치고 싶으신가요?" /> <a href="/become-a-tutor"><T en="Become a tutor" ko="선배로 지원" /></a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .auth { display: flex; justify-content: center; padding-block: clamp(48px, 8vw, 110px); }
+  .auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--white);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-md);
+    padding: clamp(28px, 4vw, 44px);
+  }
+  .auth-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  .auth-sub { color: var(--muted); margin-top: 10px; font-size: 0.98rem; line-height: 1.55; }
+  .auth-form { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; }
+  .auth-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.88rem; }
+  .auth-remember { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; }
+  .auth-remember input { width: 16px; height: 16px; accent-color: var(--violet); }
+  .auth-link { color: var(--violet); font-weight: 600; }
+  .auth-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .auth-submit { width: 100%; justify-content: space-between; margin-top: 4px; }
+  .auth-note { margin-top: 4px; font-size: 0.88rem; color: var(--violet); background: var(--violet-soft); padding: 12px 14px; border-radius: var(--r-sm); line-height: 1.5; }
+  .auth-foot { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-soft); display: flex; flex-direction: column; gap: 8px; font-size: 0.92rem; color: var(--muted); }
+  .auth-foot a { color: var(--violet); font-weight: 600; }
+  .auth-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>
+
+<script>
+  const form = document.querySelector('.auth-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const note = form.querySelector('[data-note]') as HTMLElement | null;
+    if (note) note.hidden = false;
+  });
+</script>

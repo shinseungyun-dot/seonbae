@@ -1,0 +1,64 @@
+---
+// A hand-drawn ring doodled around a title, in the curriculum's colour.
+// The wrapper is inline-block so the ring hugs the words themselves rather
+// than stretching to the width of the card.
+interface Props {
+  tone?: 1 | 2 | 3 | 4 | 5 | 6;
+  class?: string;
+}
+const { tone = 1, class: cls = '' } = Astro.props;
+
+// Two loops with an overshooting tail, drawn slightly off-round so it reads
+// as a pen stroke rather than an ellipse.
+// Drawn with uneven control points so each loop wobbles slightly, the way a
+// pen does. Ends overshoot past the start, like a circle drawn in one go.
+const rings = [
+  // Round-ish, tail trailing off low right.
+  'M97.4 19.2c.6 9.6-20.4 17.4-47 17.8C25 37.4 3.4 30.6 2.6 20.8 1.8 11.4 23 3 49.6 2.4c26-.6 46.6 6.4 47.6 16.2.6 6-8.4 11.6-22.4 14.8',
+  // Flatter, starts high left, closes past itself.
+  'M4.2 16.6C6.8 8 28.6 2 53.4 2.8c25 .8 45 8.6 44 17.8-1 9.4-23.4 16.2-49 15.4C24.6 35.2 4.6 28 3.8 19.2c-.4-4.4 3.4-8.6 11.4-11.8',
+  // Slight double-back at the left end, like a pen retracing.
+  'M96.6 18c1.6 9.8-19.8 18-46.8 18.6C24.2 37.2 2.8 30.8 2.2 21 1.6 11 23.8 2.8 50.4 2.2c25.6-.6 45.6 6 47 15.4.8 5.8-7 11.2-20.2 14.4M7.6 26.4C4 23.6 2.2 20.4 2.4 17',
+  // Wobblier top edge, sits a touch low.
+  'M97.8 22c-.8 9.8-22.6 16.4-48.6 15.4C24.4 36.4 2 29 2.4 19.6 2.8 10 25.4 2.6 51.6 3.4c25 .8 46 8 46.2 17 .2 5.6-7.6 10.6-20.4 13.6',
+  // Tighter loop, overshoot across the top left.
+  'M92 33.6C80.6 36.6 65 38 49 37.4 23.6 36.4 2.6 29 3.2 19.6 3.8 10 25.8 2.4 52 3.2c25.4.8 45.4 8.4 44.8 17.4-.3 4.6-6 8.8-15.6 11.8',
+  // Long oval, ends crossing at the right.
+  'M95.6 16.8c2.4 9.6-18.4 18.6-45.6 19.6C24.4 37.4 2.6 31 2 21.4 1.4 11.6 23 3 49.8 2.2c26.2-.8 46.4 5.6 48 14.8 1 5.8-6 11.4-19 15',
+];
+const ring = rings[(tone - 1) % rings.length];
+---
+<span class={`mt mt--${tone} ${cls}`}>
+  <svg class="mt__ring" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d={ring} fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+  </svg>
+  <span class="mt__text"><slot /></span>
+</span>
+
+<style>
+  .mt {
+    position: relative;
+    display: inline-block;
+    /* The padding is what gives the loop room to clear the letters, so the
+       stroke rides outside the word instead of through it. */
+    padding: 0.5em 0.82em 0.52em 0.7em;
+    margin-left: -0.7em;
+  }
+  .mt__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  /* The ring owns the tone colour; the words stay black. */
+  .mt__text { position: relative; color: var(--ink); }
+
+  .mt--1 { color: var(--b1); }
+  .mt--2 { color: var(--b2); }
+  .mt--3 { color: var(--b3); }
+  .mt--4 { color: var(--b4); }
+  .mt--5 { color: var(--b5); }
+  .mt--6 { color: var(--b6); }
+</style>

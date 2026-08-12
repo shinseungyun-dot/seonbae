@@ -35,7 +35,7 @@ export default async function PendingAccountPage() {
   return (
     <main className={styles.page}>
       <header>
-        <Link href="/#/ko/home" aria-label="선배 홈">
+        <Link href="/" aria-label="선배 홈">
           <img src="/seonbae-logo-antique.png" alt="" />
           <span><b>선배</b><small>ACCOUNT REVIEW</small></span>
         </Link>

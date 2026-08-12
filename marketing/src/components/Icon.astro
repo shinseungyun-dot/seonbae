@@ -1,0 +1,56 @@
+---
+// Small line-icon set, stroke = currentColor so it inherits accent colour.
+// Used sparingly to fill space and reinforce a message, never as decoration.
+interface Props { name: string; size?: number; class?: string; stroke?: number; }
+const { name, size = 24, class: cls = '', stroke = 1.8 } = Astro.props;
+
+const paths: Record<string, string> = {
+  // trust / verification
+  verify: 'M12 3l7 3v5c0 4.2-2.9 7.4-7 8.5-4.1-1.1-7-4.3-7-8.5V6l7-3z M9 12l2 2 4-4',
+  shield: 'M12 3l7 3v5c0 4.2-2.9 7.4-7 8.5-4.1-1.1-7-4.3-7-8.5V6l7-3z',
+  // matching / people
+  match: 'M9 11a3 3 0 100-6 3 3 0 000 6z M15.5 13a2.5 2.5 0 100-5 2.5 2.5 0 000 5z M4 20c0-2.8 2.2-5 5-5s5 2.2 5 5 M14.5 20c0-1.6.7-3 1.8-4',
+  target: 'M12 21a9 9 0 100-18 9 9 0 000 18z M12 16a4 4 0 100-8 4 4 0 000 8z M12 12h.01',
+  // scheduling
+  calendar: 'M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7z M4 10h16 M8 3v4 M16 3v4',
+  clock: 'M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2',
+  // notes / feedback
+  notes: 'M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z M14 3v5h5 M8 12h8 M8 16h5',
+  // whiteboard / lesson
+  board: 'M3 5h18v11H3z M12 16v3 M8 19h8 M7 12c2-4 4-4 5-2s3 2 5-1',
+  // abroad / time zones
+  globe: 'M12 21a9 9 0 100-18 9 9 0 000 18z M3 12h18 M12 3c2.5 2.6 2.5 15.4 0 18 M12 3c-2.5 2.6-2.5 15.4 0 18',
+  // progress
+  chart: 'M4 20V4 M4 20h16 M8 16v-4 M12 16V9 M16 16v-7',
+  rise: 'M4 15l5-5 3 3 7-7 M14 6h5v5',
+  // support
+  chat: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H9l-4 3v-3H6a2 2 0 01-2-2V6z',
+  // pay / fair
+  wallet: 'M4 7a2 2 0 012-2h11a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z M17 11h3v3h-3a1.5 1.5 0 010-3z',
+  // subjects
+  book: 'M5 4h11a2 2 0 012 2v14H7a2 2 0 01-2-2V4z M19 20a2 2 0 00-2-2H5',
+  spark: 'M12 3c.4 4 1.6 5.2 5.6 5.6C13.6 9 12.4 10.2 12 14.2 11.6 10.2 10.4 9 6.4 8.6 10.4 8.2 11.6 7 12 3z',
+  star: 'M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8 6.8 19.5l1-5.8-4.2-4.1 5.8-.8z',
+  check: 'M5 12l5 5 9-9',
+  arrow: 'M4 12h15 M13 6l6 6-6 6',
+};
+
+const d = paths[name] ?? paths.spark;
+---
+<svg
+  class:list={['icon', cls]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  {d.split(' M').map((seg, i) => <path d={i === 0 ? seg : `M${seg}`} />)}
+</svg>
+<style>
+  .icon { display: block; flex: none; }
+</style>

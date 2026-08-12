@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#003a6c"/>
+  <!-- arch reflected in water: the Seonbae bridge mark, abstract -->
+  <g fill="none" stroke="#f0eeeb" stroke-width="4" stroke-linecap="round">
+    <path d="M16 30 A16 16 0 0 1 48 30"/>
+    <path d="M16 30 L16 33"/>
+    <path d="M48 30 L48 33"/>
+  </g>
+  <g fill="none" stroke="#8fb4d6" stroke-width="3" stroke-linecap="round" opacity="0.95">
+    <path d="M18 40 A14 14 0 0 0 46 40" stroke-dasharray="2 5"/>
+  </g>
+  <line x1="12" y1="36" x2="52" y2="36" stroke="#f0eeeb" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+</svg>

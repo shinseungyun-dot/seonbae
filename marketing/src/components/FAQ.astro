@@ -1,0 +1,57 @@
+---
+interface FaqItem { q: string; a: string; }
+interface Props { items: FaqItem[]; }
+const { items } = Astro.props;
+---
+<div class="faq">
+  {items.map((item, i) => (
+    <details class="faq__item" name="faq" open={i === 0}>
+      <summary class="faq__q">
+        <span>{item.q}</span>
+        <span class="faq__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </span>
+      </summary>
+      <div class="faq__a"><p>{item.a}</p></div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq { border-top: 1px solid var(--line); }
+  .faq__item { border-bottom: 1px solid var(--line); }
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 4px;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.08rem, 1.5vw, 1.28rem);
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__icon {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--violet-soft);
+    color: var(--violet);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s ease, background 0.22s ease;
+  }
+  .faq__icon svg { width: 18px; height: 18px; }
+  .faq__item[open] .faq__icon { transform: rotate(135deg); background: var(--violet); color: #fff; }
+  .faq__a {
+    padding: 0 4px 24px;
+    max-width: 68ch;
+  }
+  .faq__a p { color: var(--muted); font-size: 1.02rem; line-height: 1.62; }
+</style>

@@ -40,7 +40,7 @@ export default function PortalHeader({
 
   return (
     <header className={styles.topbar}>
-      <Link className={styles.brand} href="/#/ko/home">
+      <Link className={styles.brand} href="/">
         <img src="/seonbae-logo-antique.png" alt="" />
         <span>
           <b>선배</b>

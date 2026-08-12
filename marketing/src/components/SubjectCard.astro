@@ -1,0 +1,124 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MediaPanel from './MediaPanel.astro';
+import { subjectScene } from '../lib/format';
+import { subjectCount } from '../data/rates';
+import MarkedTitle from './MarkedTitle.astro';
+
+interface Props { entry: CollectionEntry<'subjects'>; variant?: 'row' | 'grid'; }
+const { entry, variant = 'row' } = Astro.props;
+const s = entry.data;
+const href = `/subjects/${entry.id}`;
+const nSubjects = subjectCount(entry.id);
+// The card stays white and the curriculum's colour is carried by a single
+// mark, which reads more serious than six tinted boxes and still lets a family
+// tell the six apart at a glance.
+const tone = ((s.order - 1) % 6) + 1;
+---
+{variant === 'row' ? (
+  <article class={`subject-row tone-${tone}`}>
+    <div class="subject-row__body">
+      <div class="subject-row__text">
+        <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}>{s.title}</MarkedTitle></a></h3>
+        <p class="body subject-summary">{s.summary}</p>
+        <div class="subject-pills">
+          {s.levels.slice(0, 3).map((l) => <span class="pill pill--outline">{l}</span>)}
+        </div>
+      </div>
+      <div class="subject-row__foot">
+        <span class="subject-count"><strong>{nSubjects}</strong> subjects{s.tutorCount > 0 && ` · ${s.tutorCount} tutors`}</span>
+        <a href={href} class="textlink">Explore {s.title}
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="subject-row__media">
+      <MediaPanel scene={subjectScene(s.order)} accent={s.accent} ratio="1 / 1" />
+    </div>
+  </article>
+) : (
+  <article class={`subject-grid tone-${tone}`}>
+    <h3 class="subject-h"><a href={href}><MarkedTitle tone={tone as 1 | 2 | 3 | 4 | 5 | 6}>{s.title}</MarkedTitle></a></h3>
+    <p class="body subject-summary">{s.summary}</p>
+    <div class="subject-grid__foot">
+      <span class="subject-count"><strong>{nSubjects}</strong> subjects</span>
+      <a href={href} class="textlink" aria-label={`Explore ${s.title}`}>Explore
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+)}
+
+<style>
+  .subject-h a { position: relative; display: inline-block; }
+  .tone-1 { --mark: var(--b1); --mark-shape: 62% 38% 44% 56% / 38% 58% 42% 62%; --mark-tilt: -2deg; }
+  .tone-2 { --mark: var(--b2); --mark-shape: 38% 62% 68% 32% / 60% 34% 66% 40%; --mark-tilt: 1.6deg; }
+  .tone-3 { --mark: var(--b3); --mark-shape: 68% 32% 34% 66% / 44% 64% 36% 56%; --mark-tilt: -1.2deg; }
+  .tone-4 { --mark: var(--b4); --mark-shape: 34% 66% 60% 40% / 66% 38% 62% 34%; --mark-tilt: 2deg; }
+  .tone-5 { --mark: var(--b5); --mark-shape: 58% 42% 32% 68% / 36% 66% 34% 64%; --mark-tilt: -2.4deg; }
+  .tone-6 { --mark: var(--b6); --mark-shape: 44% 56% 66% 34% / 62% 34% 66% 38%; --mark-tilt: 1.4deg; }
+  .subject-h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2vw, 1.75rem);
+    letter-spacing: -0.022em;
+    line-height: 1.12;
+  }
+  .subject-h a:hover { color: var(--violet); }
+  .subject-summary { margin-top: 14px; max-width: 46ch; }
+  .subject-count { font-size: 0.88rem; color: var(--muted); }
+  .subject-count strong { font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--ink); margin-right: 3px; }
+
+  /* Row variant */
+  .subject-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: clamp(20px, 4vw, 56px);
+    align-items: center;
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 3vw, 40px);
+    border: 1px solid var(--line-soft);
+  }
+  .subject-row__body { display: flex; flex-direction: column; }
+  .subject-row__text { margin-top: 18px; }
+  .subject-row__text h3 a:hover { color: var(--violet); }
+  .subject-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .subject-row__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(12, 12, 12, 0.1);
+  }
+  .subject-row__media { align-self: stretch; }
+
+  /* Grid variant */
+  .subject-grid {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: clamp(24px, 2.6vw, 32px);
+    border: 1px solid var(--line);
+    height: 100%;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .subject-grid:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(19, 24, 27, 0.2); }
+  .subject-grid .subject-summary { flex: 1; }
+  .subject-grid__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(12, 12, 12, 0.1);
+  }
+
+  @media (max-width: 780px) {
+    .subject-row { grid-template-columns: 1fr; }
+    .subject-row__media { order: -1; }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+// Thin soft decorative contour linework for cream / pastel sections.
+// Subtle by design: sits behind content, never competes with text.
+interface Props { color?: string; opacity?: number; variant?: 'a' | 'b'; class?: string; }
+const { color = 'rgba(12,12,12,0.14)', opacity = 0.5, variant = 'a', class: cls = '' } = Astro.props;
+---
+<div class={`contour ${cls}`} aria-hidden="true">
+  {variant === 'a' ? (
+    <svg viewBox="0 0 1200 500" preserveAspectRatio="none" style={`opacity:${opacity}`}>
+      <g fill="none" stroke={color} stroke-width="1.2">
+        <path d="M-40 120 C 220 40, 420 220, 700 130 S 1120 60, 1260 170" />
+        <path d="M-40 190 C 220 110, 420 290, 700 200 S 1120 130, 1260 240" />
+        <path d="M-40 260 C 220 180, 420 360, 700 270 S 1120 200, 1260 310" />
+      </g>
+    </svg>
+  ) : (
+    <svg viewBox="0 0 1200 500" preserveAspectRatio="none" style={`opacity:${opacity}`}>
+      <g fill="none" stroke={color} stroke-width="1.2">
+        <ellipse cx="600" cy="250" rx="560" ry="150" />
+        <ellipse cx="600" cy="250" rx="440" ry="110" />
+        <ellipse cx="600" cy="250" rx="320" ry="72" />
+      </g>
+    </svg>
+  )}
+</div>

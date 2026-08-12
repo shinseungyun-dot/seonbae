@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+import MediaPanel from '../components/MediaPanel.astro';
+
+const steps = [
+  { n: '01', title: 'Tell us your goals', copy: 'Share the subject, the level, and what you are working toward. A test score, a predicted grade, or simply steadier confidence.' },
+  { n: '02', title: 'We match you by hand', copy: 'We read your goals and choose a verified tutor who fits, not the first name in a list. You see their results before you meet.' },
+  { n: '03', title: 'Meet your tutor', copy: 'Your first lesson is a real lesson. If the fit is not right, we rematch you, no questions asked.' },
+  { n: '04', title: 'Follow the plan', copy: 'Weekly lessons build on each other, with notes and next steps after every session so progress is something you can see.' },
+];
+
+const inclusions = [
+  { title: 'A live one to one lesson', copy: 'On video, with a shared whiteboard for working through problems together.' },
+  { title: 'The lesson recorded', copy: 'Disclosed and saved, so a student can review any moment later.' },
+  { title: 'Notes in your inbox', copy: 'What you covered, what to practise, and what comes next, after every session.' },
+  { title: 'Homework and feedback', copy: 'Set between lessons and marked in a way that teaches, not just corrects.' },
+];
+---
+<Base title="How it works — Seonbae" active="/how-it-works">
+  <PageHero
+    eyebrow="How it works"
+    bg="cream"
+    illo="climb"
+    illoPos="right"
+    copy="Finding the right tutor should feel simple and honest. Here is the whole shape of it, from the first message to a weekly rhythm that holds."
+    ctaLabel="Find a tutor"
+    secondaryLabel="See pricing"
+    secondaryHref="/pricing"
+  >
+    Let's find the tutor who fits, then get to <span class="mark">work</span>.
+  </PageHero>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="steps">
+        {steps.map((s, i) => (
+          <article class="step reveal" data-delay={`${i * 60}ms`}>
+            <span class="step__n">{s.n}</span>
+            <div class="step__body">
+              <h2 class="step__title">{s.title}</h2>
+              <p class="body">{s.copy}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="container split">
+      <div class="reveal">
+        <Eyebrow label="Every lesson" />
+        <h2 class="h2">What every lesson includes.</h2>
+        <p class="lead" style="margin-top:18px">The same four things, every time, whether you book one lesson or a standing weekly slot.</p>
+        <div class="incl-media" style="margin-top:26px">
+          <MediaPanel scene="call" accent="mint" ratio="16 / 7" label="One to one, on video" />
+        </div>
+      </div>
+      <div class="incl-grid reveal" data-delay="80ms">
+        {inclusions.map((f) => (
+          <article class="incl-card">
+            <span class="incl-check" aria-hidden="true">
+              <svg viewBox="0 0 20 20" width="18" height="18"><path d="M5 10.5l3 3 7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+              <h3 class="incl-title">{f.title}</h3>
+              <p class="body">{f.copy}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="verify-teaser has-contour reveal">
+        <div class="verify-teaser__text">
+          <Eyebrow label="Verification" />
+          <h2 class="h2">A tutor reaches our registry only once we have held the score report.</h2>
+          <p class="lead" style="margin-top:16px">Every credential is checked against the real document before a tutor ever meets a student. That is the part we will not skip.</p>
+          <div class="cta-row" style="margin-top:26px">
+            <Button href="/verification" label="How we verify" variant="secondary" arrow="diag" />
+          </div>
+        </div>
+        <div class="verify-teaser__media">
+          <MediaPanel scene="desk" accent="violet" ratio="5 / 4" label="Held in hand" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px); }
+  .step { position: relative; }
+  .step__n {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--violet);
+    display: inline-block;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--violet-soft);
+    width: 100%;
+  }
+  .step__title { font-family: var(--display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 10px; }
+
+  .incl-grid { display: flex; flex-direction: column; gap: 14px; }
+  .incl-card {
+    display: flex;
+    gap: 16px;
+    background: var(--white);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-lg);
+    padding: clamp(20px, 2.4vw, 26px);
+  }
+  /* Same hand-drawn blob as the rest of the site, one tone per row. */
+  .incl-check {
+    flex: none;
+    width: 38px; height: 38px;
+    border-radius: var(--check-shape);
+    background: var(--check);
+    color: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    transform: rotate(var(--check-tilt));
+  }
+  .incl-check :global(svg), .incl-check svg { transform: rotate(calc(var(--check-tilt) * -1)); }
+  .incl-card:nth-child(1) { --check: var(--b1); --check-shape: 62% 38% 44% 56% / 38% 58% 42% 62%; --check-tilt: -8deg; }
+  .incl-card:nth-child(2) { --check: var(--b2); --check-shape: 38% 62% 68% 32% / 60% 34% 66% 40%; --check-tilt: 10deg; }
+  .incl-card:nth-child(3) { --check: var(--b5); --check-shape: 68% 32% 34% 66% / 44% 64% 36% 56%; --check-tilt: -5deg; }
+  .incl-card:nth-child(4) { --check: var(--b6); --check-shape: 34% 66% 60% 40% / 66% 38% 62% 34%; --check-tilt: 7deg; }
+  .incl-title { font-family: var(--display); font-weight: 700; font-size: 1.12rem; letter-spacing: -0.015em; margin-bottom: 6px; }
+
+  .verify-teaser {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    background: var(--canvas);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-xl);
+    padding: clamp(28px, 4vw, 56px);
+  }
+
+  @media (max-width: 900px) {
+    .steps { grid-template-columns: 1fr 1fr; }
+    .verify-teaser { grid-template-columns: 1fr; }
+    .verify-teaser__media { order: -1; }
+  }
+  @media (max-width: 520px) {
+    .steps { grid-template-columns: 1fr; }
+  }
+</style>

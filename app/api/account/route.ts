@@ -81,7 +81,7 @@ export async function DELETE(request: NextRequest) {
   cookieStore.delete("seonbae-remember");
 
   return NextResponse.json(
-    { deleted: true, destination: "/#/ko/home" },
+    { deleted: true, destination: "/" },
     {
       headers: {
         "Cache-Control": "private, no-store, max-age=0",

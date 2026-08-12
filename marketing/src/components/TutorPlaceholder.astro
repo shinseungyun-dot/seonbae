@@ -1,0 +1,94 @@
+---
+// An empty tutor profile, shown until a real verified tutor fills the slot.
+// Deliberately shaped like the finished card (photo, name, university, results,
+// bio) so a family can see exactly what they will be choosing between.
+interface Props { index?: number }
+const { index = 1 } = Astro.props;
+const tone = ((index - 1) % 6) + 1;
+---
+<article class={`tph tph--${tone}`}>
+  <div class="tph__photo">
+    <span class="tph__mark" aria-hidden="true"></span>
+    <svg class="tph__cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 8a2 2 0 012-2h1.5L9 4h6l1.5 2H18a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" /><circle cx="12" cy="12" r="3.5" />
+    </svg>
+    <span class="tph__slot">Tutor photo</span>
+  </div>
+
+  <div class="tph__body">
+    <span class="tph__bar tph__bar--name" aria-hidden="true"></span>
+    <span class="tph__bar tph__bar--uni" aria-hidden="true"></span>
+
+    <div class="tph__chips" aria-hidden="true">
+      <span class="tph__chip"></span>
+      <span class="tph__chip tph__chip--sm"></span>
+    </div>
+
+    <div class="tph__lines" aria-hidden="true">
+      <span class="tph__bar"></span>
+      <span class="tph__bar"></span>
+      <span class="tph__bar tph__bar--short"></span>
+    </div>
+
+    <p class="tph__note">Profile opens once verification is complete</p>
+  </div>
+</article>
+
+<style>
+  .tph {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    height: 100%;
+  }
+  .tph--1 { --tone: var(--p1); --tone-mark: var(--b1); }
+  .tph--2 { --tone: var(--p2); --tone-mark: var(--b2); }
+  .tph--3 { --tone: var(--p3); --tone-mark: var(--b3); }
+  .tph--4 { --tone: var(--p4); --tone-mark: var(--b4); }
+  .tph--5 { --tone: var(--p5); --tone-mark: var(--b5); }
+  .tph--6 { --tone: var(--p6); --tone-mark: var(--b6); }
+
+  .tph__photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--tone);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+  }
+  .tph__mark {
+    position: absolute;
+    top: 14px; left: 14px;
+    width: 30px; height: 30px;
+    background: var(--tone-mark);
+    border-radius: 62% 38% 44% 56% / 38% 58% 42% 62%;
+    transform: rotate(-8deg);
+  }
+  .tph__cam { width: 30px; height: 30px; opacity: 0.5; }
+  .tph__slot { font-size: 0.82rem; font-weight: 600; opacity: 0.75; }
+
+  .tph__body { padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .tph__bar { display: block; height: 10px; border-radius: 5px; background: rgba(19, 24, 27, 0.07); }
+  .tph__bar--name { height: 16px; width: 62%; background: rgba(19, 24, 27, 0.13); }
+  .tph__bar--uni { width: 78%; }
+  .tph__bar--short { width: 55%; }
+
+  .tph__chips { display: flex; gap: 6px; margin-top: 4px; }
+  .tph__chip { width: 88px; height: 24px; border-radius: var(--r-pill); background: var(--tone); }
+  .tph__chip--sm { width: 62px; }
+
+  .tph__lines { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; flex: 1; }
+  .tph__note {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>

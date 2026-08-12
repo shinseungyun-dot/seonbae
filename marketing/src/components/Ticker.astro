@@ -1,0 +1,56 @@
+---
+import T from './T.astro';
+import { ui } from '../i18n/home';
+interface Props { items?: { en: string; ko: string }[]; }
+const { items = ui.ticker } = Astro.props;
+// Duplicated once for a seamless loop.
+const loop = [...items, ...items];
+---
+<div class="ticker" role="presentation">
+  <div class="ticker__track">
+    {loop.map((item) => (
+      <span class="ticker__item">
+        <svg class="ticker__spark" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 1.5c.5 4.6 1.9 6 6.5 6.5-4.6.5-6 1.9-6.5 6.5-.5-4.6-1.9-6-6.5-6.5 4.6-.5 6-1.9 6.5-6.5Z" fill="currentColor"/>
+        </svg>
+        <T en={item.en} ko={item.ko} />
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    background: var(--footer);
+    color: var(--on-dark);
+    overflow: hidden;
+    white-space: nowrap;
+    border-block: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .ticker__track {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 13px;
+    animation: ticker-scroll 34s linear infinite;
+    will-change: transform;
+  }
+  .ticker:hover .ticker__track { animation-play-state: paused; }
+  .ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding-inline: 22px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+  }
+  .ticker__spark { flex: none; color: var(--yellow); }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track { animation: none; }
+  }
+</style>

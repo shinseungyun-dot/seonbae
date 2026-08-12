@@ -1,0 +1,45 @@
+---
+// Circular portrait. Uses a real photo when `src` is given, otherwise a
+// tasteful initial-on-pastel placeholder so nothing looks unfinished.
+interface Props {
+  name: string;
+  initials?: string;
+  src?: string;
+  accent?: 'mint' | 'lavender' | 'butter' | 'violet';
+  size?: number;
+  ring?: boolean;
+  class?: string;
+}
+const { name, initials, src, accent = 'lavender', size = 56, ring = true, class: cls = '' } = Astro.props;
+const bg = {
+  mint: 'var(--mint-surface)',
+  lavender: 'var(--lavender)',
+  butter: 'var(--butter)',
+  violet: 'var(--violet-soft)',
+}[accent];
+const fg = accent === 'violet' ? 'var(--violet)' : '#2c2a26';
+const auto = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+---
+<span
+  class={`avatar ${ring ? 'avatar--ring' : ''} ${cls}`}
+  style={`width:${size}px;height:${size}px;background:${bg};color:${fg};font-size:${Math.round(size * 0.34)}px`}
+  role="img"
+  aria-label={name}
+>
+  {src ? <img src={src} alt={name} /> : <span aria-hidden="true">{initials ?? auto}</span>}
+</span>
+<style>
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    font-family: var(--display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    flex: none;
+  }
+  .avatar--ring { box-shadow: 0 0 0 3px var(--canvas), 0 0 0 4px rgba(12, 12, 12, 0.08); }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+</style>

@@ -1,0 +1,187 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import Button from '../../components/Button.astro';
+import SubjectCard from '../../components/SubjectCard.astro';
+import TutorCard from '../../components/TutorCard.astro';
+import RateBrowser from '../../components/RateBrowser.astro';
+import { won } from '../../lib/format';
+import { ratesFor, priceRange, type CurriculumSlug } from '../../data/rates';
+
+export async function getStaticPaths() {
+  const subjects = await getCollection('subjects');
+  return subjects.map((entry) => ({ params: { subject: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const s = entry.data;
+const { Content } = await render(entry);
+
+const all = (await getCollection('subjects')).sort((a, b) => a.data.order - b.data.order);
+const related = all.filter((x) => x.id !== entry.id).slice(0, 3);
+
+// Loose match of tutors to this curriculum.
+const token = s.title.split(' ')[0];
+const allTutors = (await getCollection('tutors')).sort((a, b) => a.data.order - b.data.order);
+let tutors = allTutors.filter(
+  (t) =>
+    t.data.levels.some((l) => s.levels.some((sl) => sl.includes(l) || l.includes(sl.split(' ')[0]))) ||
+    t.data.specialty.some((sp) => sp.toLowerCase().includes(token.toLowerCase()))
+);
+if (tutors.length === 0) tutors = allTutors.filter((t) => t.data.featured);
+tutors = tutors.slice(0, 3);
+
+// Prices are per subject, so this page publishes the whole sheet for this
+// curriculum rather than a single "from" figure.
+const slug = entry.id as CurriculumSlug;
+const curriculumRates = ratesFor(slug);
+const span = curriculumRates.length ? priceRange(curriculumRates) : null;
+---
+<Base title={`${s.title} tutoring — Seonbae`} description={s.summary} active="/subjects">
+  <section class="subj-hero has-contour">
+    <div class="container">
+      <div class="reveal is-in subj-lead">
+        <a href="/subjects" class="back-link">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All subjects
+        </a>
+        <h1 class="subj-title">{s.title}</h1>
+        <p class="lead" style="margin-top:16px">{s.summary}</p>
+        <div class="subj-pills">
+          {s.levels.map((l) => <span class="pill pill--violet">{l}</span>)}
+        </div>
+        <div class="subj-meta">
+          {curriculumRates.length > 0 && (
+            <span class="subj-fact"><strong>{curriculumRates.length}</strong> subjects, each priced on its own</span>
+          )}
+          {s.tutorCount > 0 && <span class="subj-fact"><strong>{s.tutorCount}</strong> verified tutors</span>}
+        </div>
+        <div class="cta-row" style="margin-top:26px">
+          <Button href="/get-matched" label="Get matched" variant="primary" size="lg" arrow="diag" />
+          {curriculumRates.length > 0 && <Button href="#rates" label="See every price" variant="text" arrow="right" />}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container subj-layout">
+      <div class="subj-main">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+      <aside class="subj-aside">
+        <div class={`aside-card surface-${s.accent}`}>
+          <h2 class="aside-title">What you will work on</h2>
+          <ul class="topic-list">
+            {s.topics.map((t) => (
+              <li>
+                <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M5 10.5l3 3 7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="aside-card aside-card--plain">
+          <h2 class="aside-title">Who this is for</h2>
+          <p class="body">{s.idealLearner}</p>
+        </div>
+        <div class="aside-card aside-card--plain">
+          <h2 class="aside-title">How lessons are structured</h2>
+          <ul class="format-list">
+            {s.lessonFormat.map((f) => <li>{f}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {curriculumRates.length > 0 && span && (
+    <section class="section bg-cream" id="rates">
+      <div class="container">
+        <div class="sec-head reveal">
+          <div>
+            <Eyebrow label="Prices" />
+            <h2 class="h2">Every {s.title} subject, priced.</h2>
+          </div>
+          <p class="rates-note">From {won(span.min)} to {won(span.max)} an hour. The rate depends on the subject, not the curriculum.</p>
+        </div>
+        <div class="reveal">
+          <RateBrowser curricula={[{ slug, label: s.title }]} id={`rates-${slug}`} surface="cream" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {tutors.length > 0 && (
+    <section class="section bg-white">
+      <div class="container">
+        <div class="sec-head reveal">
+          <div>
+            <Eyebrow label="Tutors" />
+            <h2 class="h2">Tutors for {s.title}.</h2>
+          </div>
+          <Button href="/tutors" label="All tutors" variant="text" arrow="right" />
+        </div>
+        <div class="grid three-col">
+          {tutors.map((t) => <div class="reveal"><TutorCard entry={t} /></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div>
+          <Eyebrow label="Keep exploring" />
+          <h2 class="h2">Other subjects.</h2>
+        </div>
+        <Button href="/subjects" label="Browse all" variant="text" arrow="right" />
+      </div>
+      <div class="grid three-col">
+        {related.map((r) => <div class="reveal"><SubjectCard entry={r} variant="grid" /></div>)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .subj-hero { position: relative; background: var(--canvas); padding-block: clamp(44px, 7vw, 96px); overflow: hidden; }
+  .subj-lead { max-width: 46rem; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-bottom: 22px; }
+  .back-link svg { width: 16px; height: 16px; }
+  .back-link:hover { color: var(--violet); }
+  .subj-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(3rem, 7vw, 5.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin-top: 14px;
+  }
+  .subj-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .subj-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 26px; margin-top: 22px; }
+  .subj-fact { font-size: 0.94rem; color: var(--muted); }
+  .subj-fact strong { font-family: var(--display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--ink); margin-right: 4px; }
+  .rates-note { font-size: 0.94rem; color: var(--muted); max-width: 34ch; }
+
+  .subj-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .prose :global(p) { color: var(--muted); font-size: 1.08rem; line-height: 1.7; margin-bottom: 1.1em; }
+  .prose :global(p:first-child) { font-size: 1.2rem; color: var(--ink); }
+  .aside-card { border-radius: var(--r-xl); padding: clamp(24px, 3vw, 32px); margin-bottom: 18px; }
+  .aside-card--plain { background: var(--white); border: 1px solid var(--line); }
+  .aside-title { font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.015em; margin-bottom: 16px; }
+  .topic-list { display: flex; flex-direction: column; gap: 11px; }
+  .topic-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.98rem; color: var(--ink); }
+  .topic-list svg { flex: none; margin-top: 3px; color: var(--violet); }
+  .format-list { display: flex; flex-direction: column; gap: 12px; }
+  .format-list li { position: relative; padding-left: 18px; color: var(--muted); font-size: 0.98rem; line-height: 1.5; }
+  .format-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--violet); }
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: clamp(28px, 4vw, 44px); flex-wrap: wrap; }
+  .sec-head .h2 { margin-top: 12px; }
+
+  @media (max-width: 860px) { .subj-layout { grid-template-columns: 1fr; } }
+</style>

@@ -13,7 +13,7 @@ export async function POST() {
   cookieStore.delete("seonbae-billing-access");
 
   return NextResponse.json(
-    { authenticated: false, destination: "/#/ko/home" },
+    { authenticated: false, destination: "/" },
     {
       headers: {
         "Cache-Control": "private, no-store, max-age=0",

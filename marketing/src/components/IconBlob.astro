@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro';
+
+// A line icon sitting on a soft organic shape, the Khan Academy device: the
+// blob carries the colour, the icon stays black so it reads at small sizes.
+// Each tone gets its own blob silhouette so a row of them never looks stamped.
+interface Props {
+  name: string;
+  tone?: 1 | 2 | 3 | 4 | 5 | 6;
+  size?: number;
+  class?: string;
+}
+const { name, tone = 1, size = 64, class: cls = '' } = Astro.props;
+---
+<span class={`ib ib--${tone} ${cls}`} style={`--ib-size:${size}px`}>
+  <span class="ib__blob" aria-hidden="true"></span>
+  <Icon name={name} size={Math.round(size * 0.52)} stroke={1.7} class="ib__icon" />
+</span>
+
+<style>
+  .ib {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ib-size);
+    height: var(--ib-size);
+    flex: none;
+  }
+  .ib__blob {
+    position: absolute;
+    /* Centred under the icon: the shape stays hand-drawn, the icon does not
+       drift off it. */
+    inset: 6%;
+    background: var(--ib-blob);
+    border-radius: var(--ib-shape);
+    transform: rotate(var(--ib-tilt));
+  }
+  .ib :global(.ib__icon) {
+    position: relative;
+    z-index: 1;
+    color: var(--ink);
+  }
+
+  .ib--1 { --ib-blob: #c3d9ba; --ib-shape: 62% 38% 44% 56% / 38% 58% 42% 62%; --ib-tilt: -8deg; --ib-inset: 20% 22% 2% 0%; }
+  .ib--2 { --ib-blob: #e6c2ba; --ib-shape: 38% 62% 68% 32% / 60% 34% 66% 40%; --ib-tilt: 11deg; --ib-inset: 22% 24% 0% 2%; }
+  .ib--3 { --ib-blob: #f0bf80; --ib-shape: 68% 32% 34% 66% / 44% 64% 36% 56%; --ib-tilt: -5deg; --ib-inset: 18% 20% 4% 2%; }
+  .ib--4 { --ib-blob: #bcd0e6; --ib-shape: 34% 66% 60% 40% / 66% 38% 62% 34%; --ib-tilt: 7deg; --ib-inset: 21% 23% 1% 0%; }
+  .ib--5 { --ib-blob: #e9cd8e; --ib-shape: 58% 42% 32% 68% / 36% 66% 34% 64%; --ib-tilt: -11deg; --ib-inset: 19% 21% 3% 1%; }
+  .ib--6 { --ib-blob: #bfdcd4; --ib-shape: 44% 56% 66% 34% / 62% 34% 66% 38%; --ib-tilt: 6deg; --ib-inset: 20% 22% 2% 1%; }
+</style>

@@ -290,11 +290,11 @@ export default function PrivacyPage() {
 function LegalHeader() {
   return (
     <header className={styles.header}>
-      <Link className={styles.brand} href="/#/ko/home">
+      <Link className={styles.brand} href="/">
         <img src="/seonbae-logo-antique.png" alt="" />
         <strong>선배</strong><span>SEONBAE · EST. 2026</span>
       </Link>
-      <nav><Link href="/terms">이용약관</Link><Link href="/#/ko/home">홈으로 ↗</Link></nav>
+      <nav><Link href="/terms">이용약관</Link><Link href="/">홈으로 ↗</Link></nav>
     </header>
   );
 }

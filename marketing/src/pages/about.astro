@@ -1,0 +1,303 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Avatar from '../components/Avatar.astro';
+
+const founders = [
+  {
+    name: 'Yoonjae Lee', hangul: '이윤재', role: 'Founder and Chief Executive Officer', uni: 'Korea University', accent: 'mint' as const,
+    bio: 'Started Seonbae after tutoring through university and watching most of what families paid disappear before it reached the tutor. Sets the rate for every subject and what each tutor is paid, reads the matching requests and chooses the tutor himself, and holds the line on what goes in the open. Answers admissions@ directly, so the first reply a family gets is his.',
+  },
+  {
+    name: 'Byeongguk Oh', hangul: '오병국', role: 'Co-founder and Chief Operating Officer', uni: 'Korea University', accent: 'lavender' as const,
+    bio: 'Runs matching, tutor care, and safeguarding. Believes the honest answer is always the one that keeps families with us longest, even when it costs us the booking.',
+  },
+  {
+    name: 'Seungyun Shin', hangul: '신승윤', role: 'Co-founder and Chief Technology Officer', uni: 'Seoul National University', accent: 'violet' as const,
+    bio: 'Builds the tools that keep lessons, notes, and billing simple, so a tutor spends their hours teaching rather than doing admin.',
+  },
+];
+
+const principles = [
+  { title: 'Verify before we promise', copy: 'We hold the real document before a tutor is ever listed. Trust is not a tagline here, it is the first step.' },
+  { title: 'Teach from experience', copy: 'Our tutors sat the same exams recently and scored at the top. The advice is specific because the memory is fresh.' },
+  { title: 'Keep families first', copy: 'Clear pricing, a rematch guarantee, and progress you can see. We would rather earn the next month than lock in the year.' },
+];
+---
+<Base title="About — Seonbae" active="/about">
+  <PageHero
+    eyebrow="About"
+    bg="yellow"
+    align="center"
+    copy="Seonbae began with a simple unfairness. As tutors we were paid a fraction of what families were charged, and neither side could see the other half of the deal. We rebuilt it so the rate is published, the tutor keeps their full fee, and the lesson happens online, wherever the student happens to be."
+  >
+    The people and principles behind better <span class="mark">learning</span>.
+  </PageHero>
+
+  <!-- Editorial layout throughout: a running text measure with a margin rail,
+       hairline rules instead of cards. Nothing here is boxed. -->
+  <section class="section bg-white" id="founders">
+    <div class="container">
+      <div class="statement reveal">
+        <div class="statement__rail">
+          <Eyebrow label="Why we exist" />
+        </div>
+        <div class="statement__body">
+          <p class="statement__text">Good teaching is not scarce. Access to it is. The best tutors we knew were undervalued and hard to find, and the families who needed them were paying more than the tutor ever saw.</p>
+          <p class="statement__text statement__text--two">Seonbae exists to close that gap. One rate per subject, published. One tutor, verified against the score report. One video call, from anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="story">
+        <div class="story__rail reveal">
+          <Eyebrow label="Our start" />
+          <p class="story__dateline">Seoul<br />One flat<br />Three tutors</p>
+        </div>
+        <div class="story__text reveal">
+          <h2 class="h2">We were roommates with the same complaint.</h2>
+          <p class="story__lede">Three of us shared a flat in Seoul and tutored to get through university. IB, AP, A Level, whatever came in. We were good at it, and every month we compared notes on the same thing: how little of what the family paid ever reached us.</p>
+          <figure class="story__photo">
+            <img
+              src="/images/founders.jpg"
+              alt="The three Seonbae founders standing together in university varsity jackets"
+              width="1800"
+              height="1200"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>The three of us, before any of this had a name.</figcaption>
+          </figure>
+          <p class="body">One evening we actually worked the numbers out on the kitchen table. The gap was worse than any of us had guessed. Nobody in the middle wanted it written down, so we wrote it down, and Seonbae started there.</p>
+          <blockquote class="story__quote">A good tutor should not have to accept a bad rate, and a family should not have to guess what they are paying for.</blockquote>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Founders as full-width rows, read like a masthead rather than a card set. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="ed-head reveal">
+        <Eyebrow label="The team" />
+        <h2 class="h2">Meet the founders.</h2>
+      </div>
+      <div class="roster-ed">
+        {founders.map((f, i) => (
+          <article class="fnd reveal" data-delay={`${i * 70}ms`}>
+            <span class="fnd__n" aria-hidden="true">{`0${i + 1}`}</span>
+            <div class="fnd__id">
+              <Avatar name={f.name} accent={f.accent} size={72} />
+              <div>
+                <h3 class="fnd__name">{f.name} <span class="kr fnd__hangul">{f.hangul}</span></h3>
+                <p class="fnd__role">{f.role}</p>
+                <p class="fnd__uni">{f.uni}</p>
+              </div>
+            </div>
+            <p class="fnd__bio">{f.bio}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- A signed note, so the company page ends in a human voice. -->
+  <section class="section bg-white" style="padding-top:0">
+    <div class="container">
+      <div class="note reveal">
+        <div class="note__rail">
+          <Eyebrow label="A note from the founders" />
+        </div>
+        <div class="note__body">
+          <p class="note__lede">We built the version we wanted to work for.</p>
+          <p class="body">Between us we spent years tutoring international curricula, and the same two problems kept showing up. Tutors were underpaid and could not say so. Families were overcharged and could not tell what the money bought. Everyone accepted it because nobody in the middle wanted the numbers in the open.</p>
+          <p class="body">So the rules we started with are the rules we still keep. We publish the price of all 125 subjects. We pay each tutor a fixed amount per subject and they keep it in full. We hold the score report before we list anyone. We match by hand rather than by algorithm. If a lesson falls short because of us, we re-teach it or refund it.</p>
+          <p class="body">Seonbae will grow, and the names on the tutor page will change. Those rules will not.</p>
+          <p class="note__sign">The Seonbae founders</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles as a numbered editorial list, numerals living in the margin. -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="ed-head reveal">
+        <Eyebrow label="What we hold to" />
+        <h2 class="h2">Three principles we do not bend.</h2>
+      </div>
+      <ol class="tenets">
+        {principles.map((p, i) => (
+          <li class="tenet reveal" data-delay={`${i * 70}ms`}>
+            <span class="tenet__n" aria-hidden="true">{i + 1}</span>
+            <h3 class="tenet__t">{p.title}</h3>
+            <p class="body tenet__c">{p.copy}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ----- Statement -------------------------------------------------------- */
+  .statement {
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+  }
+  .statement__rail { padding-top: 6px; }
+  .statement__text {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 2.4vw, 2.05rem);
+    line-height: 1.32;
+    letter-spacing: -0.02em;
+    max-width: 34ch;
+  }
+  .statement__text--two { margin-top: 26px; font-weight: 700; }
+
+  /* ----- Story ------------------------------------------------------------ */
+  /* Narrower rail than the other sections: this block carries a long read and
+     a photo, so the column gets the room and the margin keeps only its label. */
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 0.28fr) minmax(0, 1fr);
+    gap: clamp(28px, 6vw, 96px);
+    align-items: start;
+  }
+  .story__dateline {
+    margin-top: 18px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .story__text { max-width: 42rem; border-left: 1px solid var(--line); padding-left: clamp(24px, 3.5vw, 56px); }
+  .story__lede { font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.62; margin-top: 26px; }
+  /* Slightly larger than the site default: the column is wide here, and the
+     bigger size keeps the line length near 70 characters rather than 85. */
+  .story__text .body { margin-top: 22px; font-size: 1.15rem; line-height: 1.72; }
+  /* Founders photo runs in the story text column, so it sits in the reading
+     flow at the text measure rather than as a banner hung off the layout. */
+  .story__photo { margin: 36px 0 0; }
+  .story__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #efe9e0;
+  }
+  .story__photo figcaption {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .story__text .story__photo + .body { margin-top: 34px; }
+  .story__quote {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 2px solid var(--ink);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+  }
+
+  /* ----- Section heads ---------------------------------------------------- */
+  .ed-head { margin-bottom: clamp(24px, 3.5vw, 44px); padding-bottom: 22px; border-bottom: 2px solid var(--ink); }
+  .ed-head .h2 { margin-top: 12px; }
+
+  /* ----- Founders --------------------------------------------------------- */
+  .fnd {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(18px, 3vw, 48px);
+    align-items: start;
+    padding: clamp(24px, 3vw, 36px) 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .fnd:last-child { border-bottom: none; }
+  .fnd__n { font-family: var(--display); font-weight: 800; font-size: 0.95rem; color: var(--violet); padding-top: 6px; }
+  .fnd__id { display: flex; gap: 18px; align-items: center; }
+  .fnd__name { font-family: var(--display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; }
+  .fnd__hangul { font-weight: 500; font-size: 0.98rem; color: var(--muted); }
+  .fnd__role { color: var(--violet); font-weight: 600; font-size: 0.92rem; margin-top: 5px; }
+  .fnd__uni { color: var(--muted); font-size: 0.88rem; margin-top: 1px; }
+  .fnd__bio { color: var(--muted); font-size: 1.02rem; line-height: 1.6; padding-top: 6px; }
+
+  /* ----- Founders' note --------------------------------------------------- */
+  .note {
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+    padding-top: clamp(28px, 3.5vw, 44px);
+    border-top: 1px solid var(--line);
+  }
+  .note__body { max-width: 34rem; }
+  .note__lede {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .note__body .body + .body { margin-top: 14px; }
+  .note__sign {
+    margin-top: 24px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+  .note__sign span { font-weight: 500; font-size: 0.9rem; color: var(--muted); }
+
+  /* ----- Tenets ----------------------------------------------------------- */
+  .tenets { display: block; }
+  .tenet {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(18px, 3vw, 48px);
+    align-items: baseline;
+    padding: clamp(26px, 3.2vw, 40px) 0;
+    border-top: 1px solid var(--line);
+  }
+  .tenet:last-child { border-bottom: 1px solid var(--line); }
+  .tenet__n {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: var(--violet);
+    opacity: 0.36;
+  }
+  .tenet__t { font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 2vw, 1.75rem); letter-spacing: -0.02em; line-height: 1.15; }
+  .tenet__c { max-width: 46ch; }
+
+  @media (max-width: 900px) {
+    .statement, .story, .note { grid-template-columns: 1fr; }
+    .statement__word { font-size: clamp(3.4rem, 18vw, 6rem); }
+    .story__text { border-left: none; padding-left: 0; }
+    .fnd, .tenet { grid-template-columns: 3rem minmax(0, 1fr); }
+    .fnd__bio, .tenet__c { grid-column: 2; }
+    .tenet__n { font-size: 2.2rem; }
+  }
+  @media (max-width: 560px) {
+    .fnd__id { flex-direction: column; align-items: flex-start; gap: 14px; }
+  }
+</style>

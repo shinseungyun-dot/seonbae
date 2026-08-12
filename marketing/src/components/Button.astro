@@ -1,0 +1,46 @@
+---
+// Pill buttons with trailing circular arrow disc, plus a text-link variant.
+interface Props {
+  href?: string;
+  label: string;
+  variant?: 'primary' | 'secondary' | 'ghost-dark' | 'text' | 'text-light';
+  size?: 'md' | 'lg';
+  class?: string;
+  arrow?: 'diag' | 'right';
+}
+const {
+  href = '#',
+  label,
+  variant = 'primary',
+  size = 'md',
+  class: cls = '',
+  arrow = 'diag',
+} = Astro.props;
+
+const isText = variant === 'text' || variant === 'text-light';
+const arrowPath =
+  arrow === 'diag'
+    ? 'M6 14L14 6M14 6H7M14 6V13'
+    : 'M4 10h11M11 6l4 4-4 4';
+---
+
+{isText ? (
+  <a href={href} class={`textlink ${variant === 'text-light' ? 'textlink--light' : ''} ${cls}`}>
+    <span>{label}</span>
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d={arrowPath} stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </a>
+) : (
+  <a
+    href={href}
+    class={`btn btn--${variant} ${size === 'lg' ? 'btn--lg' : ''} ${cls}`}
+  >
+    <span>{label}</span>
+    <span class="btn__disc" aria-hidden="true">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d={arrowPath} stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+  </a>
+)}
