@@ -9,10 +9,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminApplicationsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name,email,role")
@@ -42,6 +41,7 @@ export default async function AdminApplicationsPage() {
   }
 
   const accounts: AccountApplication[] = await Promise.all((accountRows ?? []).map(async (item) => {
+    if (!item.acceptance_letter_path) return { ...item, documentUrl: null };
     const signed = await admin.storage.from("account-documents").createSignedUrl(item.acceptance_letter_path, 60 * 60);
     return { ...item, documentUrl: signed.data?.signedUrl || null };
   }));
@@ -53,12 +53,28 @@ export default async function AdminApplicationsPage() {
   return (
     <main className={styles.page}>
       <aside className={styles.sidebar}>
-        <Link className={styles.brand} href="/admin"><img src="/seonbae-logo-antique.png" alt="" /><span><b>선배</b><small>ADMIN CONSOLE</small></span></Link>
-        <nav><span>OPERATIONS</span><Link href="/admin">튜터 명부</Link><Link href="/admin/sessions">수업 · Zoom</Link><Link href="/admin/consultations">상담 신청</Link><Link className={styles.active} href="/admin/applications">가입 · 검증 심사</Link></nav>
+        <Link className={styles.brand} href="/admin">
+          <img src="/seonbae-logo-antique.png" alt="" />
+          <span><b>선배</b><small>ADMIN CONSOLE</small></span>
+        </Link>
+        <nav>
+          <span>OPERATIONS</span>
+          <Link href="/admin">튜터 명부</Link>
+          <Link href="/admin/sessions">수업 · Zoom</Link>
+          <Link href="/admin/consultations">상담 신청</Link>
+          <Link className={styles.active} href="/admin/applications">가입 · 검증 심사</Link>
+        </nav>
         <div><small>관리자</small><b>{profile.full_name || profile.email}</b></div>
       </aside>
       <section className={styles.main}>
-        <header className={styles.heading}><div><p>ADMISSIONS DESK</p><h1>가입 · 검증 심사</h1><span>합격통지서와 튜터 자격 원본을 확인하고 승인합니다.</span></div><b>{accounts.length + credentials.length}건 대기</b></header>
+        <header className={styles.heading}>
+          <div>
+            <p>ADMISSIONS DESK</p>
+            <h1>가입 · 검증 심사</h1>
+            <span>모든 가입 요청과 튜터 자격 자료를 한곳에서 확인합니다.</span>
+          </div>
+          <b>{accounts.length + credentials.length}건 대기</b>
+        </header>
         <ApplicationReviewClient accounts={accounts} credentials={credentials} />
       </section>
     </main>

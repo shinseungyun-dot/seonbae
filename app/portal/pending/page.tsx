@@ -8,9 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PendingAccountPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
   const { data: profile } = await supabase
@@ -30,6 +28,7 @@ export default async function PendingAccountPage() {
     .eq("user_id", user.id)
     .maybeSingle();
 
+  const role = request?.requested_role || profile?.role || "student";
   const rejected = profile?.account_status === "rejected" || request?.status === "rejected";
 
   return (
@@ -46,14 +45,16 @@ export default async function PendingAccountPage() {
         <h1>{rejected ? "추가 확인이 필요합니다." : "가입 심사가 진행 중입니다."}</h1>
         <span>
           {rejected
-            ? "제출 정보를 보완한 뒤 admissions@seonbae.com으로 문의해 주세요."
-            : "학교 이메일과 합격통지서를 선배 팀이 확인하고 있습니다. 승인되면 포털 기능이 열립니다."}
+            ? "심사 메모를 확인하고 필요한 정보를 보완해 주세요."
+            : role === "tutor"
+              ? "학교 이메일과 제출 서류를 선배 팀이 확인하고 있습니다."
+              : "이메일 인증은 완료되었습니다. 선배 팀이 가입 정보를 확인하고 있습니다."}
         </span>
         <dl>
           <div><dt>신청자</dt><dd>{profile?.full_name || profile?.email || user.email}</dd></div>
-          <div><dt>계정 유형</dt><dd>{roleLabel(request?.requested_role || profile?.role)}</dd></div>
-          <div><dt>학교 이메일</dt><dd>{profile?.email || user.email}</dd></div>
-          <div><dt>제출 문서</dt><dd>{request?.acceptance_letter_name || "합격통지서 확인 중"}</dd></div>
+          <div><dt>계정 유형</dt><dd>{roleLabel(role)}</dd></div>
+          <div><dt>이메일</dt><dd>{profile?.email || user.email}</dd></div>
+          {role === "tutor" && <div><dt>제출 문서</dt><dd>{request?.acceptance_letter_name || "합격통지서 확인 중"}</dd></div>}
           <div><dt>접수일</dt><dd>{request?.created_at ? formatDate(request.created_at) : "이메일 인증 후 접수"}</dd></div>
           <div><dt>상태</dt><dd className={rejected ? styles.rejected : styles.pending}>{rejected ? "보완 요청" : "검토 중"}</dd></div>
         </dl>
@@ -64,7 +65,6 @@ export default async function PendingAccountPage() {
   );
 }
 
-
 function roleLabel(role?: string) {
   if (role === "parent") return "보호자";
   if (role === "tutor") return "튜터";
@@ -72,6 +72,5 @@ function roleLabel(role?: string) {
 }
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric" })
-    .format(new Date(value));
+  return new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric" }).format(new Date(value));
 }

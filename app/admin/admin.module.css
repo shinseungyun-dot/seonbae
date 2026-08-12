@@ -3,3 +3,4 @@
 :global(html[data-theme="dark"]) .page{--paper:#0f1725;--card:#162133;--line:rgba(219,228,241,.15);color:#e8edf5;background:#0f1725}
 :global(html[data-theme="dark"]) .editor,:global(html[data-theme="dark"]) .tutorList,:global(html[data-theme="dark"]) .connection,:global(html[data-theme="dark"]) .formGrid input,:global(html[data-theme="dark"]) .formGrid select{background:#162133;color:#edf3ff}
 :global(html[data-theme="dark"]) .heading h1{color:#edf3ff}
+.page{--navy:#15303f!important;--blue:#163a51!important;--paper:#fbf7ef!important;--card:#fffdf7!important;--line:rgba(19,24,27,.12)!important;--red:#c1663a!important;color:#201e19!important;font-family:"Hanken Grotesk","Pretendard","Noto Sans KR",sans-serif!important}.brand b,.heading h1,.panel h2,.card h2{font-family:"Hanken Grotesk","Pretendard","Noto Sans KR",sans-serif!important}

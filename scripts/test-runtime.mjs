@@ -74,6 +74,20 @@ try {
   const loginResponse = await fetch(`${origin}/login?mode=signup`);
   assert.equal(loginResponse.status, 200);
 
+  const verifyEmailResponse = await fetch(`${origin}/signup/verify-email?email=test%40example.com`);
+  assert.equal(verifyEmailResponse.status, 200);
+  const verifyEmailHtml = await verifyEmailResponse.text();
+  assert.match(verifyEmailHtml, /test@example\.com/);
+
+  const thankYouResponse = await fetch(`${origin}/signup/thank-you`, { redirect: 'manual' });
+  assert.ok([302, 303, 307, 308].includes(thankYouResponse.status));
+  assert.match(thankYouResponse.headers.get('location') || '', /\/login\?error=verification-required/);
+
+  const signupRouteSource = await readFile(path.join(cwd, 'app', 'api', 'auth', 'signup', 'route.ts'), 'utf8');
+  assert.match(signupRouteSource, /account_creation_requests/);
+  assert.match(signupRouteSource, /signup\/verify-email/);
+  assert.match(signupRouteSource, /signup\/thank-you/);
+
   const subjectsHtml = await fetch(`${origin}/subjects`).then((response) => response.text());
   assert.match(subjectsHtml, /data-lang="ko"/);
   assert.match(subjectsHtml, /지금 마주한 과목에 꼭 맞는 도움/);
@@ -99,6 +113,7 @@ try {
   console.log('bounded runtime checks: pass');
   console.log('- Korean is the default and translated marketing content is present');
   console.log('- Signup required-field marks render');
+  console.log('- Signup review, verification inbox, and authenticated thank-you contracts are present');
   console.log('- Google signup is blocked and Google login creates a signed gate cookie');
 } finally {
   if (server.exitCode === null) server.kill('SIGTERM');
