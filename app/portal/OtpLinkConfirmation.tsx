@@ -56,7 +56,7 @@ export default function OtpLinkConfirmation({
   return (
     <main className={styles.confirmPage}>
       <section className={styles.confirmCard}>
-        <img src="/seonbae-logo-antique.png" alt="" />
+        <img src="/logo.png" alt="" width="58" height="58" />
         <span>{failed ? "확인 필요" : "보안 확인"}</span>
         <h1>{status}</h1>
         <p>

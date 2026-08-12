@@ -3,8 +3,7 @@
 import Link from "next/link";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "../../../utils/supabase/client";
+import AdminSidebar from "../AdminSidebar";
 import styles from "./sessions.module.css";
 import AdminConsultationPanel, {
   type AdminConsultation,
@@ -71,7 +70,6 @@ export default function AdminSessionManager({
   initialFamilyLinks: AdminFamilyLink[];
   zoomConfigured: boolean;
 }) {
-  const router = useRouter();
   const [lessons, setLessons] = useState(initialLessons);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -148,33 +146,9 @@ export default function AdminSessionManager({
     setMessage("수업이 취소되었습니다.");
   }
 
-  async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login");
-    router.refresh();
-  }
-
   return (
     <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link className={styles.brand} href="/">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span><b>선배</b><small>ADMIN CONSOLE</small></span>
-        </Link>
-        <nav>
-          <span>MANAGEMENT</span>
-          <Link href="/admin">튜터 명부</Link>
-          <Link className={styles.active} href="/admin/sessions">수업 · Zoom 관리</Link>
-          <Link href="/admin/consultations">상담 신청</Link>
-          <Link href="/admin/applications">가입 · 검증 심사</Link>
-          <Link href="/#/ko/tutors">공개 명부 보기</Link>
-        </nav>
-        <div className={styles.adminAccount}>
-          <small>관리자</small>
-          <b>{adminName}</b>
-          <button type="button" onClick={signOut}>로그아웃</button>
-        </div>
-      </aside>
+      <AdminSidebar active="sessions" adminName={adminName} styles={styles} />
 
       <section className={styles.main}>
         <header className={styles.heading}>

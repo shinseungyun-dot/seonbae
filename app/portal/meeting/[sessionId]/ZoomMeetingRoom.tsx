@@ -172,7 +172,9 @@ export default function ZoomMeetingRoom({
 
       {state !== "joined" && (
         <div className={styles.prejoin}>
-          <div className={styles.prejoinMark}>先</div>
+          <div className={styles.prejoinMark}>
+            <img src="/logo.png" alt="" width="38" height="38" />
+          </div>
           <p>SEONBAE SECURE CLASSROOM</p>
           <h2>
             {unavailable

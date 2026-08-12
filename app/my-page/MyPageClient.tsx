@@ -94,9 +94,9 @@ export default function MyPageClient({ profile }: { profile: MyPageProfile }) {
     <main className={styles.page}>
       <header className={styles.header}>
         <Link className={styles.brand} href="/">
-          <img src="/seonbae-logo-antique.png" alt="" />
+          <img src="/logo.png" alt="" width="40" height="40" />
           <span>
-            <b>선배</b>
+            <b>Seonbae</b>
             <small>MY PAGE</small>
           </span>
         </Link>

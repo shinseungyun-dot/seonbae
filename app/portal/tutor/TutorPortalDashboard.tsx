@@ -62,16 +62,16 @@ export default function TutorPortalDashboard({
 
       <section className={styles.content}>
         <div className={styles.hero}>
-          <div>
-            <p>SEONBAE TUTOR · {tutor.email}</p>
+          <div className={styles.heroCopy}>
+            <p>{l("튜터 포털", "TUTOR PORTAL")}</p>
             <h1>
-              {tutor.name}{locale === "ko" ? "님의" : "'s"}
-              <br />
-              {l("튜터 포털", "tutor portal")}
+              {locale === "ko" ? `${tutor.name} 튜터님,` : `Welcome, ${tutor.name}.`}
+              {locale === "ko" && <><br />오늘 수업을 준비해요.</>}
             </h1>
             <span>
               {l("수업을 개설하고 학생과 대화할 수 있는 튜터 전용 공간입니다.", "Host lessons and stay in touch with your students from one tutor workspace.")}
             </span>
+            <small>{tutor.email}</small>
           </div>
           <div className={styles.stats}>
             <article>

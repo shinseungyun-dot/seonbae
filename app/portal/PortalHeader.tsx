@@ -46,11 +46,18 @@ export default function PortalHeader({
     : l("학생 포털", "STUDENT PORTAL");
 
   return (
+    <>
+    <div className={styles.utilityBar}>
+      <div>
+        <span>EDUCATION TO THE WORLD</span>
+        <Link href="/">{l("웹사이트로", "Back to website")} <i aria-hidden="true">↗</i></Link>
+      </div>
+    </div>
     <header className={styles.topbar}>
       <Link className={styles.brand} href="/">
-        <img src="/seonbae-logo-antique.png" alt="" />
+        <img src="/logo.png" alt="" width="36" height="36" />
         <span>
-          <b>{l("선배", "Seonbae")}</b>
+          <b>Seonbae</b>
           <small>{portalLabel}</small>
         </span>
       </Link>
@@ -121,6 +128,7 @@ export default function PortalHeader({
         <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
       </div>
     </header>
+    </>
   );
 }
 

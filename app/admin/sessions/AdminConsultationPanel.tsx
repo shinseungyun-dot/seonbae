@@ -168,9 +168,9 @@ export default function AdminConsultationPanel({
     <section className={styles.consultationWorkspace}>
       <header>
         <p>FAMILY CONSULTATION</p>
-        <h2>보호자–창업팀 상담</h2>
+        <h2>보호자 · 창업팀 상담</h2>
         <span>
-          튜터–학생 수업과 분리된 전용 회의를 만들고 관리합니다.
+          튜터 · 학생 수업과 분리된 전용 회의를 만들고 관리합니다.
         </span>
       </header>
       <div className={styles.workspace}>
@@ -325,7 +325,7 @@ export default function AdminConsultationPanel({
       <form className={styles.familyManager} onSubmit={connectFamily}>
         <div>
           <p>FAMILY LINK</p>
-          <h3>보호자–학생 연결</h3>
+          <h3>보호자 · 학생 연결</h3>
           <span>연결된 보호자는 해당 학생의 수업 일정을 볼 수 있습니다.</span>
         </div>
         <select

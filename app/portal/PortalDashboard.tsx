@@ -114,21 +114,20 @@ export default function PortalDashboard({
 
       <section className={styles.content}>
         <div className={styles.hero}>
-          <div>
+          <div className={styles.heroCopy}>
             <p>
-              {user.role === "parent" ? "SEONBAE FAMILY" : "SEONBAE STUDENT"} ·{" "}
-              {user.email}
+              {user.role === "parent" ? l("보호자 포털", "FAMILY PORTAL") : l("학생 포털", "STUDENT PORTAL")}
             </p>
             <h1>
-              {user.name}{locale === "ko" ? "님의" : "'s"}
-              <br />
-              {user.role === "parent" ? l("보호자 포털", "family portal") : l("학습 포털", "learning portal")}
+              {locale === "ko" ? `${user.name}님,` : `Welcome, ${user.name}.`}
+              {locale === "ko" && <><br />오늘도 함께 시작해요.</>}
             </h1>
             <span>
               {user.role === "parent"
                 ? l("자녀의 수업 현황과 창업팀 상담 일정을 한곳에서 확인하세요.", "See your students' lesson progress and team consultation schedule in one place.")
                 : l("수업 일정, 누적 학습 기록, 담당 튜터와의 대화를 확인하세요.", "See lesson schedules, learning history, and conversations with your tutor.")}
             </span>
+            <small>{user.email}</small>
           </div>
           <div className={styles.stats}>
             <article>
@@ -411,7 +410,7 @@ function ParentConsultations({
         </span>
       </div>
       <p className={styles.consultationIntro}>
-        {l("학습 방향, 튜터 매칭, 서비스 이용에 관한 보호자 상담입니다. 튜터–학생 수업과 분리된 전용 Zoom 회의로 진행됩니다.", "A separate parent consultation about learning direction, tutor matching, and the service, held in its own Zoom meeting.")}
+        {l("학습 방향, 튜터 매칭, 서비스 이용에 관한 보호자 상담입니다. 튜터 · 학생 수업과 분리된 전용 Zoom 회의로 진행됩니다.", "A separate parent consultation about learning direction, tutor matching, and the service, held in its own Zoom meeting.")}
       </p>
       <div className={styles.consultations}>
         {consultations.length ? (

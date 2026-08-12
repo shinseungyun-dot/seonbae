@@ -35,8 +35,8 @@ export default async function PendingAccountPage() {
     <main className={styles.page}>
       <header>
         <Link href="/" aria-label="선배 홈">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span><b>선배</b><small>ACCOUNT REVIEW</small></span>
+          <img src="/logo.png" alt="" width="40" height="40" />
+          <span><b>Seonbae</b><small>ACCOUNT REVIEW</small></span>
         </Link>
         <PendingLogoutButton />
       </header>

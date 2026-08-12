@@ -248,7 +248,7 @@ function LegalHeader() {
   return (
     <header className={styles.header}>
       <Link className={styles.brand} href="/">
-        <img src="/seonbae-logo-antique.png" alt="" />
+        <img src="/logo.png" alt="" width="40" height="40" />
         <strong>선배</strong><span>SEONBAE · EST. 2026</span>
       </Link>
       <nav><Link href="/privacy">개인정보 처리방침</Link><Link href="/">홈으로 ↗</Link></nav>

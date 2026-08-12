@@ -23,7 +23,7 @@ export default function ThankYouClient({ email }: { email: string }) {
   return (
     <main className={styles.page}>
       <div className={styles.shell}>
-        <Link className={styles.brand} href="/"><img src="/seonbae-logo-antique.png" alt="" /> Seonbae</Link>
+        <Link className={styles.brand} href="/"><img src="/logo.png" alt="" width="40" height="40" /> Seonbae</Link>
         <section className={styles.card}>
           <p className={styles.eyebrow}>EMAIL VERIFIED</p>
           <h1>확인되었습니다.<br />반갑습니다.</h1>

@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createClient } from "../../utils/supabase/client";
+import AdminSidebar from "./AdminSidebar";
 import styles from "./admin.module.css";
 
 export type AdminTutor = {
@@ -29,7 +27,6 @@ const bannerOptions = [
 ];
 
 export default function AdminTutorEditor({ adminName, initialTutors }: { adminName: string; initialTutors: AdminTutor[] }) {
-  const router = useRouter();
   const [tutors, setTutors] = useState(initialTutors);
   const [selectedId, setSelectedId] = useState(initialTutors[0]?.registry_id ?? "");
   const [saving, setSaving] = useState(false);
@@ -61,29 +58,9 @@ export default function AdminTutorEditor({ adminName, initialTutors }: { adminNa
     setSaving(false);
   }
 
-  async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login");
-    router.refresh();
-  }
-
   return (
     <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link className={styles.brand} href="/">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span><b>선배</b><small>ADMIN CONSOLE</small></span>
-        </Link>
-        <nav>
-          <span>MANAGEMENT</span>
-          <a className={styles.active} href="#tutors">튜터 명부</a>
-          <Link href="/admin/sessions">수업 · Zoom 관리</Link>
-          <Link href="/admin/consultations">상담 신청</Link>
-          <Link href="/admin/applications">가입 · 검증 심사</Link>
-          <Link href="/#/ko/tutors">공개 명부 보기</Link>
-        </nav>
-        <div className={styles.adminAccount}><small>관리자</small><b>{adminName}</b><button type="button" onClick={signOut}>로그아웃</button></div>
-      </aside>
+      <AdminSidebar active="tutors" adminName={adminName} styles={styles} />
 
       <section className={styles.main} id="tutors">
         <header className={styles.heading}>

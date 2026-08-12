@@ -31,10 +31,17 @@ export default function TutorPortalHeader({
   }
 
   return (
+    <>
+    <div className={styles.utilityBar}>
+      <div>
+        <span>EDUCATION TO THE WORLD</span>
+        <Link href="/">{l("웹사이트로", "Back to website")} <i aria-hidden="true">↗</i></Link>
+      </div>
+    </div>
     <header className={styles.topbar}>
       <Link className={styles.brand} href="/portal/tutor">
-        <img src="/seonbae-logo-antique.png" alt="" />
-        <span><b>{l("선배", "Seonbae")}</b><small>{l("튜터 포털", "TUTOR PORTAL")}</small></span>
+        <img src="/logo.png" alt="" width="36" height="36" />
+        <span><b>Seonbae</b><small>{l("튜터 포털", "TUTOR PORTAL")}</small></span>
       </Link>
       <nav className={styles.portalNav} aria-label={l("튜터 포털 메뉴", "Tutor portal menu")}>
         <Link href="/portal/tutor" aria-current={active === "overview" ? "page" : undefined}>{l("개요", "Overview")}</Link>
@@ -62,6 +69,7 @@ export default function TutorPortalHeader({
         <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
       </div>
     </header>
+    </>
   );
 }
 

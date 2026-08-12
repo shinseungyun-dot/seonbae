@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "../../../utils/supabase/admin";
 import { createClient } from "../../../utils/supabase/server";
 import ApplicationReviewClient, { type AccountApplication, type CredentialApplication } from "./ApplicationReviewClient";
+import AdminSidebar from "../AdminSidebar";
 import styles from "./applications.module.css";
 
 export const dynamic = "force-dynamic";
@@ -52,20 +52,7 @@ export default async function AdminApplicationsPage() {
 
   return (
     <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link className={styles.brand} href="/admin">
-          <img src="/seonbae-logo-antique.png" alt="" />
-          <span><b>선배</b><small>ADMIN CONSOLE</small></span>
-        </Link>
-        <nav>
-          <span>OPERATIONS</span>
-          <Link href="/admin">튜터 명부</Link>
-          <Link href="/admin/sessions">수업 · Zoom</Link>
-          <Link href="/admin/consultations">상담 신청</Link>
-          <Link className={styles.active} href="/admin/applications">가입 · 검증 심사</Link>
-        </nav>
-        <div><small>관리자</small><b>{profile.full_name || profile.email}</b></div>
-      </aside>
+      <AdminSidebar active="applications" adminName={profile.full_name || profile.email || "관리자"} styles={styles} />
       <section className={styles.main}>
         <header className={styles.heading}>
           <div>

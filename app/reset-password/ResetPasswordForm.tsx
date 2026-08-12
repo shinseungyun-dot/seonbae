@@ -58,7 +58,7 @@ export default function ResetPasswordForm() {
     <main className={styles.page}>
       <header className={styles.header}>
         <Link className={styles.brand} href="/" aria-label="선배 홈">
-          <img src="/seonbae-logo-antique.png" alt="" />
+          <img src="/logo.png" alt="" width="40" height="40" />
           <span>선배</span>
         </Link>
         <Link href="/login">로그인으로 돌아가기 ↗</Link>

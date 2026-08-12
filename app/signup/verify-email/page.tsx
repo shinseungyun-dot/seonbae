@@ -10,7 +10,7 @@ export default async function VerifyEmailPage({ searchParams }: { searchParams: 
   return (
     <main className={styles.page}>
       <div className={styles.shell}>
-        <Link className={styles.brand} href="/"><img src="/seonbae-logo-antique.png" alt="" /> Seonbae</Link>
+        <Link className={styles.brand} href="/"><img src="/logo.png" alt="" width="40" height="40" /> Seonbae</Link>
         <section className={styles.card}>
           <p className={styles.eyebrow}>ONE LAST STEP</p>
           <h1>이메일을 확인해 주세요.</h1>
