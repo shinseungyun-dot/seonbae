@@ -28,12 +28,12 @@
     document.querySelectorAll('[data-auth-portal]').forEach(function (link) {
       link.classList.remove('auth-skeleton');
       link.removeAttribute('aria-busy');
-      link.href = authenticated ? (session.destination || '/portal') : '/login';
+      link.href = authenticated ? (session.destination || '/portal') : '/login?next=/portal';
       var label = link.querySelector('[data-auth-portal-label]');
       if (label) {
-        label.textContent = authenticated
-          ? (session.role === 'admin' ? (lang === 'ko' ? '관리자' : 'Admin') : (lang === 'ko' ? '포털' : 'Portal'))
-          : (lang === 'ko' ? '로그인' : 'Log in');
+        label.textContent = authenticated && session.role === 'admin'
+          ? (lang === 'ko' ? '관리자' : 'Admin')
+          : (lang === 'ko' ? '포털' : 'Portal');
       }
     });
 
@@ -41,7 +41,7 @@
       node.textContent = authenticated ? session.displayName : '';
     });
 
-    document.querySelectorAll('[data-auth-cta]').forEach(function (node) {
+    document.querySelectorAll('[data-auth-login], [data-auth-signup], [data-auth-signed-out]').forEach(function (node) {
       node.hidden = authenticated;
     });
     document.querySelectorAll('[data-auth-identity], [data-auth-identity-link], [data-auth-logout]').forEach(function (node) {
@@ -93,7 +93,9 @@
 
   document.querySelectorAll('[data-set-lang]').forEach(function (button) {
     button.addEventListener('click', function () {
-      sessionPromise.then(render);
+      sessionPromise.then(function (session) {
+        window.requestAnimationFrame(function () { render(session); });
+      });
     });
   });
 

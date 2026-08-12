@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ChatPanel, { type PortalChatThread } from "../ChatPanel";
 import styles from "../portal.module.css";
+import { useSeonbaeLocale } from "../../../utils/i18n/client";
 import TutorPortalHeader from "./TutorPortalHeader";
 
 export type TutorPortalSession = {
@@ -32,6 +33,8 @@ export default function TutorPortalDashboard({
   sessions: TutorPortalSession[];
   chatThreads: PortalChatThread[];
 }) {
+  const locale = useSeonbaeLocale();
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
   const completed = sessions.filter(
     (session) => session.zoomStatus === "ended",
   );
@@ -62,26 +65,26 @@ export default function TutorPortalDashboard({
           <div>
             <p>SEONBAE TUTOR · {tutor.email}</p>
             <h1>
-              {tutor.name}님의
+              {tutor.name}{locale === "ko" ? "님의" : "'s"}
               <br />
-              튜터 포털
+              {l("튜터 포털", "tutor portal")}
             </h1>
             <span>
-              수업을 개설하고 학생과 대화할 수 있는 튜터 전용 공간입니다.
+              {l("수업을 개설하고 학생과 대화할 수 있는 튜터 전용 공간입니다.", "Host lessons and stay in touch with your students from one tutor workspace.")}
             </span>
           </div>
           <div className={styles.stats}>
             <article>
               <b>{completed.length}</b>
-              <span>완료한 수업</span>
+              <span>{l("완료한 수업", "Completed lessons")}</span>
             </article>
             <article>
               <b>{formatMinutes(completedMinutes)}</b>
-              <span>누적 수업 시간</span>
+              <span>{l("누적 수업 시간", "Teaching time")}</span>
             </article>
             <article>
               <b>{activeStudents}</b>
-              <span>담당 학생</span>
+              <span>{l("담당 학생", "Active students")}</span>
             </article>
           </div>
         </div>
@@ -89,8 +92,7 @@ export default function TutorPortalDashboard({
         <div className={styles.sync}>
           <span className={styles.syncDot} />
           <p>
-            <b>튜터 호스트 권한</b> · 학생은 회의를 개설할 수 없으며, 담당
-            튜터만 수업 Zoom을 호스트합니다.
+            <b>{l("튜터 호스트 권한", "Tutor host access")}</b> · {l("학생은 회의를 개설할 수 없으며, 담당 튜터만 수업 Zoom을 호스트합니다.", "Students cannot start meetings; only the assigned tutor can host a lesson on Zoom.")}
           </p>
         </div>
 
@@ -98,10 +100,10 @@ export default function TutorPortalDashboard({
           <div className={styles.panelHeading}>
             <div>
               <p>LESSON SCHEDULE</p>
-              <h2>예정된 수업</h2>
+              <h2>{l("예정된 수업", "Upcoming lessons")}</h2>
             </div>
             <span className={styles.chatLive}>
-              {upcoming.length}개의 예정 수업
+              {locale === "ko" ? `${upcoming.length}개의 예정 수업` : `${upcoming.length} upcoming lesson${upcoming.length === 1 ? "" : "s"}`}
             </span>
           </div>
           <div className={styles.tutorSchedule}>
@@ -109,27 +111,27 @@ export default function TutorPortalDashboard({
               upcoming.map((session) => (
                 <article key={session.id}>
                   <time>
-                    <b>{formatDate(session.sessionDate)}</b>
+                    <b>{formatDate(session.sessionDate, locale)}</b>
                     <span>{session.startsAt.slice(0, 5)}</span>
                   </time>
                   <div>
                     <h3>{session.title}</h3>
                     <p>
                       {session.studentName} · {session.subject} ·{" "}
-                      {session.durationMinutes}분
+                      {session.durationMinutes}{l("분", " min")}
                     </p>
                   </div>
                   {session.zoomMeetingNumber ? (
                     <Link href={`/portal/meeting/${session.id}`}>
-                      수업 호스트 시작 →
+                      {l("수업 호스트 시작", "Start lesson as host")} →
                     </Link>
                   ) : (
-                    <span>Zoom 준비 중</span>
+                    <span>{l("Zoom 준비 중", "Zoom is being prepared")}</span>
                   )}
                 </article>
               ))
             ) : (
-              <div className={styles.chatEmpty}>예정된 수업이 없습니다.</div>
+              <div className={styles.chatEmpty}>{l("예정된 수업이 없습니다.", "There are no upcoming lessons.")}</div>
             )}
           </div>
         </section>
@@ -138,7 +140,7 @@ export default function TutorPortalDashboard({
           <div className={styles.panelHeading}>
             <div>
               <p>COMPLETED LESSONS</p>
-              <h2>완료 기록</h2>
+              <h2>{l("완료 기록", "Completed history")}</h2>
             </div>
           </div>
           <div className={styles.tutorHistory}>
@@ -148,17 +150,17 @@ export default function TutorPortalDashboard({
                 .reverse()
                 .map((session) => (
                   <article key={session.id}>
-                    <span>{formatDate(session.sessionDate)}</span>
+                    <span>{formatDate(session.sessionDate, locale)}</span>
                     <b>{session.studentName}</b>
                     <p>{session.title}</p>
                     <strong>
-                      {session.actualMinutes ?? session.durationMinutes}분
+                      {session.actualMinutes ?? session.durationMinutes}{l("분", " min")}
                     </strong>
                   </article>
                 ))
             ) : (
               <div className={styles.chatEmpty}>
-                Zoom 수업이 종료되면 실제 진행 시간이 기록됩니다.
+                {l("Zoom 수업이 종료되면 실제 진행 시간이 기록됩니다.", "Actual teaching time is recorded after a Zoom lesson ends.")}
               </div>
             )}
           </div>
@@ -167,15 +169,15 @@ export default function TutorPortalDashboard({
         <ChatPanel
           currentUserId={currentUserId}
           threads={chatThreads}
-          heading="학생 채팅"
+          heading={l("학생 채팅", "Student chat")}
         />
       </section>
     </main>
   );
 }
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("ko-KR", {
+function formatDate(value: string, locale: "ko" | "en") {
+  return new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", {
     month: "long",
     day: "numeric",
     weekday: "short",

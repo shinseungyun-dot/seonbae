@@ -10,6 +10,11 @@ import {
 } from "../../utils/auth/password";
 import { normalizePhone, sanitizePhoneInput } from "../../utils/auth/phone";
 import { isEmailAddress, isKoreanSchoolEmail } from "../../utils/auth/school-email";
+import {
+  setSeonbaeLocale,
+  useSeonbaeLocale,
+  type SeonbaeLocale,
+} from "../../utils/i18n/client";
 import styles from "./login.module.css";
 
 type AuthAction = "signin" | "signup" | "find-id" | "reset-password";
@@ -42,6 +47,7 @@ const actionCopy: Record<
 
 export default function LoginPage() {
   const router = useRouter();
+  const locale = useSeonbaeLocale();
   const [action, setAction] = useState<AuthAction>("signin");
   const [fullName, setFullName] = useState("");
   const [identifier, setIdentifier] = useState("");
@@ -68,6 +74,17 @@ export default function LoginPage() {
       setRemember(false);
     }
   }, []);
+
+  function changeLocale(nextLocale: SeonbaeLocale) {
+    setSeonbaeLocale(nextLocale);
+  }
+
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
+  const localizeApiMessage = (value: unknown, fallbackKo: string, fallbackEn: string) => {
+    if (typeof value !== "string" || !value.trim()) return l(fallbackKo, fallbackEn);
+    if (locale === "ko" || !/[가-힣]/.test(value)) return value;
+    return fallbackEn;
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -100,37 +117,37 @@ export default function LoginPage() {
     if (action === "signup") {
       const passwordError = getPasswordPolicyError(password);
       if (passwordError) {
-        setMessage(passwordError);
+        setMessage(locale === "ko" ? passwordError : "Use at least 12 characters with upper and lowercase letters, a number, and an allowed special character.");
         setBusy(false);
         return;
       }
       if (password !== confirmPassword) {
-        setMessage("비밀번호가 서로 일치하지 않습니다.");
+        setMessage(l("비밀번호가 서로 일치하지 않습니다.", "The passwords do not match."));
         setBusy(false);
         return;
       }
       if (!isEmailAddress(identifier)) {
-        setMessage("올바른 이메일 주소를 입력해 주세요.");
+        setMessage(l("올바른 이메일 주소를 입력해 주세요.", "Enter a valid email address."));
         setBusy(false);
         return;
       }
       if (accountRole === "tutor" && !isKoreanSchoolEmail(identifier)) {
-        setMessage(".ac.kr로 끝나는 학교 이메일을 입력해 주세요.");
+        setMessage(l(".ac.kr로 끝나는 학교 이메일을 입력해 주세요.", "Use a university email address ending in .ac.kr."));
         setBusy(false);
         return;
       }
       if (accountRole === "tutor" && !acceptanceLetter) {
-        setMessage("학교 합격통지서를 PDF, JPG 또는 PNG로 첨부해 주세요.");
+        setMessage(l("학교 합격통지서를 PDF, JPG 또는 PNG로 첨부해 주세요.", "Attach your university acceptance letter as a PDF, JPG, or PNG."));
         setBusy(false);
         return;
       }
       if (!normalizePhone(phone)) {
-        setMessage("휴대전화번호를 올바르게 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.");
+        setMessage(l("휴대전화번호를 올바르게 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.", "Enter a valid mobile number, including the country code when outside Korea."));
         setBusy(false);
         return;
       }
       if (!privacyAgreed || !termsAgreed || !ageConfirmed) {
-        setMessage("회원가입에 필요한 필수 항목을 모두 확인하고 동의해 주세요.");
+        setMessage(l("회원가입에 필요한 필수 항목을 모두 확인하고 동의해 주세요.", "Review and accept all required agreements to sign up."));
         setBusy(false);
         return;
       }
@@ -176,7 +193,7 @@ export default function LoginPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        setMessage(result.error || "입력한 정보를 다시 확인해 주세요.");
+        setMessage(localizeApiMessage(result.error, "입력한 정보를 다시 확인해 주세요.", "Check the information you entered and try again."));
         setBusy(false);
         return;
       }
@@ -187,9 +204,9 @@ export default function LoginPage() {
         return;
       }
 
-      setMessage(result.message || "가입 확인 메일을 보냈습니다.");
+      setMessage(localizeApiMessage(result.message, "가입 확인 메일을 보냈습니다.", "We sent your confirmation email."));
     } catch {
-      setMessage("요청을 처리하지 못했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.");
+      setMessage(l("요청을 처리하지 못했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.", "We could not process the request. Check your connection and try again."));
     } finally {
       setBusy(false);
     }
@@ -213,16 +230,13 @@ export default function LoginPage() {
       const result = await response.json();
 
       if (!response.ok || typeof result.url !== "string") {
-        setMessage(
-          result.error
-          || "Google 인증을 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.",
-        );
+        setMessage(localizeApiMessage(result.error, "Google 인증을 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.", "Google sign-in could not start. Please try again shortly."));
         return;
       }
 
       window.location.assign(result.url);
     } catch {
-      setMessage("Google 인증 서버에 연결하지 못했습니다. 네트워크를 확인해 주세요.");
+      setMessage(l("Google 인증 서버에 연결하지 못했습니다. 네트워크를 확인해 주세요.", "Could not connect to Google authentication. Check your connection."));
     } finally {
       setGoogleBusy(false);
     }
@@ -255,8 +269,13 @@ export default function LoginPage() {
   const isTutorSignup = isSignup && accountRole === "tutor";
   const isRecovery = action === "find-id" || action === "reset-password";
   const activeCopy = isTutorSignup
-    ? { title: "튜터 가입 심사 신청", description: "", submit: "심사 신청" }
-    : actionCopy[action];
+    ? { title: l("튜터 가입 심사 신청", "Tutor account application"), description: "", submit: l("심사 신청", "Submit for review") }
+    : locale === "ko" ? actionCopy[action] : {
+        signin: { title: "Log in", description: "Access your Seonbae portal with your registered account.", submit: "Log in" },
+        signup: { title: "Sign up", description: "", submit: "Create account" },
+        "find-id": { title: "Find my account", description: "If your details match, we will email you a secure account access link.", submit: "Send account access email" },
+        "reset-password": { title: "Reset password", description: "If your details match, we will email you a secure reset link.", submit: "Send reset email" },
+      }[action];
 
   function setAllRequiredAgreements(checked: boolean) {
     setPrivacyAgreed(checked);
@@ -271,43 +290,47 @@ export default function LoginPage() {
           <img src="/logo.png" alt="" />
           <span className={styles.brandKo}>Seonbae</span>
         </Link>
-        <Link className={styles.back} href="/">
-          홈으로 돌아가기 <span aria-hidden="true">→</span>
-        </Link>
+        <div className={styles.headerTools}>
+          <div className={styles.languageToggle} role="group" aria-label="Language">
+            <button type="button" aria-pressed={locale === "ko"} onClick={() => changeLocale("ko")}>KO</button>
+            <button type="button" aria-pressed={locale === "en"} onClick={() => changeLocale("en")}>EN</button>
+          </div>
+          <Link className={styles.back} href="/">
+            {l("홈으로 돌아가기", "Back to home")} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </header>
 
       <section className={styles.authHero}>
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>SEONBAE PORTAL</p>
-          <h1>
-            수업과 일정을
-            <br />
-            <em>한곳에서.</em>
-          </h1>
+          <h1>{l("수업과 일정을", "Lessons and schedules")}<br /><em>{l("한곳에서.", "in one place.")}</em></h1>
           <p className={styles.intro}>
-            예정된 수업, 담당 튜터, 학습 자료와 전달 사항을 한눈에 확인하세요.
-            학생, 보호자, 튜터에게 필요한 기능이 계정 유형에 맞게 열립니다.
+            {l(
+              "예정된 수업, 담당 튜터, 학습 자료와 전달 사항을 한눈에 확인하세요. 학생, 보호자, 튜터에게 필요한 기능이 계정 유형에 맞게 열립니다.",
+              "See upcoming lessons, tutors, learning materials, and updates at a glance. Each account opens the right tools for students, parents, and tutors.",
+            )}
           </p>
           <div className={styles.benefits}>
             <article>
               <span>01</span>
               <div>
-                <b>월간 수업 일정</b>
-                <p>한 달 전체 수업과 변경 사항을 달력에서 확인합니다.</p>
+                <b>{l("월간 수업 일정", "Monthly lesson calendar")}</b>
+                <p>{l("한 달 전체 수업과 변경 사항을 달력에서 확인합니다.", "Review a full month of lessons and schedule changes.")}</p>
               </div>
             </article>
             <article>
               <span>02</span>
               <div>
-                <b>담당 튜터 정보</b>
-                <p>수업별 담당 튜터와 과목을 바로 확인합니다.</p>
+                <b>{l("담당 튜터 정보", "Tutor information")}</b>
+                <p>{l("수업별 담당 튜터와 과목을 바로 확인합니다.", "See the tutor and subject assigned to every lesson.")}</p>
               </div>
             </article>
             <article>
               <span>03</span>
               <div>
-                <b>중앙 관리</b>
-                <p>선배 팀이 업데이트한 일정이 포털에 반영됩니다.</p>
+                <b>{l("중앙 관리", "One shared workspace")}</b>
+                <p>{l("선배 팀이 업데이트한 일정이 포털에 반영됩니다.", "Updates from the Seonbae team appear directly in your portal.")}</p>
               </div>
             </article>
           </div>
@@ -321,8 +344,8 @@ export default function LoginPage() {
                   type="button"
                   className={styles.formBack}
                   onClick={() => switchAction("signin")}
-                  aria-label="로그인으로 돌아가기"
-                  title="로그인으로 돌아가기"
+                  aria-label={l("로그인으로 돌아가기", "Back to login")}
+                  title={l("로그인으로 돌아가기", "Back to login")}
                 >
                   <span aria-hidden="true">←</span>
                 </button>
@@ -342,16 +365,16 @@ export default function LoginPage() {
                   disabled={busy || googleBusy}
                 >
                   <GoogleIcon />
-                  <span>{googleBusy ? "Google 연결 중..." : "Google로 로그인"}</span>
+                  <span>{googleBusy ? l("Google 연결 중...", "Connecting to Google...") : l("Google로 로그인", "Continue with Google")}</span>
                 </button>
-                <div className={styles.authDivider}><span>또는 이메일로</span></div>
+                <div className={styles.authDivider}><span>{l("또는 이메일로", "or use email")}</span></div>
               </>
             )}
 
             {isSignup && (
               <>
                 <fieldset className={styles.accountRole}>
-                  <legend>계정 유형</legend>
+                  <legend>{l("계정 유형", "Account type")}</legend>
                   <label data-selected={accountRole === "student"}>
                     <input
                       type="radio"
@@ -363,7 +386,7 @@ export default function LoginPage() {
                         setAcceptanceLetter(null);
                       }}
                     />
-                    <span><b>학생 계정</b><small>수업 일정, Zoom, 튜터 채팅</small></span>
+                    <span><b>{l("학생 계정", "Student")}</b><small>{l("수업 일정, Zoom, 튜터 채팅", "Lesson calendar, Zoom, and tutor chat")}</small></span>
                   </label>
                   <label data-selected={accountRole === "parent"}>
                     <input
@@ -376,7 +399,7 @@ export default function LoginPage() {
                         setAcceptanceLetter(null);
                       }}
                     />
-                    <span><b>보호자 계정</b><small>자녀 리포트, 일정, 결제 관리</small></span>
+                    <span><b>{l("보호자 계정", "Parent")}</b><small>{l("자녀 리포트, 일정, 결제 관리", "Student reports, schedules, and billing")}</small></span>
                   </label>
                   <label data-selected={accountRole === "tutor"}>
                     <input
@@ -386,13 +409,13 @@ export default function LoginPage() {
                       checked={accountRole === "tutor"}
                       onChange={() => setAccountRole("tutor")}
                     />
-                    <span><b>튜터 계정</b><small>학생, 숙제, 자격 검증 관리</small></span>
+                    <span><b>{l("튜터 계정", "Tutor")}</b><small>{l("학생, 숙제, 자격 검증 관리", "Students, homework, and credential review")}</small></span>
                   </label>
                 </fieldset>
                 {isTutorSignup && (
                   <div className={styles.reviewNotice}>
-                    <b>입학 확인 후 계정이 열립니다.</b>
-                    <span>신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.</span>
+                    <b>{l("입학 확인 후 계정이 열립니다.", "Your account opens after enrollment is verified.")}</b>
+                    <span>{l("신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.", "Your application is sent to admissions@seonbae.com and stays under review until approved.")}</span>
                   </div>
                 )}
               </>
@@ -400,7 +423,7 @@ export default function LoginPage() {
 
             {(isSignup || isRecovery) && (
               <label>
-                <span>이름</span>
+                <span>{l("이름", "Full name")}</span>
                 <input
                   type="text"
                   value={fullName}
@@ -417,10 +440,10 @@ export default function LoginPage() {
               <label>
                 <span>
                   {action === "signin"
-                    ? "아이디 또는 이메일"
+                    ? l("아이디 또는 이메일", "ID or email")
                     : isSignup && accountRole === "tutor"
-                      ? "학교 이메일"
-                      : "이메일"}
+                      ? l("학교 이메일", "University email")
+                      : l("이메일", "Email")}
                 </span>
                 <input
                   type={action === "signin" ? "text" : "email"}
@@ -437,7 +460,7 @@ export default function LoginPage() {
 
             {isTutorSignup && (
               <label className={styles.fileField}>
-                <span>학교 합격통지서</span>
+                <span>{l("학교 합격통지서", "University acceptance letter")}</span>
                 <input
                   type="file"
                   accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
@@ -445,14 +468,14 @@ export default function LoginPage() {
                   required
                 />
                 <small className={styles.fieldNote}>
-                  PDF, JPG 또는 PNG · 최대 10MB
+                  {l("PDF, JPG 또는 PNG · 최대 10MB", "PDF, JPG, or PNG · up to 10 MB")}
                 </small>
               </label>
             )}
 
             {(isSignup || isRecovery) && (
               <label>
-                <span>휴대전화번호</span>
+                <span>{l("휴대전화번호", "Mobile number")}</span>
                 <input
                   type="tel"
                   value={phone}
@@ -465,7 +488,7 @@ export default function LoginPage() {
                 />
                 {action === "find-id" && (
                   <small className={styles.fieldNote}>
-                    가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다.
+                    {l("가입 정보가 일치하면 등록된 이메일로 보안 로그인 링크를 보냅니다.", "If your details match, we will send a secure sign-in link to your registered email.")}
                   </small>
                 )}
               </label>
@@ -473,7 +496,7 @@ export default function LoginPage() {
 
             {(action === "signin" || isSignup) && (
               <label>
-                <span>비밀번호</span>
+                <span>{l("비밀번호", "Password")}</span>
                 <input
                   type="password"
                   value={password}
@@ -489,23 +512,23 @@ export default function LoginPage() {
             {isSignup && (
               <>
                 <div className={styles.passwordPolicy} aria-live="polite">
-                  <p>비밀번호 조건</p>
+                  <p>{l("비밀번호 조건", "Password requirements")}</p>
                   <ul>
-                    <li data-valid={passwordChecks.length}>12자 이상</li>
+                    <li data-valid={passwordChecks.length}>{l("12자 이상", "At least 12 characters")}</li>
                     <li data-valid={passwordChecks.lower && passwordChecks.upper}>
-                      영문 소문자와 대문자
+                      {l("영문 소문자와 대문자", "Uppercase and lowercase letters")}
                     </li>
-                    <li data-valid={passwordChecks.number}>숫자</li>
-                    <li data-valid={passwordChecks.symbol}>특수문자</li>
-                    <li data-valid={passwordChecks.allowed}>공백 없이 허용된 문자만 사용</li>
+                    <li data-valid={passwordChecks.number}>{l("숫자", "A number")}</li>
+                    <li data-valid={passwordChecks.symbol}>{l("특수문자", "A special character")}</li>
+                    <li data-valid={passwordChecks.allowed}>{l("공백 없이 허용된 문자만 사용", "Allowed characters only, with no spaces")}</li>
                   </ul>
                   <div className={styles.allowedSymbols}>
-                    <span>허용 특수문자</span>
+                    <span>{l("허용 특수문자", "Allowed special characters")}</span>
                     <code>{PASSWORD_ALLOWED_SYMBOLS}</code>
                   </div>
                 </div>
                 <label>
-                  <span>비밀번호 확인</span>
+                  <span>{l("비밀번호 확인", "Confirm password")}</span>
                   <input
                     type="password"
                     value={confirmPassword}
@@ -517,31 +540,31 @@ export default function LoginPage() {
                   />
                 </label>
                 <div className={styles.consentSummary}>
-                  <b>필수 개인정보 수집·이용 안내</b>
+                  <b>{l("필수 개인정보 수집·이용 안내", "Required personal information notice")}</b>
                   <dl>
                     <div>
-                      <dt>수집 항목</dt>
+                      <dt>{l("수집 항목", "Information collected")}</dt>
                       <dd>
                         {isTutorSignup
-                          ? "이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록"
-                          : "이름, 이메일, 휴대전화번호, 인증·동의 기록"}
+                          ? l("이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록", "Name, university email, mobile number, acceptance letter, and authentication and consent records")
+                          : l("이름, 이메일, 휴대전화번호, 인증·동의 기록", "Name, email, mobile number, and authentication and consent records")}
                       </dd>
                     </div>
                     <div>
-                      <dt>이용 목적</dt>
+                      <dt>{l("이용 목적", "Purpose")}</dt>
                       <dd>
                         {isTutorSignup
-                          ? "입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정"
-                          : "회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정"}
+                          ? l("입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정", "Enrollment and role review, account management, portal access, account recovery, and password resets")
+                          : l("회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정", "Account management, portal access, account recovery, and password resets")}
                       </dd>
                     </div>
                     <div>
-                      <dt>보유 기간</dt>
-                      <dd>회원 탈퇴 시까지. 법령상 보존 의무가 있으면 해당 기간까지</dd>
+                      <dt>{l("보유 기간", "Retention")}</dt>
+                      <dd>{l("회원 탈퇴 시까지. 법령상 보존 의무가 있으면 해당 기간까지", "Until account deletion, or longer where retention is required by law")}</dd>
                     </div>
                   </dl>
                   <p>
-                    동의를 거부할 수 있으나, 필수 정보이므로 동의하지 않으면 회원가입이 어렵습니다.
+                    {l("동의를 거부할 수 있으나, 필수 정보이므로 동의하지 않으면 회원가입이 어렵습니다.", "You may decline, but this information is required to create an account.")}
                   </p>
                 </div>
                 <div className={styles.consentList}>
@@ -554,8 +577,8 @@ export default function LoginPage() {
                       aria-controls="privacy-consent terms-consent age-confirmation"
                     />
                     <label htmlFor="all-required-consent">
-                      <b>전체 동의</b>
-                      <span>필수 약관과 개인정보 수집·이용에 모두 동의합니다.</span>
+                      <b>{l("전체 동의", "Agree to all")}</b>
+                      <span>{l("필수 약관과 개인정보 수집·이용에 모두 동의합니다.", "I agree to all required terms and personal information collection.")}</span>
                     </label>
                   </div>
                   <div className={styles.consentRow}>
@@ -567,8 +590,8 @@ export default function LoginPage() {
                       required
                     />
                     <label htmlFor="privacy-consent">
-                      <b>[필수]</b> 개인정보 수집·이용에 동의합니다.{" "}
-                      <Link href="/privacy" target="_blank">전문 보기</Link>
+                      <b>{l("[필수]", "[Required]")}</b> {l("개인정보 수집·이용에 동의합니다.", "I agree to the collection and use of personal information.")} {" "}
+                      <Link href="/privacy" target="_blank">{l("전문 보기", "Read policy")}</Link>
                     </label>
                   </div>
                   <div className={styles.consentRow}>
@@ -580,8 +603,8 @@ export default function LoginPage() {
                       required
                     />
                     <label htmlFor="terms-consent">
-                      <b>[필수]</b> 이용약관에 동의합니다.{" "}
-                      <Link href="/terms" target="_blank">전문 보기</Link>
+                      <b>{l("[필수]", "[Required]")}</b> {l("이용약관에 동의합니다.", "I agree to the Terms of Use.")} {" "}
+                      <Link href="/terms" target="_blank">{l("전문 보기", "Read terms")}</Link>
                     </label>
                   </div>
                   <div className={styles.consentRow}>
@@ -593,7 +616,7 @@ export default function LoginPage() {
                       required
                     />
                     <label htmlFor="age-confirmation">
-                      <b>[필수]</b> 만 14세 이상이거나, 만 14세 미만 학생을 위한 법정대리인으로 가입합니다.
+                      <b>{l("[필수]", "[Required]")}</b> {l("만 14세 이상이거나, 만 14세 미만 학생을 위한 법정대리인으로 가입합니다.", "I am at least 14, or I am registering as the legal guardian of a student under 14.")}
                     </label>
                   </div>
                 </div>
@@ -607,7 +630,7 @@ export default function LoginPage() {
                   checked={remember}
                   onChange={(event) => updateRemember(event.target.checked)}
                 />
-                <span>로그인 상태 유지</span>
+                <span>{l("로그인 상태 유지", "Keep me logged in")}</span>
               </label>
             )}
 
@@ -617,19 +640,19 @@ export default function LoginPage() {
               </p>
             )}
             <button className={styles.submit} type="submit" disabled={busy}>
-              <span>{busy ? "확인 중..." : activeCopy.submit}</span>
+              <span>{busy ? l("확인 중...", "Working...") : activeCopy.submit}</span>
               <span aria-hidden="true">↗</span>
             </button>
           </form>
 
           {action === "signin" && (
-            <div className={styles.recoveryLinks} aria-label="계정 찾기">
+            <div className={styles.recoveryLinks} aria-label={l("계정 찾기", "Account recovery")}>
               <button type="button" onClick={() => switchAction("find-id")}>
-                아이디 찾기
+                {l("아이디 찾기", "Find account")}
               </button>
               <span aria-hidden="true">·</span>
               <button type="button" onClick={() => switchAction("reset-password")}>
-                비밀번호 재설정
+                {l("비밀번호 재설정", "Reset password")}
               </button>
             </div>
           )}
@@ -637,21 +660,21 @@ export default function LoginPage() {
           <div className={styles.authFooter}>
             <span>
               {action === "signin"
-                ? "아직 계정이 없으신가요?"
+                ? l("아직 계정이 없으신가요?", "New to Seonbae?")
                 : isSignup
-                  ? "이미 계정이 있으신가요?"
-                  : "계정이 기억나셨나요?"}
+                  ? l("이미 계정이 있으신가요?", "Already have an account?")
+                  : l("계정이 기억나셨나요?", "Remembered your account?")}
             </span>
             <button
               type="button"
               onClick={() => switchAction(action === "signin" ? "signup" : "signin")}
             >
-              {action === "signin" ? "회원가입" : "로그인"}
+              {action === "signin" ? l("회원가입", "Sign up") : l("로그인", "Log in")}
             </button>
           </div>
           <div className={styles.legalLinks}>
-            <Link href="/privacy">개인정보 처리방침</Link>
-            <Link href="/terms">이용약관</Link>
+            <Link href="/privacy">{l("개인정보 처리방침", "Privacy policy")}</Link>
+            <Link href="/terms">{l("이용약관", "Terms")}</Link>
           </div>
         </div>
       </section>

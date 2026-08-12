@@ -81,6 +81,7 @@
 }
 .brand{gap:9px}.brand img{width:36px;height:36px;border-radius:0}.brandKo{font-family:"Hanken Grotesk","Pretendard Variable",sans-serif;font-size:1.32rem;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
 .back{font-size:.86rem;font-weight:600;color:var(--ink);border:0;padding:8px 0}.back:hover{color:var(--blue)}
+.headerTools{display:flex;align-items:center;gap:18px}.languageToggle{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;background:rgba(19,24,27,.05)}.languageToggle button{min-width:38px;height:32px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer}.languageToggle button[aria-pressed=true]{background:var(--white);color:var(--blue);box-shadow:0 1px 2px rgba(10,26,47,.08)}
 .authHero{
   min-height:calc(100dvh - 76px);
   grid-template-columns:minmax(0,1fr) minmax(390px,520px);
@@ -115,4 +116,4 @@
 .formMessage{background:#fbeed8;color:#694b0a;border:1px solid rgba(214,160,43,.28)}
 .authFooter button,.recoveryLinks button,.legalLinks a{color:var(--blue)}
 @media(max-width:900px){.authHero{grid-template-columns:1fr;align-items:start}.heroCopy{max-width:720px}.loginSurface{max-width:600px;width:100%;justify-self:center}}
-@media(max-width:600px){.header{height:70px}.authHero{padding:42px 20px 64px}.heroCopy h1{font-size:2.75rem}.benefits{display:none}.intro{font-size:.96rem}.loginSurface{padding:24px}.back{font-size:.75rem}}
+@media(max-width:600px){.header{height:70px}.authHero{padding:42px 20px 64px}.heroCopy h1{font-size:2.75rem}.benefits{display:none}.intro{font-size:.96rem}.loginSurface{padding:24px}.back{display:none}.headerTools{gap:8px}}

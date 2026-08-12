@@ -4,6 +4,7 @@ import UtilityBar from '../components/UtilityBar.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ConversionPanel from '../components/ConversionPanel.astro';
+import T from '../components/T.astro';
 
 interface Props {
   title?: string;
@@ -23,7 +24,7 @@ const {
 const still = Astro.url.searchParams.has('still');
 ---
 <!doctype html>
-<html lang="en">
+<html lang="ko" data-lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,7 +38,7 @@ const still = Astro.url.searchParams.has('still');
     {still && <style is:global>.reveal{opacity:1 !important;transform:none !important;transition:none !important;} html{scroll-behavior:auto !important;}</style>}
 
     <!-- Set language before paint so the toggle never flashes. Saved choice
-         wins; otherwise the homepage opens in Korean and other pages in English. -->
+         wins; first-time visits open in Korean across every route. -->
     <script is:inline>
       (function () {
         try {
@@ -46,7 +47,8 @@ const still = Astro.url.searchParams.has('still');
           document.documentElement.setAttribute('data-lang', lang);
           document.documentElement.setAttribute('lang', lang);
         } catch (e) {
-          document.documentElement.setAttribute('data-lang', 'en');
+          document.documentElement.setAttribute('data-lang', 'ko');
+          document.documentElement.setAttribute('lang', 'ko');
         }
       })();
     </script>
@@ -84,7 +86,7 @@ const still = Astro.url.searchParams.has('still');
     </noscript>
   </head>
   <body>
-    <a href="#main" class="skip-link">Skip to content</a>
+    <a href="#main" class="skip-link"><T en="Skip to content" ko="본문으로 바로가기" /></a>
     <UtilityBar />
     <Header heroDark={heroDark} active={active} />
     <main id="main">

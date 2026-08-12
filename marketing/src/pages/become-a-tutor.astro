@@ -28,7 +28,7 @@ const keep = [
     <div class="container split">
       <div class="reveal is-in">
         <span class="eyebrow"><T en="Teach with Seonbae" ko="선배로 함께하기" /></span>
-        <h1 class="display bt-title"><T en="Be the " ko="누군가의 " /><span class="mark"><T en="선배" ko="선배" /></span><T en=" someone needed." ko="가 되어주세요." /></h1>
+        <h1 class="display bt-title"><T en="Be the mentor someone needed." ko="누군가에게 꼭 필요한 선배가 되어주세요." /></h1>
         <p class="lead" style="margin-top:20px"><T en="Share the subject you topped, on your own schedule, and get paid fairly for every lesson. No admin, no chasing payments." ko="당신이 최고 성적을 받은 과목을, 원하는 시간에 가르치고, 매 수업마다 정당한 보수를 받으세요. 번거로운 행정도, 결제 독촉도 없습니다." /></p>
         <div class="cta-row" style="margin-top:30px">
           <a href="#apply" class="btn btn--primary btn--lg">
@@ -117,9 +117,9 @@ const keep = [
             <div class="form-field">
               <label for="uni"><T en="University" ko="대학" /></label>
               <select id="uni" name="university" class="form-control" required>
-                <option value="snu">Seoul National University</option>
-                <option value="ku">Korea University</option>
-                <option value="yonsei">Yonsei University</option>
+                <option value="snu" data-label-en="Seoul National University" data-label-ko="서울대학교">서울대학교</option>
+                <option value="ku" data-label-en="Korea University" data-label-ko="고려대학교">고려대학교</option>
+                <option value="yonsei" data-label-en="Yonsei University" data-label-ko="연세대학교">연세대학교</option>
               </select>
             </div>
             <div class="form-field">
@@ -129,7 +129,7 @@ const keep = [
           </div>
           <div class="form-field">
             <label for="subj"><T en="Subjects you can teach" ko="가르칠 수 있는 과목" /></label>
-            <input id="subj" name="subjects" class="form-control" type="text" required placeholder="IB Math AA, AP Calculus…" />
+            <input id="subj" name="subjects" class="form-control" type="text" required data-placeholder-en="IB Math AA, AP Calculus…" data-placeholder-ko="IB 수학 AA, AP 미적분…" />
           </div>
           <button type="submit" class="btn btn--primary btn--lg bt-submit">
             <span><T en="Submit application" ko="지원서 제출" /></span>
@@ -175,14 +175,27 @@ const keep = [
   const form = document.querySelector('.bt-form') as HTMLFormElement | null;
   const btn = form?.querySelector('.bt-submit') as HTMLButtonElement | null;
   const btnLabel = btn?.querySelector('span:first-child') as HTMLElement | null;
+  const language = () => document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
+  const refreshLanguage = () => {
+    const lang = language();
+    document.querySelectorAll<HTMLOptionElement>('[data-label-en]').forEach((option) => {
+      option.textContent = lang === 'en' ? (option.dataset.labelEn || '') : (option.dataset.labelKo || '');
+    });
+    document.querySelectorAll<HTMLInputElement>('[data-placeholder-en]').forEach((input) => {
+      input.placeholder = lang === 'en' ? (input.dataset.placeholderEn || '') : (input.dataset.placeholderKo || '');
+    });
+  };
+  refreshLanguage();
+  document.querySelectorAll('[data-set-lang]').forEach((button) => {
+    button.addEventListener('click', () => requestAnimationFrame(refreshLanguage));
+  });
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validate(form)) return;
 
-    const original = btnLabel?.textContent ?? '';
     if (btn) btn.disabled = true;
-    if (btnLabel) btnLabel.textContent = 'Sending…';
+    if (btnLabel) btnLabel.textContent = language() === 'en' ? 'Sending…' : '전송 중…';
 
     const draft = readForm(form);
     try { sessionStorage.setItem('seonbae-tutor-application', JSON.stringify(draft)); } catch {}

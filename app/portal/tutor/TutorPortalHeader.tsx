@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useSeonbaeLocale } from "../../../utils/i18n/client";
 import styles from "../portal.module.css";
 
 export type TutorHeaderUser = {
@@ -20,6 +21,8 @@ export default function TutorPortalHeader({
 }) {
   const router = useRouter();
   const profileMenuRef = useRef<HTMLDetailsElement>(null);
+  const locale = useSeonbaeLocale();
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
 
   async function signOut() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -31,12 +34,12 @@ export default function TutorPortalHeader({
     <header className={styles.topbar}>
       <Link className={styles.brand} href="/portal/tutor">
         <img src="/seonbae-logo-antique.png" alt="" />
-        <span><b>선배</b><small>TUTOR PORTAL</small></span>
+        <span><b>{l("선배", "Seonbae")}</b><small>{l("튜터 포털", "TUTOR PORTAL")}</small></span>
       </Link>
-      <nav className={styles.portalNav} aria-label="튜터 포털 메뉴">
-        <Link href="/portal/tutor" aria-current={active === "overview" ? "page" : undefined}>개요</Link>
-        <Link href="/portal/tutor/homework" aria-current={active === "homework" ? "page" : undefined}>숙제</Link>
-        <Link href="/portal/tutor/verification" aria-current={active === "verification" ? "page" : undefined}>자격 검증</Link>
+      <nav className={styles.portalNav} aria-label={l("튜터 포털 메뉴", "Tutor portal menu")}>
+        <Link href="/portal/tutor" aria-current={active === "overview" ? "page" : undefined}>{l("개요", "Overview")}</Link>
+        <Link href="/portal/tutor/homework" aria-current={active === "homework" ? "page" : undefined}>{l("숙제", "Homework")}</Link>
+        <Link href="/portal/tutor/verification" aria-current={active === "verification" ? "page" : undefined}>{l("자격 검증", "Verification")}</Link>
       </nav>
       <div className={styles.account}>
         <details
@@ -51,12 +54,12 @@ export default function TutorPortalHeader({
             <span className={styles.profileChevron} aria-hidden="true">▾</span>
           </summary>
           <div>
-            <Link href="/my-page#info">내 정보</Link>
-            <Link href="/my-page#settings">설정</Link>
-            <button type="button" onClick={signOut}>로그아웃</button>
+            <Link href="/my-page#info">{l("내 정보", "My information")}</Link>
+            <Link href="/my-page#settings">{l("설정", "Settings")}</Link>
+            <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
           </div>
         </details>
-        <button type="button" onClick={signOut}>로그아웃</button>
+        <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
       </div>
     </header>
   );

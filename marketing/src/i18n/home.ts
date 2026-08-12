@@ -30,7 +30,7 @@ export const ui = {
 
   ticker: [
     t('Confidence starts here', '자신감은 여기서 시작됩니다'),
-    t('Learn from a 선배', '선배에게 배우세요'),
+    t('Learn from someone who has been there', '선배에게 배우세요'),
     t('Tutors who have been there', '직접 겪어본 선배들'),
     t('Tutoring that clicks', '이해가 되는 과외'),
   ] as Pair[],

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import ChatPanel, { type PortalChatThread } from "./ChatPanel";
 import PortalHeader, { type PortalHeaderUser } from "./PortalHeader";
+import { useSeonbaeLocale } from "../../utils/i18n/client";
 import styles from "./portal.module.css";
 
 export type PortalSession = {
@@ -60,6 +61,8 @@ export default function PortalDashboard({
 }) {
   const [visibleMonth, setVisibleMonth] = useState(() => initialVisibleMonth());
   const [selectedDate, setSelectedDate] = useState(() => initialDateKey());
+  const locale = useSeonbaeLocale();
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
 
   const calendarDays = useMemo(
     () => getCalendarDays(visibleMonth),
@@ -117,24 +120,24 @@ export default function PortalDashboard({
               {user.email}
             </p>
             <h1>
-              {user.name}님의
+              {user.name}{locale === "ko" ? "님의" : "'s"}
               <br />
-              {user.role === "parent" ? "보호자 포털" : "학습 포털"}
+              {user.role === "parent" ? l("보호자 포털", "family portal") : l("학습 포털", "learning portal")}
             </h1>
             <span>
               {user.role === "parent"
-                ? "자녀의 수업 현황과 창업팀 상담 일정을 한곳에서 확인하세요."
-                : "수업 일정, 누적 학습 기록, 담당 튜터와의 대화를 확인하세요."}
+                ? l("자녀의 수업 현황과 창업팀 상담 일정을 한곳에서 확인하세요.", "See your students' lesson progress and team consultation schedule in one place.")
+                : l("수업 일정, 누적 학습 기록, 담당 튜터와의 대화를 확인하세요.", "See lesson schedules, learning history, and conversations with your tutor.")}
             </span>
           </div>
           <div className={styles.stats}>
             <article>
               <b>{completed.length}</b>
-              <span>완료한 수업</span>
+              <span>{l("완료한 수업", "Completed lessons")}</span>
             </article>
             <article>
               <b>{formatMinutes(completedMinutes)}</b>
-              <span>누적 수업 시간</span>
+              <span>{l("누적 수업 시간", "Learning time")}</span>
             </article>
             <article>
               <b>
@@ -147,7 +150,7 @@ export default function PortalDashboard({
                     ).size}
               </b>
               <span>
-                {user.role === "parent" ? "연결된 학생" : "담당 튜터"}
+                {user.role === "parent" ? l("연결된 학생", "Linked students") : l("담당 튜터", "Tutors")}
               </span>
             </article>
           </div>
@@ -156,34 +159,33 @@ export default function PortalDashboard({
         <div className={styles.sync}>
           <span className={styles.syncDot} />
           <p>
-            <b>실시간 일정</b> · Zoom 회의가 끝나면 실제 진행 시간과 완료
-            수업 수가 자동으로 반영됩니다.
+            <b>{l("실시간 일정", "Live schedule")}</b> · {l("Zoom 회의가 끝나면 실제 진행 시간과 완료 수업 수가 자동으로 반영됩니다.", "Actual meeting time and completed lesson counts update automatically after each Zoom session.")}
           </p>
           <time>
-            {new Intl.DateTimeFormat("ko-KR", {
+            {new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", {
               month: "long",
               day: "numeric",
             }).format(new Date())}{" "}
-            기준
+            {l("기준", "updated")}
           </time>
         </div>
 
         {user.role === "parent" && (
-          <section className={styles.parentActions} aria-label="보호자 주요 메뉴">
+          <section className={styles.parentActions} aria-label={l("보호자 주요 메뉴", "Parent shortcuts")}>
             <div>
               <strong>
                 {linkedStudentCount > 0
-                  ? `${linkedStudentCount}명의 학생 계정이 연결되어 있습니다.`
-                  : "학생 계정을 먼저 연결해 주세요."}
+                  ? l(`${linkedStudentCount}명의 학생 계정이 연결되어 있습니다.`, `${linkedStudentCount} student account${linkedStudentCount === 1 ? " is" : "s are"} linked.`)
+                  : l("학생 계정을 먼저 연결해 주세요.", "Link a student account first.")}
               </strong>
               <span>
-                OTP 확인 후 학생 일정, 수업 리포트, 결제 내역을 함께 관리할 수 있습니다.
+                {l("OTP 확인 후 학생 일정, 수업 리포트, 결제 내역을 함께 관리할 수 있습니다.", "After OTP verification, manage student schedules, reports, and billing together.")}
               </span>
             </div>
             <nav>
-              <Link href="/portal/family">학생 연결</Link>
-              <Link href="/portal/reports">수업 리포트</Link>
-              <Link href="/portal/billing">결제 내역</Link>
+              <Link href="/portal/family">{l("학생 연결", "Link student")}</Link>
+              <Link href="/portal/reports">{l("수업 리포트", "Reports")}</Link>
+              <Link href="/portal/billing">{l("결제 내역", "Billing")}</Link>
             </nav>
           </section>
         )}
@@ -193,22 +195,22 @@ export default function PortalDashboard({
             <div className={styles.panelHeading}>
               <div>
                 <p>YOUR CALENDAR</p>
-                <h2>월간 수업 일정</h2>
+                <h2>{l("월간 수업 일정", "Monthly lesson calendar")}</h2>
               </div>
               <div className={styles.monthNav}>
                 <button
                   type="button"
                   onClick={() => moveMonth(-1)}
-                  aria-label="이전 달"
+                  aria-label={l("이전 달", "Previous month")}
                   disabled={sameMonth(visibleMonth, MINIMUM_PORTAL_MONTH)}
                 >
                   ←
                 </button>
-                <span>{formatMonth(visibleMonth)}</span>
+                <span>{locale === "ko" ? formatMonth(visibleMonth) : new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(visibleMonth)}</span>
                 <button
                   type="button"
                   onClick={() => moveMonth(1)}
-                  aria-label="다음 달"
+                  aria-label={l("다음 달", "Next month")}
                 >
                   →
                 </button>
@@ -216,7 +218,7 @@ export default function PortalDashboard({
             </div>
 
             <div className={styles.calendarWeekdays} aria-hidden="true">
-              {["일", "월", "화", "수", "목", "금", "토"].map((weekday) => (
+              {(locale === "ko" ? ["일", "월", "화", "수", "목", "금", "토"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]).map((weekday) => (
                 <span key={weekday}>{weekday}</span>
               ))}
             </div>
@@ -242,12 +244,12 @@ export default function PortalDashboard({
                     key={key}
                     disabled={beforeMinimum}
                     aria-pressed={selectedDate === key}
-                    aria-label={`${formatDate(key)}, 수업 ${count}개`}
+                    aria-label={`${formatDate(key, locale)}, ${l(`수업 ${count}개`, `${count} lesson${count === 1 ? "" : "s"}`)}`}
                   >
                     <span className={styles.calendarNumber}>
                       {date.getDate()}
                     </span>
-                    {count > 0 && <em>{count}개</em>}
+                    {count > 0 && <em>{locale === "ko" ? `${count}개` : count}</em>}
                   </button>
                 );
               })}
@@ -260,7 +262,7 @@ export default function PortalDashboard({
                     <span className={styles.lessonBar} />
                     <time>
                       <b>{session.startsAt.slice(0, 5)}</b>
-                      <small>{session.durationMinutes}분</small>
+                      <small>{session.durationMinutes}{l("분", " min")}</small>
                     </time>
                     <div>
                       <h3>{session.title}</h3>
@@ -268,7 +270,7 @@ export default function PortalDashboard({
                         {user.role === "parent"
                           ? `${session.studentName} · `
                           : ""}
-                        {session.tutor?.name || "담당 튜터 배정 중"} ·{" "}
+                        {session.tutor?.name || l("담당 튜터 배정 중", "Tutor assignment pending")} ·{" "}
                         {session.sessionType}
                       </p>
                     </div>
@@ -278,15 +280,15 @@ export default function PortalDashboard({
                         className={styles.zoomLink}
                         href={`/portal/meeting/${session.id}`}
                       >
-                        Zoom 입장 →
+                        {l("Zoom 입장", "Join Zoom")} →
                       </Link>
                     )}
                   </article>
                 ))
               ) : (
                 <div className={styles.empty}>
-                  <span>수업이 없는 날입니다.</span>
-                  <p>다른 날짜를 선택하면 예정된 수업을 확인할 수 있습니다.</p>
+                  <span>{l("수업이 없는 날입니다.", "There are no lessons on this day.")}</span>
+                  <p>{l("다른 날짜를 선택하면 예정된 수업을 확인할 수 있습니다.", "Choose another date to see scheduled lessons.")}</p>
                 </div>
               )}
             </div>
@@ -296,17 +298,17 @@ export default function PortalDashboard({
             <section className={styles.panel}>
               <div className={styles.sideHeading}>
                 <p>UP NEXT</p>
-                <h2>다음 수업</h2>
+                <h2>{l("다음 수업", "Next lesson")}</h2>
               </div>
               {nextSession ? (
                 <div className={styles.next}>
                   <span>
-                    {formatDate(nextSession.sessionDate)} ·{" "}
+                    {formatDate(nextSession.sessionDate, locale)} ·{" "}
                     {nextSession.startsAt.slice(0, 5)}
                   </span>
                   <h3>{nextSession.title}</h3>
                   <p>
-                    {nextSession.subject} · {nextSession.durationMinutes}분
+                    {nextSession.subject} · {nextSession.durationMinutes}{l("분", " min")}
                   </p>
                   <b>
                     {user.role === "parent"
@@ -319,13 +321,13 @@ export default function PortalDashboard({
                       className={styles.nextZoomLink}
                       href={`/portal/meeting/${nextSession.id}`}
                     >
-                      Zoom 교실 입장 <span>→</span>
+                      {l("Zoom 교실 입장", "Join Zoom classroom")} <span>→</span>
                     </Link>
                   )}
                 </div>
               ) : (
                 <div className={styles.sideEmpty}>
-                  예정된 다음 수업이 없습니다.
+                  {l("예정된 다음 수업이 없습니다.", "There is no upcoming lesson.")}
                 </div>
               )}
             </section>
@@ -333,36 +335,36 @@ export default function PortalDashboard({
             <section className={styles.panel}>
               <div className={styles.sideHeading}>
                 <p>LESSON DETAILS</p>
-                <h2>선택한 수업</h2>
+                <h2>{l("선택한 수업", "Selected lesson")}</h2>
               </div>
               {selected ? (
                 <div className={styles.tutorDetail}>
                   {selected.tutor?.photoUrl ? (
                     <img
                       src={selected.tutor.photoUrl}
-                      alt={`${selected.tutor.name} 튜터`}
+                      alt={locale === "ko" ? `${selected.tutor.name} 튜터` : `${selected.tutor.name}, tutor`}
                     />
                   ) : (
                     <span className={styles.tutorPhoto}>
-                      {initials(selected.tutor?.name || "선배")}
+                      {initials(selected.tutor?.name || "Seonbae")}
                     </span>
                   )}
                   <div>
-                    <b>{selected.tutor?.name || "담당 튜터 배정 중"}</b>
+                    <b>{selected.tutor?.name || l("담당 튜터 배정 중", "Tutor assignment pending")}</b>
                     <small>
                       {selected.tutor?.university
                         || selected.tutorRegistryId
-                        || "선배 튜터"}
+                        || l("선배 튜터", "Seonbae tutor")}
                     </small>
                   </div>
                   <p>
                     {selected.notes
-                      || "수업 전 전달 사항이 등록되면 이곳에 표시됩니다."}
+                      || l("수업 전 전달 사항이 등록되면 이곳에 표시됩니다.", "Lesson notes will appear here when they are added.")}
                   </p>
                 </div>
               ) : (
                 <div className={styles.sideEmpty}>
-                  수업을 선택하면 담당 튜터와 전달 사항을 확인할 수 있습니다.
+                  {l("수업을 선택하면 담당 튜터와 전달 사항을 확인할 수 있습니다.", "Choose a lesson to see its tutor and notes.")}
                 </div>
               )}
             </section>
@@ -373,12 +375,13 @@ export default function PortalDashboard({
           <ParentConsultations
             consultations={consultations}
             completedCount={completedConsultations}
+            locale={locale}
           />
         ) : (
           <ChatPanel
             currentUserId={currentUserId}
             threads={chatThreads}
-            heading="담당 튜터와 채팅"
+            heading={l("담당 튜터와 채팅", "Chat with your tutor")}
           />
         )}
       </section>
@@ -389,53 +392,54 @@ export default function PortalDashboard({
 function ParentConsultations({
   consultations,
   completedCount,
+  locale,
 }: {
   consultations: PortalConsultation[];
   completedCount: number;
+  locale: "ko" | "en";
 }) {
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
   return (
     <section className={`${styles.panel} ${styles.chatPanel}`}>
       <div className={styles.panelHeading}>
         <div>
           <p>FAMILY CONSULTATION</p>
-          <h2>창업팀 상담</h2>
+          <h2>{l("창업팀 상담", "Team consultation")}</h2>
         </div>
         <span className={styles.chatLive}>
-          완료 {completedCount}회 · 수업 상담과 별도 운영
+          {l(`완료 ${completedCount}회 · 수업 상담과 별도 운영`, `${completedCount} completed · separate from lessons`)}
         </span>
       </div>
       <p className={styles.consultationIntro}>
-        학습 방향, 튜터 매칭, 서비스 이용에 관한 보호자 상담입니다. 튜터–학생
-        수업과 분리된 전용 Zoom 회의로 진행됩니다.
+        {l("학습 방향, 튜터 매칭, 서비스 이용에 관한 보호자 상담입니다. 튜터–학생 수업과 분리된 전용 Zoom 회의로 진행됩니다.", "A separate parent consultation about learning direction, tutor matching, and the service, held in its own Zoom meeting.")}
       </p>
       <div className={styles.consultations}>
         {consultations.length ? (
           consultations.map((consultation) => (
             <article className={styles.consultationCard} key={consultation.id}>
               <time>
-                <b>{formatDate(consultation.sessionDate)}</b>
+                <b>{formatDate(consultation.sessionDate, locale)}</b>
                 <span>{consultation.startsAt.slice(0, 5)}</span>
               </time>
               <div>
                 <h3>{consultation.title}</h3>
                 <p>
-                  {consultation.topic} · {consultation.durationMinutes}분
+                  {consultation.topic} · {consultation.durationMinutes}{l("분", " min")}
                   {consultation.zoomStatus === "ended"
-                    ? ` · 실제 ${consultation.actualMinutes ?? consultation.durationMinutes}분`
+                    ? l(` · 실제 ${consultation.actualMinutes ?? consultation.durationMinutes}분`, ` · ${consultation.actualMinutes ?? consultation.durationMinutes} actual min`)
                     : ""}
                 </p>
               </div>
               {consultationZoomIsAvailable(consultation) && (
                 <Link href={`/portal/consultation/${consultation.id}`}>
-                  상담 입장 →
+                  {l("상담 입장", "Join consultation")} →
                 </Link>
               )}
             </article>
           ))
         ) : (
           <div className={styles.chatEmpty}>
-            예정된 창업팀 상담이 없습니다. 상담 신청 후 일정이 확정되면 이곳에
-            표시됩니다.
+            {l("예정된 창업팀 상담이 없습니다. 상담 신청 후 일정이 확정되면 이곳에 표시됩니다.", "There is no scheduled team consultation. Confirmed bookings will appear here.")}
           </div>
         )}
       </div>
@@ -491,8 +495,8 @@ function sessionDateTime(session: PortalSession) {
   return new Date(`${session.sessionDate}T${session.startsAt}`);
 }
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("ko-KR", {
+function formatDate(value: string, locale: "ko" | "en") {
+  return new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", {
     month: "long",
     day: "numeric",
     weekday: "short",

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useSeonbaeLocale } from "../../utils/i18n/client";
 import styles from "./portal.module.css";
 
 export type PortalHeaderUser = {
@@ -20,6 +21,8 @@ export default function PortalHeader({
 }) {
   const router = useRouter();
   const profileMenuRef = useRef<HTMLDetailsElement>(null);
+  const locale = useSeonbaeLocale();
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
 
   function setProfileMenuOpen(open: boolean) {
     if (profileMenuRef.current) profileMenuRef.current.open = open;
@@ -38,41 +41,45 @@ export default function PortalHeader({
     }
   }
 
+  const portalLabel = user.role === "parent"
+    ? l("보호자 포털", "FAMILY PORTAL")
+    : l("학생 포털", "STUDENT PORTAL");
+
   return (
     <header className={styles.topbar}>
       <Link className={styles.brand} href="/">
         <img src="/seonbae-logo-antique.png" alt="" />
         <span>
-          <b>선배</b>
-          <small>{user.role === "parent" ? "FAMILY PORTAL" : "STUDENT PORTAL"}</small>
+          <b>{l("선배", "Seonbae")}</b>
+          <small>{portalLabel}</small>
         </span>
       </Link>
 
       <nav
         className={styles.portalNav}
-        aria-label={user.role === "parent" ? "보호자 포털 메뉴" : "학생 포털 메뉴"}
+        aria-label={user.role === "parent" ? l("보호자 포털 메뉴", "Parent portal menu") : l("학생 포털 메뉴", "Student portal menu")}
       >
           <Link href="/portal" aria-current={active === "overview" ? "page" : undefined}>
-            {user.role === "parent" ? "가족 일정" : "오늘 · 일정"}
+            {user.role === "parent" ? l("가족 일정", "Family calendar") : l("오늘 · 일정", "Overview")}
           </Link>
           <Link href="/portal/homework" aria-current={active === "homework" ? "page" : undefined}>
-            숙제
+            {l("숙제", "Homework")}
           </Link>
           {user.role === "student" && (
             <Link href="/portal/tutors" aria-current={active === "tutors" ? "page" : undefined}>
-              내 튜터
+              {l("내 튜터", "My tutors")}
             </Link>
           )}
           {user.role === "parent" && (
             <>
           <Link href="/portal/family" aria-current={active === "family" ? "page" : undefined}>
-            학생 연결
+            {l("학생 연결", "Students")}
           </Link>
           <Link href="/portal/reports" aria-current={active === "reports" ? "page" : undefined}>
-            수업 리포트
+            {l("수업 리포트", "Reports")}
           </Link>
           <Link href="/portal/billing" aria-current={active === "billing" ? "page" : undefined}>
-            결제
+            {l("결제", "Billing")}
           </Link>
             </>
           )}
@@ -99,19 +106,19 @@ export default function PortalHeader({
           >
             <span className={styles.avatar}>{initials(user.name)}</span>
             <span className={styles.accountMeta}>
-              <small>로그인 계정</small>
+              <small>{l("로그인 계정", "Signed in")}</small>
               <b>{user.name}</b>
             </span>
             <span className={styles.profileChevron} aria-hidden="true">▾</span>
           </summary>
           <div>
-            <Link href="/my-page#info">내 정보</Link>
-            <Link href="/my-page#policies">정책</Link>
-            <Link href="/my-page#settings">설정</Link>
-            <button type="button" onClick={signOut}>로그아웃</button>
+            <Link href="/my-page#info">{l("내 정보", "My information")}</Link>
+            <Link href="/my-page#policies">{l("정책", "Policies")}</Link>
+            <Link href="/my-page#settings">{l("설정", "Settings")}</Link>
+            <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
           </div>
         </details>
-        <button type="button" onClick={signOut}>로그아웃</button>
+        <button type="button" onClick={signOut}>{l("로그아웃", "Log out")}</button>
       </div>
     </header>
   );

@@ -13,11 +13,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{document.documentElement.dataset.theme=localStorage.getItem('seonbae-theme')==='dark'?'dark':'light'}catch(e){}",
+              "try{var l=localStorage.getItem('seonbae-lang')==='en'?'en':'ko';document.documentElement.dataset.lang=l;document.documentElement.lang=l;document.documentElement.dataset.theme=localStorage.getItem('seonbae-theme')==='dark'?'dark':'light'}catch(e){}",
           }}
         />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

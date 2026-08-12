@@ -1,4 +1,5 @@
 ---
+import T from './T.astro';
 // An empty tutor profile, shown until a real verified tutor fills the slot.
 // Deliberately shaped like the finished card (photo, name, university, results,
 // bio) so a family can see exactly what they will be choosing between.
@@ -12,7 +13,7 @@ const tone = ((index - 1) % 6) + 1;
     <svg class="tph__cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M4 8a2 2 0 012-2h1.5L9 4h6l1.5 2H18a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" /><circle cx="12" cy="12" r="3.5" />
     </svg>
-    <span class="tph__slot">Tutor photo</span>
+    <span class="tph__slot"><T en="Tutor photo" ko="튜터 사진" /></span>
   </div>
 
   <div class="tph__body">
@@ -30,7 +31,7 @@ const tone = ((index - 1) % 6) + 1;
       <span class="tph__bar tph__bar--short"></span>
     </div>
 
-    <p class="tph__note">Profile opens once verification is complete</p>
+    <p class="tph__note"><T en="Profile opens once verification is complete" ko="검증이 끝나면 프로필이 공개됩니다" /></p>
   </div>
 </article>
 

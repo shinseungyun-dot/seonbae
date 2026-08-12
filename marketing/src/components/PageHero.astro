@@ -1,12 +1,15 @@
 ---
 import Eyebrow from './Eyebrow.astro';
 import Button from './Button.astro';
+import T from './T.astro';
 
 // One warm, welcoming hero (Khan-style soft background shapes) that each page
 // tints differently and pairs with its own distinct body layout.
 interface Props {
   eyebrow: string;
+  eyebrowKo?: string;
   copy?: string;
+  copyKo?: string;
   ctaLabel?: string;
   ctaHref?: string;
   secondaryLabel?: string;
@@ -19,7 +22,9 @@ interface Props {
 }
 const {
   eyebrow,
+  eyebrowKo,
   copy,
+  copyKo,
   ctaLabel,
   ctaHref = '/get-matched',
   secondaryLabel,
@@ -46,9 +51,9 @@ const scene = `phero--s${seed + 1}`;
   <span class="phero__dots" aria-hidden="true"></span>
   <div class="container">
     <div class="phero__inner reveal is-in">
-      <Eyebrow label={eyebrow} />
+      {eyebrowKo ? <span class="eyebrow"><T en={eyebrow} ko={eyebrowKo} /></span> : <Eyebrow label={eyebrow} />}
       <h1 class="display phero__title"><slot /></h1>
-      {copy && <p class="lead phero__copy">{copy}</p>}
+      {copy && <p class="lead phero__copy">{copyKo ? <T en={copy} ko={copyKo} /> : copy}</p>}
       {ctaLabel && (
         <div class="cta-row phero__cta">
           <Button href={ctaHref} label={ctaLabel} variant="primary" size="lg" arrow="diag" />

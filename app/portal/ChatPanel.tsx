@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSeonbaeLocale } from "../../utils/i18n/client";
 import styles from "./portal.module.css";
 
 export type PortalChatThread = {
@@ -22,7 +23,7 @@ type PortalChatMessage = {
 export default function ChatPanel({
   currentUserId,
   threads,
-  heading = "튜터 채팅",
+  heading,
 }: {
   currentUserId: string;
   threads: PortalChatThread[];
@@ -35,6 +36,9 @@ export default function ChatPanel({
   const [draft, setDraft] = useState("");
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
+  const locale = useSeonbaeLocale();
+  const l = (ko: string, en: string) => locale === "ko" ? ko : en;
+  const visibleHeading = heading || l("튜터 채팅", "Tutor chat");
 
   const activeThread = useMemo(
     () => threads.find((thread) => thread.id === activeThreadId) ?? null,
@@ -51,17 +55,17 @@ export default function ChatPanel({
         const result = await response.json();
         if (!response.ok) {
           if (!quiet) {
-            setStatus(result.error || "메시지를 불러오지 못했습니다.");
+            setStatus(locale === "ko" && result.error ? result.error : l("메시지를 불러오지 못했습니다.", "Messages could not be loaded."));
           }
           return;
         }
         setMessages(result.messages ?? []);
         if (!quiet) setStatus("");
       } catch {
-        if (!quiet) setStatus("메시지 연결을 확인해 주세요.");
+        if (!quiet) setStatus(l("메시지 연결을 확인해 주세요.", "Check your connection and try again."));
       }
     },
-    [activeThreadId],
+    [activeThreadId, locale],
   );
 
   useEffect(() => {
@@ -85,13 +89,13 @@ export default function ChatPanel({
       });
       const result = await response.json();
       if (!response.ok) {
-        setStatus(result.error || "메시지를 보내지 못했습니다.");
+        setStatus(locale === "ko" && result.error ? result.error : l("메시지를 보내지 못했습니다.", "The message could not be sent."));
         return;
       }
       setMessages((current) => [...current, result as PortalChatMessage]);
       setDraft("");
     } catch {
-      setStatus("메시지를 보내지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      setStatus(l("메시지를 보내지 못했습니다. 잠시 후 다시 시도해 주세요.", "The message could not be sent. Please try again shortly."));
     } finally {
       setSending(false);
     }
@@ -102,20 +106,20 @@ export default function ChatPanel({
       <div className={styles.panelHeading}>
         <div>
           <p>DIRECT MESSAGE</p>
-          <h2>{heading}</h2>
+          <h2>{visibleHeading}</h2>
         </div>
         <span className={styles.chatLive}>
-          <i /> 5초마다 동기화
+          <i /> {l("5초마다 동기화", "Syncs every 5 seconds")}
         </span>
       </div>
 
       {!threads.length ? (
         <div className={styles.chatEmpty}>
-          배정된 수업이 생기면 학생과 튜터 사이의 대화방이 자동으로 열립니다.
+          {l("배정된 수업이 생기면 학생과 튜터 사이의 대화방이 자동으로 열립니다.", "A conversation opens automatically when a lesson is assigned.")}
         </div>
       ) : (
         <div className={styles.chatLayout}>
-          <nav className={styles.chatThreads} aria-label="대화 상대">
+          <nav className={styles.chatThreads} aria-label={l("대화 상대", "Conversations")}>
             {threads.map((thread) => (
               <button
                 type="button"
@@ -142,7 +146,7 @@ export default function ChatPanel({
                     <article key={message.id} data-mine={mine}>
                       <p>{message.body}</p>
                       <time>
-                        {new Intl.DateTimeFormat("ko-KR", {
+                        {new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", {
                           month: "numeric",
                           day: "numeric",
                           hour: "2-digit",
@@ -154,7 +158,7 @@ export default function ChatPanel({
                 })
               ) : (
                 <div className={styles.noMessages}>
-                  첫 메시지를 보내 보세요.
+                  {l("첫 메시지를 보내 보세요.", "Send the first message.")}
                 </div>
               )}
             </div>
@@ -164,12 +168,14 @@ export default function ChatPanel({
                 onChange={(event) =>
                   setDraft(event.target.value.slice(0, 2000))
                 }
-                placeholder={`${activeThread?.counterpartName ?? "상대방"}에게 메시지 보내기`}
+                placeholder={locale === "ko"
+                  ? `${activeThread?.counterpartName ?? "상대방"}에게 메시지 보내기`
+                  : `Message ${activeThread?.counterpartName ?? "this person"}`}
                 rows={2}
                 maxLength={2000}
               />
               <button type="submit" disabled={sending || !draft.trim()}>
-                {sending ? "전송 중" : "보내기"} <span>→</span>
+                {sending ? l("전송 중", "Sending") : l("보내기", "Send")} <span>→</span>
               </button>
             </form>
             {status && <p className={styles.chatStatus}>{status}</p>}

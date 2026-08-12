@@ -5,8 +5,8 @@
 interface Props { class?: string; }
 const { class: cls = '' } = Astro.props;
 ---
-<div class:list={['langtoggle', cls]} role="group" aria-label="Language / 언어">
-  <button type="button" data-set-lang="ko" lang="ko">한국어</button>
+<div class:list={['langtoggle', cls]} role="group" aria-label="Language">
+  <button type="button" data-set-lang="ko" lang="ko" aria-label="한국어">KO</button>
   <button type="button" data-set-lang="en" lang="en">EN</button>
 </div>
 
@@ -37,7 +37,7 @@ const { class: cls = '' } = Astro.props;
   .langtoggle button[lang='ko'] { font-family: var(--kr); }
   .langtoggle button:hover { color: var(--ink); }
 
-  /* Active pill, chosen purely from the root language flag. Default = EN. */
+  /* Active pill, chosen purely from the root language flag. Default = KO. */
   html[data-lang='ko'] .langtoggle [data-set-lang='ko'],
   html:not([data-lang='ko']) .langtoggle [data-set-lang='en'] {
     background: var(--white);

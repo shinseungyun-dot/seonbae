@@ -220,6 +220,10 @@ html[data-lang='en'] [data-l='ko'],
 html:not([data-lang='ko']) [data-l='ko'] { display: none !important; }
 html[data-lang='ko'] [data-l='en'] { display: none !important; }
 
+/* Legacy content in the supplied final design is still being translated page
+   by page. Never leak an English-only block into Korean while that work is in
+   progress; the English version remains complete and the Korean version only
+   shows localized surfaces. */
 /* Korean sets its own breaking + a touch looser tracking on big display type,
    which is optimised for Latin. Keeps words whole (keep-all) rather than
    breaking mid-syllable-run. */

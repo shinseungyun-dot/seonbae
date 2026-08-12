@@ -18,7 +18,7 @@ const tutorPreview = tutorsAll.slice(0, 3);
 
 const steps = [
   { t: { en: 'Tell us your goal', ko: '목표를 알려주세요' }, c: { en: 'Subject, level, and what you are working toward.', ko: '과목, 수준, 그리고 이루고 싶은 목표.' }, icon: 'target' },
-  { t: { en: 'We match by hand', ko: '직접 매칭합니다' }, c: { en: 'A verified 선배 who fits, not the first name in a list.', ko: '목록의 첫 이름이 아니라, 꼭 맞는 검증된 선배.' }, icon: 'match' },
+  { t: { en: 'We match by hand', ko: '직접 매칭합니다' }, c: { en: 'A verified tutor who fits, not the first name in a list.', ko: '목록의 첫 이름이 아니라, 꼭 맞는 검증된 선배.' }, icon: 'match' },
   { t: { en: 'Learn and see progress', ko: '배우고, 성장을 확인' }, c: { en: 'Notes and next steps after every lesson.', ko: '매 수업 뒤 노트와 다음 단계.' }, icon: 'rise' },
 ];
 const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
@@ -97,7 +97,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
             <span class="flow__deco" aria-hidden="true">
               <span class="flow__ghost">{String(i + 1).padStart(2, '0')}</span>
             </span>
-            <span class="flow__n">{`Step ${i + 1}`}</span>
+            <span class="flow__n"><T en={`Step ${i + 1}`} ko={`${i + 1}단계`} /></span>
             <h3 class="flow__t"><T en={s.t.en} ko={s.t.ko} /></h3>
             <p class="body"><T en={s.c.en} ko={s.c.ko} /></p>
             {i < steps.length - 1 && (
@@ -164,8 +164,8 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     <div class="container">
       <div class="sec-head reveal">
         <div>
-          <span class="eyebrow"><T en="The 선배" ko="선배들" /></span>
-          <h2 class="dhead">Taught by someone who <span class="ed">recently topped it</span>.</h2>
+          <span class="eyebrow"><T en="Our tutors" ko="선배들" /></span>
+          <h2 class="dhead"><T en="Learn from someone who recently earned a top result." ko="최근에 직접 최고 성적을 받은 선배에게 배웁니다." /></h2>
         </div>
         <a href="/tutors" class="textlink"><span><T en="Meet all tutors" ko="선배 전체 보기" /></span>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>

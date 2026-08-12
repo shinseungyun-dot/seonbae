@@ -1,24 +1,43 @@
 ---
 import Base from '../layouts/Base.astro';
-import Eyebrow from '../components/Eyebrow.astro';
+import T from '../components/T.astro';
 
-const levels = ['Lower secondary', 'IGCSE', 'IB or A Level', 'University prep', 'Adult learner'];
-const subjects = ['IB Diploma', 'Advanced Placement', 'A Level', 'IGCSE', 'Standardized Tests', 'English and Writing', 'Not sure yet'];
-const prefs = [
-  { v: 'weekly', t: 'Weekly momentum', d: 'A standing slot with one tutor' },
-  { v: 'hourly', t: 'By the hour', d: 'Occasional, when I need it' },
-  { v: 'unsure', t: 'Not sure yet', d: 'Help me decide' },
+const levels = [
+  { value: 'Lower secondary', en: 'Lower secondary', ko: '중등 과정' },
+  { value: 'IGCSE', en: 'IGCSE', ko: 'IGCSE' },
+  { value: 'IB or A Level', en: 'IB or A Level', ko: 'IB 또는 A레벨' },
+  { value: 'University prep', en: 'University prep', ko: '대학 입시 준비' },
+  { value: 'Adult learner', en: 'Adult learner', ko: '성인 학습자' },
 ];
-const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
+const subjects = [
+  { value: 'IB Diploma', en: 'IB Diploma', ko: 'IB 디플로마' },
+  { value: 'Advanced Placement', en: 'Advanced Placement', ko: 'AP' },
+  { value: 'A Level', en: 'A Level', ko: 'A레벨' },
+  { value: 'IGCSE', en: 'IGCSE', ko: 'IGCSE' },
+  { value: 'Standardized Tests', en: 'Standardized Tests', ko: '표준화 시험' },
+  { value: 'English and Writing', en: 'English and Writing', ko: '영어·글쓰기' },
+  { value: 'Not sure yet', en: 'Not sure yet', ko: '아직 잘 모르겠어요' },
+];
+const prefs = [
+  { v: 'weekly', en: 'Weekly momentum', ko: '매주 꾸준히', den: 'A standing slot with one tutor', dko: '한 튜터와 정해진 시간에 수업' },
+  { v: 'hourly', en: 'By the hour', ko: '필요할 때 한 시간씩', den: 'Occasional, when I need it', dko: '필요한 때만 수업' },
+  { v: 'unsure', en: 'Not sure yet', ko: '아직 잘 모르겠어요', den: 'Help me decide', dko: '상담하며 결정할게요' },
+];
+const stepLabels = [
+  { en: 'Student', ko: '학생' },
+  { en: 'Subject', ko: '과목' },
+  { en: 'Schedule', ko: '일정' },
+  { en: 'Contact', ko: '연락처' },
+];
 ---
 <Base title="Get matched — Seonbae" active="/get-matched" showConversion={false} heroDark={false}>
   <section class="match-section">
     <div class="container">
       <div class="match-wrap">
         <header class="match-head reveal is-in">
-          <Eyebrow label="Get matched" />
-          <h1 class="display match-title">Let's find the tutor who <span class="mark">fits</span>.</h1>
-          <p class="lead" style="margin-top:14px">Four short steps. It takes about a minute, and a real person reads every answer.</p>
+          <span class="eyebrow"><T en="Consultation" ko="상담 신청" /></span>
+          <h1 class="display match-title"><T en="Let's find the tutor who fits." ko="학생에게 꼭 맞는 선배를 찾아볼게요." /></h1>
+          <p class="lead" style="margin-top:14px"><T en="Four short steps. It takes about a minute, and a real person reads every answer." ko="네 단계면 충분합니다. 약 1분이면 작성할 수 있고, 선배 팀이 모든 답변을 직접 확인합니다." /></p>
         </header>
 
         <div class="match-card reveal is-in">
@@ -26,7 +45,7 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
             {stepLabels.map((l, i) => (
               <div class={`progress-seg ${i === 0 ? 'is-active' : ''}`} data-seg={i + 1}>
                 <span class="progress-dot">{i + 1}</span>
-                <span class="progress-label">{l}</span>
+                <span class="progress-label"><T en={l.en} ko={l.ko} /></span>
               </div>
             ))}
           </div>
@@ -35,16 +54,16 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
             <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
             <!-- Step 1 -->
             <fieldset class="step is-current" data-step="1">
-              <legend class="step-legend">Who are the lessons for?</legend>
+              <legend class="step-legend"><T en="Who are the lessons for?" ko="누구를 위한 수업인가요?" /></legend>
               <div class="form-field">
-                <label for="m-student">Student name <span class="req">*</span></label>
-                <input class="form-control" id="m-student" name="student" type="text" required placeholder="First name is fine" />
+                <label for="m-student"><T en="Student name" ko="학생 이름" /> <span class="req">*</span></label>
+                <input class="form-control" id="m-student" name="student" type="text" required data-placeholder-en="First name is fine" data-placeholder-ko="이름만 적어도 괜찮아요" />
               </div>
               <div class="form-field" style="margin-top:18px">
-                <span class="field-label">Level</span>
+                <span class="field-label"><T en="Level" ko="학년·과정" /></span>
                 <div class="choice-grid">
                   {levels.map((l, i) => (
-                    <label class="choice"><input type="radio" name="level" value={l} checked={i === 0} /><span>{l}</span></label>
+                    <label class="choice"><input type="radio" name="level" value={l.value} checked={i === 0} /><span><T en={l.en} ko={l.ko} /></span></label>
                   ))}
                 </div>
               </div>
@@ -52,55 +71,55 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
 
             <!-- Step 2 -->
             <fieldset class="step" data-step="2" hidden>
-              <legend class="step-legend">What subject, and what for?</legend>
+              <legend class="step-legend"><T en="What subject, and what for?" ko="어떤 과목을, 무엇을 위해 배우나요?" /></legend>
               <div class="form-field">
-                <span class="field-label">Subject</span>
+                <span class="field-label"><T en="Subject" ko="과목" /></span>
                 <div class="choice-grid choice-grid--3">
                   {subjects.map((s, i) => (
-                    <label class="choice"><input type="radio" name="subject" value={s} checked={i === 0} /><span>{s}</span></label>
+                    <label class="choice"><input type="radio" name="subject" value={s.value} checked={i === 0} /><span><T en={s.en} ko={s.ko} /></span></label>
                   ))}
                 </div>
               </div>
               <div class="form-field" style="margin-top:20px">
-                <label for="m-goal">The goal <span class="req">*</span></label>
-                <input class="form-control" id="m-goal" name="goal" type="text" required placeholder="A predicted 7, a 1500 SAT, or steadier confidence" />
+                <label for="m-goal"><T en="The goal" ko="학습 목표" /> <span class="req">*</span></label>
+                <input class="form-control" id="m-goal" name="goal" type="text" required data-placeholder-en="A predicted 7, a 1500 SAT, or steadier confidence" data-placeholder-ko="예상 7점, SAT 1500점, 또는 자신감 회복" />
               </div>
             </fieldset>
 
             <!-- Step 3 -->
             <fieldset class="step" data-step="3" hidden>
-              <legend class="step-legend">When works, and how often?</legend>
+              <legend class="step-legend"><T en="When works, and how often?" ko="언제, 얼마나 자주 수업할까요?" /></legend>
               <div class="form-field tutor-picker-field">
-                <label for="m-tutor-search">Preferred tutor</label>
+                <label for="m-tutor-search"><T en="Preferred tutor" ko="희망 튜터" /></label>
                 <div class="tutor-picker" data-tutor-picker>
                   <input type="hidden" name="preferredTutor" value="Manager consultation" data-tutor-value />
                   <button type="button" class="form-control tutor-picker__trigger" id="m-tutor-search" aria-expanded="false" aria-controls="m-tutor-options">
-                    <span data-tutor-label>Consult with the team / 매니저와 상담</span>
+                    <span data-tutor-label data-label-en="Consult with the team" data-label-ko="매니저와 상담">매니저와 상담</span>
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                   <div class="tutor-picker__menu" id="m-tutor-options" hidden>
-                    <input class="form-control tutor-picker__search" type="search" placeholder="Search by name, university, or curriculum" aria-label="Search tutors" data-tutor-search />
+                    <input class="form-control tutor-picker__search" type="search" data-placeholder-en="Search by name, university, or curriculum" data-placeholder-ko="이름, 대학 또는 커리큘럼으로 검색" aria-label="Search tutors" data-aria-en="Search tutors" data-aria-ko="튜터 검색" data-tutor-search />
                     <div class="tutor-picker__options" role="listbox" data-tutor-options>
                       <button type="button" class="tutor-option is-selected" role="option" aria-selected="true" data-value="Manager consultation" data-search="manager consultation team 매니저 상담">
                         <span class="tutor-option__avatar">S</span>
-                        <span><strong>Consult with the team</strong><small>매니저와 상담 · We will recommend the right fit</small></span>
+                        <span><strong><T en="Consult with the team" ko="매니저와 상담" /></strong><small><T en="We will recommend the right fit" ko="학생에게 맞는 튜터를 추천해 드립니다" /></small></span>
                       </button>
                     </div>
-                    <p class="tutor-picker__empty" data-tutor-empty hidden>No matching tutors in this curriculum.</p>
+                    <p class="tutor-picker__empty" data-tutor-empty hidden><T en="No matching tutors in this curriculum." ko="이 커리큘럼에 맞는 튜터가 아직 없습니다." /></p>
                   </div>
                 </div>
-                <p class="field-hint">The list updates to tutors matching the curriculum selected above.</p>
+                <p class="field-hint"><T en="The list updates to tutors matching the curriculum selected above." ko="위에서 선택한 커리큘럼에 맞는 튜터만 표시됩니다." /></p>
               </div>
               <div class="form-field">
-                <label for="m-times">Preferred times</label>
-                <input class="form-control" id="m-times" name="times" type="text" placeholder="Weekday evenings, and your time zone" />
-                <p class="field-hint" data-clock>Seoul is 9:00 PM right now</p>
+                <label for="m-times"><T en="Preferred times" ko="희망 시간" /></label>
+                <input class="form-control" id="m-times" name="times" type="text" data-placeholder-en="Weekday evenings, and your time zone" data-placeholder-ko="평일 저녁, 거주 지역의 시간대" />
+                <p class="field-hint" data-clock></p>
               </div>
               <div class="form-field" style="margin-top:20px">
-                <span class="field-label">How would you like to work?</span>
+                <span class="field-label"><T en="How would you like to work?" ko="어떤 방식으로 수업할까요?" /></span>
                 <div class="choice-grid choice-grid--3">
                   {prefs.map((p, i) => (
-                    <label class="choice choice--rich"><input type="radio" name="preference" value={p.v} checked={i === 0} /><span><strong>{p.t}</strong><em>{p.d}</em></span></label>
+                    <label class="choice choice--rich"><input type="radio" name="preference" value={p.v} checked={i === 0} /><span><strong><T en={p.en} ko={p.ko} /></strong><em><T en={p.den} ko={p.dko} /></em></span></label>
                   ))}
                 </div>
               </div>
@@ -108,24 +127,24 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
 
             <!-- Step 4 -->
             <fieldset class="step" data-step="4" hidden>
-              <legend class="step-legend">Where should we reach you?</legend>
+              <legend class="step-legend"><T en="Where should we reach you?" ko="어디로 연락드릴까요?" /></legend>
               <div class="form-field">
-                <label for="m-email">Email <span class="req">*</span></label>
+                <label for="m-email"><T en="Email" ko="이메일" /> <span class="req">*</span></label>
                 <input class="form-control" id="m-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
               </div>
               <div class="form-field" style="margin-top:18px">
-                <label for="m-note">Anything else we should know?</label>
-                <textarea class="form-control" id="m-note" name="note" placeholder="A deadline, a past struggle, or a tutor style that has worked before"></textarea>
+                <label for="m-note"><T en="Anything else we should know?" ko="추가로 알려주실 내용이 있나요?" /></label>
+                <textarea class="form-control" id="m-note" name="note" data-placeholder-en="A deadline, a past struggle, or a tutor style that has worked before" data-placeholder-ko="시험 일정, 어려웠던 점, 잘 맞았던 수업 방식"></textarea>
               </div>
             </fieldset>
 
             <div class="match-nav">
               <button type="button" class="btn btn--secondary" id="btn-back" hidden>
                 <span class="btn__disc" aria-hidden="true" style="order:-1"><svg viewBox="0 0 20 20" fill="none"><path d="M16 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                <span>Back</span>
+                <span><T en="Back" ko="이전" /></span>
               </button>
               <button type="button" class="btn btn--primary btn--lg" id="btn-next">
-                <span>Continue</span>
+                <span data-next-label data-en="Continue" data-ko="계속하기">계속하기</span>
                 <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
             </div>
@@ -135,10 +154,10 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
             <span class="done-check" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12.5l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
-            <h2 class="h3">Thank you. We are on it.</h2>
-            <p class="body" id="match-done-note" style="margin-top:12px; max-width:46ch; margin-inline:auto">A real person will read your answers and reply within one business day with a verified tutor who fits, plus a couple of times to book a first lesson. That first lesson comes with a rematch guarantee.</p>
+            <h2 class="h3"><T en="Thank you. We are on it." ko="감사합니다. 바로 확인할게요." /></h2>
+            <p class="body" id="match-done-note" data-default-en="A real person will read your answers and reply within one business day with a verified tutor who fits, plus a couple of times to book a first lesson. That first lesson comes with a rematch guarantee." data-default-ko="선배 팀이 답변을 직접 확인한 뒤 영업일 기준 하루 안에 잘 맞는 검증된 튜터와 첫 수업 가능한 시간을 안내해 드립니다. 첫 수업 후 맞지 않으면 다시 매칭해 드립니다." style="margin-top:12px; max-width:46ch; margin-inline:auto"></p>
             <div class="cta-row" style="justify-content:center; margin-top:24px">
-              <a href="/how-it-works" class="btn btn--secondary"><span>See what happens next</span><span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+              <a href="/how-it-works" class="btn btn--secondary"><span><T en="See what happens next" ko="다음 과정 보기" /></span><span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
             </div>
           </div>
         </div>
@@ -247,8 +266,35 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
   const back = document.getElementById('btn-back') as HTMLButtonElement | null;
   const next = document.getElementById('btn-next') as HTMLButtonElement | null;
   const done = document.getElementById('match-done') as HTMLElement | null;
-  const nextLabel = next?.querySelector('span:first-child') as HTMLElement | null;
+  const nextLabel = next?.querySelector('[data-next-label]') as HTMLElement | null;
   let i = 0;
+
+  const language = () => document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
+  const localize = (node: HTMLElement | null, en: string, ko: string) => {
+    if (node) node.textContent = language() === 'en' ? en : ko;
+  };
+  const refreshDynamicLanguage = () => {
+    const lang = language();
+    document.querySelectorAll<HTMLElement>('[data-placeholder-en]').forEach((node) => {
+      const control = node as HTMLInputElement | HTMLTextAreaElement;
+      control.placeholder = lang === 'en' ? (node.dataset.placeholderEn || '') : (node.dataset.placeholderKo || '');
+    });
+    document.querySelectorAll<HTMLElement>('[data-aria-en]').forEach((node) => {
+      node.setAttribute('aria-label', lang === 'en' ? (node.dataset.ariaEn || '') : (node.dataset.ariaKo || ''));
+    });
+    if (pickerLabel?.dataset.manager === 'true' || pickerValue?.value === 'Manager consultation') {
+      localize(pickerLabel, pickerLabel?.dataset.labelEn || 'Consult with the team', pickerLabel?.dataset.labelKo || '매니저와 상담');
+    }
+    if (nextLabel && !next?.disabled) {
+      nextLabel.textContent = i === steps.length - 1
+        ? (lang === 'en' ? 'Submit' : '상담 신청')
+        : (lang === 'en' ? 'Continue' : '계속하기');
+    }
+    const doneNote = document.getElementById('match-done-note') as HTMLElement | null;
+    if (doneNote && !doneNote.dataset.state) {
+      doneNote.textContent = lang === 'en' ? (doneNote.dataset.defaultEn || '') : (doneNote.dataset.defaultKo || '');
+    }
+  };
 
   type Tutor = {
     registry_id: string;
@@ -341,7 +387,9 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
     option.classList.add('is-selected');
     option.setAttribute('aria-selected', 'true');
     if (pickerValue) pickerValue.value = option.dataset.value || 'Manager consultation';
+    if (pickerLabel) pickerLabel.dataset.manager = String((option.dataset.value || '') === 'Manager consultation');
     if (pickerLabel) pickerLabel.textContent = option.querySelector('strong')?.textContent || option.dataset.value || '';
+    if ((option.dataset.value || '') === 'Manager consultation') refreshDynamicLanguage();
     setTutorMenu(false);
   });
   document.addEventListener('click', (event) => {
@@ -349,7 +397,8 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
   });
   form?.querySelectorAll('input[name="subject"]').forEach((input) => input.addEventListener('change', () => {
     if (pickerValue) pickerValue.value = 'Manager consultation';
-    if (pickerLabel) pickerLabel.textContent = 'Consult with the team / 매니저와 상담';
+    if (pickerLabel) pickerLabel.dataset.manager = 'true';
+    refreshDynamicLanguage();
     renderTutorOptions();
   }));
   fetch('/api/tutors', { cache: 'no-store', headers: { Accept: 'application/json' } })
@@ -364,8 +413,8 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
       s.classList.toggle('is-done', idx < n);
     });
     if (back) back.hidden = n === 0;
-    if (nextLabel) nextLabel.textContent = n === steps.length - 1 ? 'Submit' : 'Continue';
     i = n;
+    refreshDynamicLanguage();
   };
 
   const validStep = () => {
@@ -382,25 +431,25 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
 
     if (!form) return;
     next.disabled = true;
-    if (nextLabel) nextLabel.textContent = 'Sending…';
+    if (nextLabel) nextLabel.textContent = language() === 'en' ? 'Sending…' : '전송 중…';
 
-    let mode: 'posted' | 'email' = 'email';
     let failed = false;
     try {
-      mode = await submitForm(form, 'New matching request from seonbaetutor.com');
+      await submitForm(form, 'New matching request from seonbaetutor.com');
     } catch {
       failed = true;
     }
 
     next.disabled = false;
-    if (nextLabel) nextLabel.textContent = 'Submit';
+    if (nextLabel) nextLabel.textContent = language() === 'en' ? 'Submit' : '상담 신청';
 
     const note = document.getElementById('match-done-note');
     if (note) {
       if (failed) {
-        note.textContent = 'Something went wrong on our side. Please email admissions@seonbaetutor.com with your subject and level, and we will match you straight away.';
-      } else if (mode === 'email') {
-        note.textContent = 'Your email app is opening with your answers filled in. Send it and a real person will reply within one business day with a verified tutor who fits, plus a couple of times to book a first lesson.';
+        note.dataset.state = 'failed';
+        note.textContent = language() === 'en'
+          ? 'Something went wrong on our side. Please email admissions@seonbaetutor.com with your subject and level, and we will match you straight away.'
+          : '처리 중 문제가 생겼습니다. 과목과 학년을 admissions@seonbaetutor.com으로 보내주시면 바로 매칭을 도와드리겠습니다.';
       }
     }
 
@@ -410,4 +459,7 @@ const stepLabels = ['Student', 'Subject', 'Schedule', 'Contact'];
     if (done) { done.hidden = false; done.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   });
   back?.addEventListener('click', () => { if (i > 0) show(i - 1); });
+  document.querySelectorAll('[data-set-lang]').forEach((button) => button.addEventListener('click', () => window.requestAnimationFrame(refreshDynamicLanguage)));
+  if (pickerLabel) pickerLabel.dataset.manager = 'true';
+  refreshDynamicLanguage();
 </script>
