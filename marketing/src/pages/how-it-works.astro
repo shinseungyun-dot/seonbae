@@ -97,6 +97,23 @@ const inclusions = [
       </div>
     </div>
   </section>
+
+  <section class="section bg-cream research-section">
+    <div class="container research-band reveal">
+      <div>
+        <Eyebrow label="The research team" labelKo="연구팀" />
+        <h2 class="h2"><T en="The work behind each lesson." ko="매 수업 뒤에 있는 연구." /></h2>
+      </div>
+      <div class="research-copy">
+        <p class="lead"><T en="Our research team built these from more than 500 past and practice papers, along with the algorithm that turns a raw score into the grade it would earn in a real sitting." ko="선배 연구팀은 500개가 넘는 기출 및 연습 문제와, 원점수를 실제 시험에서 받을 등급으로 바꾸는 알고리즘을 만들었습니다." /></p>
+        <p class="body"><T en="The same team builds our standalone mock exams and level tests, which anyone can sit whether they study with us or not." ko="같은 팀이 선배 수강 여부와 관계없이 누구나 응시할 수 있는 독립형 모의고사와 레벨 테스트도 만듭니다." /></p>
+        <div class="cta-row research-actions">
+          <Button href="/resources" label="Read the articles" labelKo="연구팀의 글 보기" variant="secondary" arrow="right" />
+          <Button href="/mock-exams" label="See the exams" labelKo="모의고사 보기" variant="secondary" arrow="right" />
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -152,10 +169,24 @@ const inclusions = [
     padding: clamp(28px, 4vw, 56px);
   }
 
+  .research-section { padding-top: 0; }
+  .research-band {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding-block: clamp(38px, 5vw, 64px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .research-band .h2 { margin-top: 12px; }
+  .research-copy { display: grid; gap: 18px; }
+  .research-actions { margin-top: 4px; }
+
   @media (max-width: 900px) {
     .steps { grid-template-columns: 1fr 1fr; }
     .verify-teaser { grid-template-columns: 1fr; }
     .verify-teaser__media { order: -1; }
+    .research-band { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) {
     .steps { grid-template-columns: 1fr; }

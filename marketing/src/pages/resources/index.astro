@@ -50,6 +50,7 @@ const slug = (c: string) => c.toLowerCase().replace(/ /g, '-');
         ))}
       </div>
       <p class="no-match" hidden><T en="Nothing here yet in that category. Try another." ko="이 분류에는 아직 글이 없습니다. 다른 분류를 선택해 주세요." /></p>
+      <p class="paid-note reveal"><a href="/mock-exams"><T en="The same research team also builds our mock exams and level tests, which are paid. Everything on this page stays free." ko="같은 연구팀이 유료 모의고사와 레벨 테스트도 만듭니다. 이 페이지의 모든 자료는 계속 무료입니다." /></a></p>
     </div>
   </section>
 </Base>
@@ -77,6 +78,8 @@ const slug = (c: string) => c.toLowerCase().replace(/ /g, '-');
   .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: clamp(20px, 3vw, 36px); }
   .res-cell.is-hidden { display: none; }
   .no-match { margin-top: 22px; color: var(--muted); }
+  .paid-note { margin-top: clamp(44px, 6vw, 72px); padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); }
+  .paid-note a { color: var(--violet); text-decoration: underline; text-underline-offset: 4px; }
   @media (max-width: 680px) { .res-grid { grid-template-columns: 1fr; } }
 </style>
 
