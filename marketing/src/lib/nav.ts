@@ -5,13 +5,14 @@
 
 export interface NavItem { label: string; labelKo: string; href: string; }
 
-// Five tabs, ordered the way a visitor decides: understand, browse, meet,
-// check us, price. The wordmark goes home (where everyone expects it), and the
+// Six tabs, ordered the way a visitor decides: understand, browse, meet,
+// assess, price, then learn about us. The wordmark goes home, and the
 // company pages live under one "About" menu instead of competing for a tab.
 export const mainNav: NavItem[] = [
   { label: 'How it works', labelKo: '이용 방법', href: '/how-it-works' },
   { label: 'Subjects', labelKo: '과목', href: '/subjects' },
   { label: 'Tutors', labelKo: '튜터', href: '/tutors' },
+  { label: 'Mock exams', labelKo: '모의고사', href: '/mock-exams' },
   { label: 'Pricing', labelKo: '요금', href: '/pricing' },
   { label: 'About', labelKo: '소개', href: '/about' },
 ];
@@ -34,6 +35,7 @@ export const footerLearn: NavItem[] = [
   { label: 'Subjects', labelKo: '과목', href: '/subjects' },
   { label: 'Tutors', labelKo: '선배', href: '/tutors' },
   { label: 'How it works', labelKo: '이용 방법', href: '/how-it-works' },
+  { label: 'Mock exams', labelKo: '모의고사', href: '/mock-exams' },
   { label: 'Pricing', labelKo: '요금', href: '/pricing' },
 ];
 

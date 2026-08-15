@@ -224,6 +224,9 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
           </article>
         ))}
       </div>
+      <p class="portal-exam-note reveal">
+        <a href="/mock-exams"><T en="Mock exam results land here too, whether or not you have a tutor." ko="모의고사 결과도 이곳에 함께 쌓입니다. 선배와 함께하지 않아도 마찬가지입니다." /></a>
+      </p>
     </div>
   </section>
 
@@ -488,6 +491,8 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     align-self: start;
   }
   .promise-card .body { max-width: 28ch; align-self: start; }
+  .portal-exam-note { margin-top: clamp(34px, 5vw, 56px); padding-top: 22px; border-top: 1px solid var(--line); text-align: center; color: var(--muted); }
+  .portal-exam-note a { color: var(--violet); font-weight: 650; text-decoration: underline; text-underline-offset: 4px; }
   @media (max-width: 900px) { .promise-grid { grid-template-columns: 1fr 1fr; gap: 36px 24px; } }
   @media (max-width: 560px) { .promise-grid { grid-template-columns: 1fr; } }
 

@@ -1,0 +1,360 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+import T from '../components/T.astro';
+import { won } from '../lib/format';
+import { MEMBER_DISCOUNT, examPriceRange, exams, memberPrice } from '../data/exams';
+
+const priceRange = examPriceRange();
+const minTurnaround = Math.min(...exams.map((exam) => exam.turnaround));
+const maxTurnaround = Math.max(...exams.map((exam) => exam.turnaround));
+const discountPercent = Math.round(MEMBER_DISCOUNT * 100);
+const orderHref = 'mailto:admissions@seonbaetutor.com?subject=Mock%20exam%20order';
+
+const examKo: Record<string, { name: string; unit: string; blurb: string }> = {
+  'ib-math-placement': {
+    name: 'IB 수학 배치고사',
+    unit: '진단 시험지 1회분, 60분',
+    blurb: '2년간의 과정을 결정하기 전에 AA와 AI, Higher와 Standard 중 무엇이 맞는지 알려줍니다.',
+  },
+  sat: {
+    name: 'SAT 전범위 모의고사',
+    unit: '두 영역 전체, 실제 시험 시간',
+    blurb: '두 영역을 모두 다루는 전범위 선형 시험지로, 실제 점수 경계에 맞춰 채점합니다.',
+  },
+  'ap-calculus-bc': {
+    name: 'AP Calculus BC',
+    unit: '객관식과 서술형을 포함한 시험지 1회분',
+    blurb: '두 영역을 모두 다루며, 모든 서술형 풀이 단계를 실제 채점 방식에 맞춰 평가합니다.',
+  },
+  'ib-chemistry': {
+    name: 'IB Chemistry',
+    unit: '시험지 1회분',
+    blurb: '서술형을 직접 채점하고, 풀이 과정 점수와 최종 답 점수를 따로 보여줍니다.',
+  },
+  'ib-physics': {
+    name: 'IB Physics',
+    unit: '시험지 1회분',
+    blurb: '서술형을 직접 채점하고, 풀이 과정 점수와 최종 답 점수를 따로 보여줍니다.',
+  },
+  'ib-economics': {
+    name: 'IB Economics',
+    unit: '시험지 1회분',
+    blurb: '실제 평가 기준에 따라 에세이를 채점하며, 명령어가 요구하는 바를 정확히 반영합니다.',
+  },
+  'ib-math-aa': {
+    name: 'IB Math AA',
+    unit: '시험지 1회분',
+    blurb: '풀이를 한 줄씩 채점해 어느 단계에서 점수를 잃었는지 보여줍니다.',
+  },
+  toefl: {
+    name: 'TOEFL 전범위 모의고사',
+    unit: '네 영역 전체, 말하기 녹음 제출',
+    blurb: '읽기, 듣기, 말하기, 쓰기를 모두 평가합니다. 말하기는 녹음으로 제출하고 공식 평가 기준에 맞춰 채점합니다.',
+  },
+  ielts: {
+    name: 'IELTS 전범위 모의고사',
+    unit: '네 영역 전체, 말하기 녹음 제출',
+    blurb: '읽기, 듣기, 말하기, 쓰기를 모두 공식 평가 기준에 따라 밴드 점수로 평가합니다.',
+  },
+};
+
+const steps = [
+  {
+    title: 'Choose and enquire',
+    titleKo: '시험을 고르고 문의하기',
+    copy: 'Pick the paper. The price is published, so there is nothing to ask. We confirm the paper and invoice by email.',
+    copyKo: '시험지를 고르세요. 가격은 모두 공개되어 있습니다. 이메일로 시험지를 확인하고 결제를 안내합니다.',
+  },
+  {
+    title: 'Sit it timed, at home',
+    titleKo: '집에서 시간을 재고 응시하기',
+    copy: 'You get the paper and the exact timing. No supervision, because the point is the diagnosis, not the invigilation.',
+    copyKo: '시험지와 정확한 제한 시간을 받습니다. 감독이 아니라 진단이 목적이므로 별도 감독은 없습니다.',
+  },
+  {
+    title: 'Submit a scan',
+    titleKo: '스캔본 제출하기',
+    copy: 'Photograph or scan and return it by email. For TOEFL and IELTS, speaking is recorded and sent the same way.',
+    copyKo: '사진이나 스캔본을 이메일로 보내세요. TOEFL과 IELTS 말하기는 녹음 파일을 같은 방식으로 제출합니다.',
+  },
+  {
+    title: 'Get it back marked',
+    titleKo: '채점 결과 받기',
+    copy: 'Your paper with every mark shown, plus the report. Two to four working days, depending on the exam.',
+    copyKo: '모든 점수가 표시된 답안지와 리포트를 받습니다. 시험에 따라 영업일 기준 2-4일이 걸립니다.',
+  },
+];
+
+const piles = [
+  {
+    title: 'You did not know it',
+    titleKo: '몰랐던 내용',
+    copy: 'A real gap in content. This is the only pile that more studying fixes.',
+    copyKo: '실제 개념의 공백입니다. 더 공부하는 것으로 해결되는 유일한 유형입니다.',
+  },
+  {
+    title: 'You knew it and lost it anyway',
+    titleKo: '알았지만 점수를 잃은 내용',
+    copy: 'A misread question, a slip, an answer to a question you were not asked. More revision will not touch these.',
+    copyKo: '문제를 잘못 읽거나 실수했거나 묻지 않은 것에 답한 경우입니다. 복습만 더해서는 해결되지 않습니다.',
+  },
+  {
+    title: 'You knew it but ran out of time',
+    titleKo: '알았지만 시간이 부족했던 내용',
+    copy: 'Recognized, could not retrieve fast enough. A practice problem, not a knowledge problem.',
+    copyKo: '알아보았지만 충분히 빠르게 떠올리지 못한 경우입니다. 지식이 아니라 연습의 문제입니다.',
+  },
+];
+---
+
+<Base
+  title="Mock exams | Seonbae"
+  description="Full mock papers sat at home, marked by hand, and returned with a report that explains why every mark was lost."
+  active="/mock-exams"
+  showConversion={false}
+>
+  <PageHero
+    eyebrow="Mock exams"
+    eyebrowKo="모의고사"
+    bg="cream"
+    copy="A full paper under timed conditions, marked by hand by our research team, and returned with a report that separates what you did not know from what you knew and lost anyway."
+    copyKo="실제 제한 시간에 맞춰 치른 한 회분 시험을 연구팀이 직접 채점하고, 몰랐던 내용과 알았지만 놓친 점수를 나눠 리포트로 돌려드립니다."
+    ctaLabel="See what you get"
+    ctaLabelKo="리포트 구성 보기"
+    ctaHref="#report"
+    secondaryLabel="How it works"
+    secondaryLabelKo="이용 방법"
+    secondaryHref="/how-it-works"
+  >
+    <span data-l="en">Sit the real thing before the <span class="mark">real thing.</span></span>
+    <span data-l="ko" class="kr">실전 전에 <span class="mark">진짜 시험을</span> 먼저.</span>
+  </PageHero>
+
+  <section class="section bg-white">
+    <div class="container split what-grid">
+      <div class="reveal">
+        <Eyebrow label="What it is" labelKo="모의고사란" />
+        <h2 class="h2"><T en="A real paper, not a quiz." ko="퀴즈가 아니라 실제 시험지입니다." /></h2>
+        <div class="what-copy">
+          <p class="lead"><T en="Timed, sat at home, and marked by a person rather than a machine. You get the paper back with every mark accounted for, alongside a written report on what the result actually means and what to do about it." ko="집에서 시간을 재고 응시하며, 기계가 아닌 사람이 채점합니다. 모든 점수가 표시된 답안지와 함께 결과가 실제로 무엇을 뜻하는지, 다음에 무엇을 해야 하는지 적은 리포트를 받습니다." /></p>
+          <p class="body"><T en={`Nothing about it requires you to be a Seonbae student. If you already have a tutor with us, every exam is ${discountPercent} percent less.`} ko={`선배 수강생이 아니어도 응시할 수 있습니다. 현재 정기 수업을 받고 있다면 모든 시험이 ${discountPercent}% 할인됩니다.`} /></p>
+        </div>
+      </div>
+      <dl class="facts reveal" data-delay="80ms">
+        <div class="fact">
+          <dt>{exams.length}</dt>
+          <dd><T en={`exams at launch, from ${won(priceRange.min)}`} ko={`개 시험, ${won(priceRange.min)}부터`} /></dd>
+        </div>
+        <div class="fact">
+          <dt>{minTurnaround}-{maxTurnaround} <small><T en="days" ko="일" /></small></dt>
+          <dd><T en="from submission to marked report" ko="제출부터 채점 리포트까지" /></dd>
+        </div>
+        <div class="fact">
+          <dt>500+</dt>
+          <dd><T en="papers behind every question we write" ko="문항 제작의 바탕이 된 기출 및 연습 문제" /></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="section-head reveal">
+        <Eyebrow label="How it runs" labelKo="진행 방식" />
+        <h2 class="h2"><T en="Four steps, all from home." ko="집에서 끝내는 네 단계." /></h2>
+      </div>
+      <div class="run-grid">
+        {steps.map((step, index) => (
+          <article class="run-card reveal" data-delay={`${index * 60}ms`}>
+            <span class="run-number" aria-hidden="true">{index + 1}</span>
+            <div>
+              <h3><T en={step.title} ko={step.titleKo} /></h3>
+              <p class="body"><T en={step.copy} ko={step.copyKo} /></p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="delivery-note reveal"><T en="For launch, the paper, your scan, and the marked report travel by email. Results will also land in your portal as that service rolls out, whether or not you have a tutor." ko="출시 시점에는 시험지, 답안 스캔본, 채점 리포트를 이메일로 주고받습니다. 포털 기능이 제공되면 선배 수강 여부와 관계없이 결과도 함께 쌓입니다." /></p>
+    </div>
+  </section>
+
+  <section class="section bg-white" id="report">
+    <div class="container">
+      <div class="report-panel reveal">
+        <div class="report-intro">
+          <Eyebrow label="The report" labelKo="리포트" tone="light" />
+          <h2 class="h2"><T en="Every lost mark goes into one of three piles." ko="잃은 점수는 세 가지로 나눕니다." /></h2>
+          <p class="report-lead"><T en="A score on its own tells you very little. What changes what you do next is knowing why the marks went. So we sort every one of them." ko="점수만으로는 알 수 있는 것이 많지 않습니다. 다음 행동을 바꾸는 것은 왜 점수를 잃었는지 아는 일입니다. 그래서 모든 감점을 분류합니다." /></p>
+          <p class="report-extra"><T en="Alongside the split: your score against the real boundary for that paper, a breakdown by topic, and one specific thing to do next." ko="분류와 함께 실제 등급 경계에 따른 점수, 주제별 분석, 그리고 바로 실행할 다음 한 가지를 제공합니다." /></p>
+        </div>
+        <div class="pile-stack">
+          {piles.map((pile, index) => (
+            <article class="pile-row">
+              <span class="pile-number" aria-hidden="true">{index + 1}</span>
+              <div>
+                <h3><T en={pile.title} ko={pile.titleKo} /></h3>
+                <p><T en={pile.copy} ko={pile.copyKo} /></p>
+              </div>
+            </article>
+          ))}
+          <p class="pile-close"><T en="Most students respond to every lost mark the same way, by rereading their notes. That only helps the first pile. The split tells you which student you are right now, and it usually changes the plan." ko="대부분의 학생은 점수를 잃을 때마다 노트를 다시 읽습니다. 하지만 그것은 첫 번째 유형에만 도움이 됩니다. 이 분류는 지금 어떤 상태인지 보여 주고, 대개 공부 계획을 바꿉니다." /></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream" id="prices">
+    <div class="container">
+      <div class="price-head reveal">
+        <Eyebrow label="Prices" labelKo="가격" />
+        <h2 class="h2"><T en="Published, like everything else." ko="다른 모든 요금처럼 공개합니다." /></h2>
+        <p class="lead"><T en={`Every exam is priced on this page. Families in active weekly tutoring with us pay ${discountPercent} percent less after their membership is verified.`} ko={`모든 시험 가격을 이 페이지에 공개합니다. 정기 수업 중인 가족은 수강 여부 확인 후 ${discountPercent}% 할인됩니다.`} /></p>
+      </div>
+
+      <div class="exam-table-wrap reveal">
+        <table class="exam-table">
+          <thead>
+            <tr>
+              <th scope="col"><T en="Exam" ko="시험" /></th>
+              <th scope="col"><T en="What you get" ko="구성" /></th>
+              <th scope="col"><T en="Price" ko="가격" /></th>
+              <th scope="col"><T en="Member price" ko="수강생 가격" /></th>
+            </tr>
+          </thead>
+          <tbody>
+            {exams.map((exam) => (
+              <tr>
+                <th scope="row">
+                  <span class="exam-name"><T en={exam.name} ko={examKo[exam.id].name} /></span>
+                  <span class="exam-blurb"><T en={exam.blurb} ko={examKo[exam.id].blurb} /></span>
+                </th>
+                <td>
+                  <T en={exam.unit} ko={examKo[exam.id].unit} />
+                  <small><T en={`${exam.turnaround} working days`} ko={`영업일 ${exam.turnaround}일`} /></small>
+                </td>
+                <td class="money" data-krw={exam.price}>{won(exam.price)}</td>
+                <td class="money money--member" data-krw={memberPrice(exam.price)}>{won(memberPrice(exam.price))}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ul class="price-notes reveal">
+        <li><T en="IB prices are per paper. A full IB subject is usually three papers." ko="IB 가격은 시험지 한 회분 기준입니다. IB 한 과목 전체는 보통 세 개 시험지로 구성됩니다." /></li>
+        <li><T en="TOEFL and IELTS speaking is submitted as a recording rather than a live interview. It is marked against the same descriptors, but it is not a perfect substitute for the real interactive test, and we would rather say so." ko="TOEFL과 IELTS 말하기는 실시간 인터뷰 대신 녹음 파일로 제출합니다. 동일한 평가 기준으로 채점하지만 실제 상호작용 시험을 완전히 대신할 수는 없으며, 이 점을 미리 분명히 안내합니다." /></li>
+        <li><T en="The IB Math placement test is a diagnostic, not a past paper. It exists to answer one question: AA or AI, Higher or Standard." ko="IB 수학 배치고사는 기출문제가 아니라 진단 시험입니다. AA와 AI, Higher와 Standard 중 무엇이 맞는지 답하기 위해 마련되었습니다." /></li>
+      </ul>
+
+      <div class="order-row reveal">
+        <div>
+          <h3><T en="Ready to sit one?" ko="응시할 준비가 되었나요?" /></h3>
+          <p><T en="Tell us which paper you want. We confirm the details and invoice by email." ko="원하는 시험지를 알려주세요. 이메일로 세부 내용을 확인하고 결제를 안내합니다." /></p>
+        </div>
+        <Button href={orderHref} label="Enquire to order" labelKo="주문 문의하기" variant="primary" size="lg" arrow="diag" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container maker-band reveal">
+      <div>
+        <Eyebrow label="Who makes them" labelKo="제작 팀" />
+        <h2 class="h2"><T en="Built from the papers, not from memory." ko="기억이 아니라 실제 시험지에서 만듭니다." /></h2>
+        <p class="lead"><T en="Our research team built these from more than 500 past and practice papers, along with the algorithm that turns a raw score into the grade it would earn in a real sitting." ko="선배 연구팀은 500개가 넘는 기출 및 연습 문제와, 원점수를 실제 시험에서 받을 등급으로 바꾸는 알고리즘을 바탕으로 이 시험들을 만들었습니다." /></p>
+        <Button href="/resources" label="Read what they publish" labelKo="연구팀의 글 보기" variant="secondary" arrow="right" />
+      </div>
+      <dl class="maker-facts">
+        <div><dt>500+</dt><dd><T en="past and practice papers behind every exam" ko="모든 시험의 바탕이 된 기출 및 연습 문제" /></dd></div>
+        <div><dt>SKY</dt><dd><T en="Seoul National, Korea, and Yonsei students on the research team" ko="서울대, 고려대, 연세대 학생으로 구성된 연구팀" /></dd></div>
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .what-grid { align-items: start; }
+  .what-grid .h2,
+  .section-head .h2,
+  .price-head .h2,
+  .maker-band .h2 { margin-top: 12px; }
+  .what-copy { display: grid; gap: 18px; margin-top: 20px; }
+
+  .facts { border-top: 2px solid var(--ink); }
+  .fact { display: grid; grid-template-columns: minmax(130px, 0.65fr) 1fr; gap: 20px; align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .fact dt { font-family: var(--display); font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--violet); }
+  .fact dt small { font-size: 0.33em; letter-spacing: 0; }
+  .fact dd { color: var(--muted); line-height: 1.45; }
+
+  .section-head { max-width: 48rem; margin-bottom: clamp(28px, 4vw, 44px); }
+  .run-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .run-card { display: flex; gap: 18px; padding: clamp(22px, 3vw, 30px); background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); }
+  .run-number { flex: none; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); background: var(--yellow-soft); color: var(--violet); font-family: var(--display); font-weight: 800; }
+  .run-card:nth-child(2) .run-number,
+  .run-card:nth-child(4) .run-number { background: var(--sage); }
+  .run-card h3 { font-size: 1.18rem; margin-bottom: 8px; }
+  .delivery-note { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); }
+
+  .report-panel { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); gap: clamp(30px, 5vw, 72px); padding: clamp(30px, 5vw, 70px); background: var(--footer); color: var(--on-dark); border-radius: var(--r-xl); box-shadow: var(--shadow-md); }
+  .report-panel .h2 { color: var(--on-dark); margin-top: 14px; }
+  .report-lead { margin-top: 20px; color: var(--on-dark-soft); font-size: 1.08rem; line-height: 1.6; }
+  .report-extra { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line-dark); color: var(--on-dark); line-height: 1.55; }
+  .pile-stack { display: grid; gap: 12px; }
+  .pile-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding: clamp(20px, 2.6vw, 28px); background: rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: var(--r-lg); }
+  .pile-number { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); background: rgba(255, 255, 255, 0.14); color: var(--yellow-soft); font-family: var(--display); font-weight: 800; }
+  .pile-row h3 { color: var(--on-dark); font-size: 1.12rem; margin-bottom: 7px; }
+  .pile-row p { color: var(--on-dark-soft); line-height: 1.5; }
+  .pile-close { padding: clamp(22px, 3vw, 30px); background: var(--yellow-soft); color: var(--ink); border-radius: var(--r-lg); font-weight: 600; line-height: 1.55; }
+
+  .price-head { max-width: 58rem; margin-bottom: clamp(28px, 4vw, 44px); }
+  .price-head .lead { margin-top: 16px; }
+  .exam-table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); }
+  .exam-table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; }
+  .exam-table th,
+  .exam-table td { padding: 20px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .exam-table thead th { padding-block: 14px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .exam-table thead th:first-child,
+  .exam-table tbody th { padding-left: 0; }
+  .exam-table thead th:last-child,
+  .exam-table tbody td:last-child { padding-right: 0; }
+  .exam-table th:nth-child(1) { width: 34%; }
+  .exam-table th:nth-child(2) { width: 32%; }
+  .exam-table th:nth-child(3),
+  .exam-table th:nth-child(4) { width: 17%; }
+  .exam-name { display: block; font-family: var(--display); font-weight: 750; font-size: 1.05rem; color: var(--ink); }
+  .exam-blurb { display: block; margin-top: 7px; color: var(--muted); font-weight: 400; font-size: 0.88rem; line-height: 1.45; }
+  .exam-table td { color: var(--muted); font-size: 0.94rem; line-height: 1.45; }
+  .exam-table td small { display: block; margin-top: 7px; color: var(--muted-soft); }
+  .exam-table .money { color: var(--ink); font-family: var(--display); font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .exam-table .money--member { color: var(--violet); }
+  .price-notes { display: grid; gap: 0; margin-top: 30px; }
+  .price-notes li { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 0.94rem; line-height: 1.55; }
+  .order-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 36px; padding-top: 30px; border-top: 2px solid var(--ink); }
+  .order-row h3 { font-size: 1.35rem; }
+  .order-row p { margin-top: 6px; color: var(--muted); }
+
+  .maker-band { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); gap: clamp(30px, 6vw, 86px); align-items: end; padding-block: clamp(38px, 5vw, 64px); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .maker-band .lead { margin: 18px 0 26px; max-width: 45rem; }
+  .maker-facts { display: grid; gap: 22px; }
+  .maker-facts div { padding-top: 18px; border-top: 2px solid var(--ink); }
+  .maker-facts dt { font-family: var(--display); font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--violet); }
+  .maker-facts dd { margin-top: 8px; color: var(--muted); line-height: 1.45; }
+
+  @media (max-width: 900px) {
+    .report-panel,
+    .maker-band { grid-template-columns: 1fr; }
+    .report-extra { max-width: 46rem; }
+  }
+  @media (max-width: 700px) {
+    .run-grid { grid-template-columns: 1fr; }
+    .order-row { align-items: flex-start; flex-direction: column; }
+    .fact { grid-template-columns: 1fr; gap: 8px; }
+  }
+  @media (max-width: 520px) {
+    .report-panel { margin-inline: calc(var(--gutter) * -0.35); }
+    .pile-row { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  }
+</style>
