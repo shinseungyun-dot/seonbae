@@ -35,6 +35,10 @@ const nextConfig = {
           destination: "/marketing/how-it-works/index.html",
         },
         {
+          source: "/mock-exams",
+          destination: "/marketing/mock-exams/index.html",
+        },
+        {
           source: "/pricing",
           destination: "/marketing/pricing/index.html",
         },
