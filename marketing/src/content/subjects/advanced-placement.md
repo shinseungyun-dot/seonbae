@@ -9,17 +9,11 @@ featured: true
 priceFrom: 80000
 tutorCount: 0
 topics:
-  - AP Calculus AB and BC
-  - AP Sciences
-  - AP Economics
-  - AP English
-  - Free response strategy
-  - Score five preparation
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: High school students taking one or more AP courses who want to secure college credit and keep their GPA strong at the same time.
-lessonFormat:
-  - Weekly lessons matched to your school's pacing
-  - Past paper practice with the College Board scoring guides
-  - A revision run up in the weeks before the May exams
 ---
 
 Taking several AP classes at once can be demanding. Our tutors carry that burden with you, and make it their priority to help you move ahead.

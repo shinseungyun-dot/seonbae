@@ -18,7 +18,6 @@ const subjects = defineCollection({
     tutorCount: z.number().default(0),
     topics: z.array(z.string()),
     idealLearner: z.string(),
-    lessonFormat: z.array(z.string()),
   }),
 });
 

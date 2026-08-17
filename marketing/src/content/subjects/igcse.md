@@ -9,17 +9,11 @@ featured: false
 priceFrom: 60000
 tutorCount: 0
 topics:
-  - Mathematics
-  - Combined and separate sciences
-  - English as a first and second language
-  - Second languages
-  - Coursework support
-  - Study habits that last
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: Students in the years before the diploma or sixth form who want a solid base and calmer study habits going into their harder courses.
-lessonFormat:
-  - Weekly lessons that fit around a full school timetable
-  - Clear explanations that build understanding, not just answers
-  - Early work on the habits that make the next stage easier
 ---
 
 The IGCSEs are the perfect opportunity to develop great study habits. Understanding unfamiliar concepts, making them your own, and expressing them clearly in the exam are skills your tutor helps build across every subject.

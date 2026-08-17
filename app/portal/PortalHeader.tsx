@@ -64,7 +64,7 @@ export default function PortalHeader({
         collapse: l("사이드바 접기", "Collapse sidebar"),
         open: l("포털 메뉴 열기", "Open portal menu"),
         close: l("포털 메뉴 닫기", "Close portal menu"),
-        website: l("웹사이트로", "Back to website"),
+        website: l("홈페이지로", "Back to homepage"),
         account: l("로그인 계정", "Signed in"),
         information: l("내 정보", "My information"),
         policies: l("정책", "Policies"),

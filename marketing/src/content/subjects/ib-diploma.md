@@ -9,17 +9,11 @@ featured: true
 priceFrom: 80000
 tutorCount: 0
 topics:
-  - HL and SL sciences
-  - Mathematics AA and AI
-  - Internal assessments
-  - Extended essay
-  - Theory of Knowledge
-  - Exam technique and timing
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: Students in the diploma years who want steadier grades across demanding HL subjects, or focused help finishing an IA or the extended essay before a deadline.
-lessonFormat:
-  - Weekly one to one lessons on video, recorded so you can review them later
-  - A shared plan that tracks each subject, deadline, and predicted grade
-  - Notes and next steps after every session
 ---
 
 The IB rewards students who understand how it is marked. Knowing what is on the syllabus is not quite enough. Our tutors sat the same diploma in international schools worldwide, earned 7s in the subjects they teach, and reached the 40 and above milestone. Now they are ready to start learning with you.

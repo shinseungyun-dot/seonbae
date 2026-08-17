@@ -9,17 +9,11 @@ featured: false
 priceFrom: 50000
 tutorCount: 0
 topics:
-  - Essay structure and argument
-  - Close reading
-  - Personal statements
-  - Grammar and style
-  - Speaking confidence
-  - Wider reading habits
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: Students who want to write with clarity and read with confidence, whether for school English, applications, or life outside the classroom.
-lessonFormat:
-  - Weekly lessons with writing between them
-  - Line by line feedback that teaches, not just corrects
-  - A reading list chosen for the student's level and interests
 ---
 
 Learning a language and producing strong writing both require many attempts and detailed feedback. That is why a learning partner helps. Our tutors guide you from reading to speaking and writing.
