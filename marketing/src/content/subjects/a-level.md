@@ -1,8 +1,8 @@
 ---
 title: A Level
 number: "03"
-summary: Depth first teaching for AS and A2, built around the exact board your school follows and the grades your university offers depend on.
-levels: ["A Level", "AS and A2", "Sixth form"]
+summary: Learn AS the concise and pacy way. Absorb A2 the deep and meticulous way. A stars are well within reach with our tutors’ support.
+levels: ["AS", "A2"]
 accent: butter
 order: 3
 featured: false
@@ -22,8 +22,6 @@ lessonFormat:
   - A term plan aligned to your predicted grades and offers
 ---
 
-A Levels reward depth. Universities read them closely, and the gap between a B and an A can decide an offer. Our tutors earned top grades in these subjects and know each board has its own habits.
+A Levels require a narrow, deep pool of knowledge. Conditional offers can place a huge burden on students. Tutors who earned A stars in these subjects can carry that burden with you until the pressure of the offer feels manageable.
 
-We start by matching lessons to your exact specification, then build understanding that holds up under the hardest questions rather than memorised steps that fall apart under pressure. Past papers become a weekly habit, marked against real grade boundaries so progress is never a guess.
-
-For students aiming at competitive courses, we plan backward from the offer, so every term has a clear target.
+Every new concept becomes a foundation for the exam, and your tutor solidifies it through careful explanation and thorough practice. You will learn to see questions through an examiner’s eyes, just as your tutor once did.

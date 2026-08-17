@@ -7,38 +7,32 @@ import T from '../components/T.astro';
 
 const founders = [
   {
-    name: 'Yoonjae Lee', hangul: '이윤재', role: 'Founder and Chief Executive Officer', roleKo: '창업자·CEO', uni: 'Korea University', uniKo: '고려대학교', accent: 'mint' as const,
-    bio: 'Started Seonbae after tutoring through university and watching most of what families paid disappear before it reached the tutor. Sets the rate for every subject and what each tutor is paid, reads the matching requests and chooses the tutor himself, and holds the line on what goes in the open. Answers admissions@ directly, so the first reply a family gets is his.',
-    bioKo: '대학 시절 과외를 하며 가족이 낸 비용의 대부분이 튜터에게 닿지 않는 현실을 보고 선배를 시작했습니다. 모든 과목 요금과 튜터 보수를 정하고, 매칭 요청을 직접 읽어 선배를 고르며, 공개해야 할 원칙을 지킵니다.',
+    name: 'Yoonjae Lee', hangul: '이윤재', role: 'Founder & CEO', roleKo: '창업자 & CEO', uni: 'Korea University, International Studies', uniKo: '고려대학교 국제학부', accent: 'mint' as const,
   },
   {
-    name: 'Byeongguk Oh', hangul: '오병국', role: 'Co-founder and Chief Operating Officer', roleKo: '공동창업자·COO', uni: 'Korea University', uniKo: '고려대학교', accent: 'lavender' as const,
-    bio: 'Runs matching, tutor care, and safeguarding. Believes the honest answer is always the one that keeps families with us longest, even when it costs us the booking.',
-    bioKo: '매칭과 튜터 지원, 학생 보호를 맡고 있습니다. 당장의 예약을 놓치더라도 솔직한 답이 가족과 가장 오래 함께하는 길이라고 믿습니다.',
+    name: 'Byeongguk Oh', hangul: '오병국', role: 'Co-Founder & COO', roleKo: '공동창업자 & COO', uni: 'Korea University, Business Administration', uniKo: '고려대학교 경영학과', accent: 'lavender' as const,
   },
   {
-    name: 'Seungyun Shin', hangul: '신승윤', role: 'Co-founder and Chief Technology Officer', roleKo: '공동창업자·CTO', uni: 'Seoul National University', uniKo: '서울대학교', accent: 'violet' as const,
-    bio: 'Builds the tools that keep lessons, notes, and billing simple, so a tutor spends their hours teaching rather than doing admin.',
-    bioKo: '수업과 노트, 결제를 단순하게 유지하는 도구를 만들어 선배가 행정 대신 가르치는 데 시간을 쓸 수 있게 합니다.',
+    name: 'Seungyun Shin', hangul: '신승윤', role: 'Co-Founder & CTO', roleKo: '공동창업자 & CTO', uni: 'Seoul National University, Computer Science', uniKo: '서울대학교 컴퓨터공학부', accent: 'violet' as const,
   },
 ];
 
 const principles = [
-  { title: 'Verify before we promise', titleKo: '약속보다 검증을 먼저', copy: 'We hold the real document before a tutor is ever listed. Trust is not a tagline here, it is the first step.', copyKo: '선배를 명부에 올리기 전에 실제 서류를 확인합니다. 신뢰는 문구가 아니라 첫 단계입니다.' },
-  { title: 'Teach from experience', titleKo: '경험에서 가르치기', copy: 'Our tutors sat the same exams recently and scored at the top. The advice is specific because the memory is fresh.', copyKo: '선배는 최근 같은 시험에서 최고 성적을 받았습니다. 기억이 생생하기 때문에 조언도 구체적입니다.' },
-  { title: 'Keep families first', titleKo: '가족을 먼저 생각하기', copy: 'Clear pricing, a rematch guarantee, and progress you can see. We would rather earn the next month than lock in the year.', copyKo: '분명한 요금, 재매칭 보장, 눈에 보이는 성장. 1년을 묶기보다 다음 달의 신뢰를 얻겠습니다.' },
+  { title: 'Know who you are learning from', titleKo: '선생님이 믿음직해야 해요', copy: 'Every tutor is verified before appearing on Seonbae. We check academic records and university qualifications before anyone is listed.', copyKo: '부모님이 안심하고 고를 수 있도록 성적부터 대학까지 모두 확인합니다.' },
+  { title: 'Firsthand experience makes a difference', titleKo: '선생님도 입시 경험이 있어야 해요', copy: 'Knowing the content and earning the marks are different skills. Recent exam experience helps a tutor give advice that fits the student and the way exams work now.', copyKo: '내용을 아는 것과 점수를 잘 받는 일은 다릅니다. 최근까지 같은 고민을 했던 선배가 학생에게 맞는 입시 지도를 할 수 있습니다.' },
+  { title: 'Clear from the start', titleKo: '투명해야 해요', copy: 'Pricing, schedules, lesson expectations, and communication should be easy to understand from the beginning.', copyKo: '가격, 시간대, 수업 내용과 소통 과정까지 모두 투명하고 직관적이어야 합니다.' },
 ];
 ---
-<Base title="About — Seonbae" active="/about">
+<Base title="About | Seonbae" active="/about">
   <PageHero
     eyebrow="About"
     eyebrowKo="선배 소개"
     bg="yellow"
     align="center"
-    copy="Seonbae began with a simple unfairness. As tutors we were paid a fraction of what families were charged, and neither side could see the other half of the deal. We rebuilt it so the rate is published, the tutor keeps their full fee, and the lesson happens online, wherever the student happens to be."
-    copyKo="선배는 단순한 불공정에서 시작했습니다. 가족이 낸 금액 중 튜터에게 돌아오는 몫은 작았고, 어느 쪽도 전체 구조를 알 수 없었습니다. 그래서 요금을 공개하고 선배가 정해진 보수를 전액 받으며, 학생이 어디에 있든 온라인으로 만나는 방식으로 다시 만들었습니다."
+    copy="A place where great tutors are valued fairly, families know exactly what they are paying for, and students can learn from people who genuinely understand their path."
+    copyKo="좋은 선생님들이 만족스러운 보수로 수업하고, 부모님은 배움의 과정을 확인하며, 학생은 자신의 길을 먼저 걸어본 선배에게 배울 수 있는 곳을 만들었습니다."
   >
-    <T en="The people and principles behind better learning." ko="더 나은 배움을 만드는 사람과 원칙." />
+    <T en="We built the tutoring platform we wished existed." ko="저희가 필요했던 과외 플랫폼, 저희가 직접 만들었습니다." />
   </PageHero>
 
   <!-- Editorial layout throughout: a running text measure with a margin rail,
@@ -50,8 +44,8 @@ const principles = [
           <Eyebrow label="Why we exist" labelKo="우리가 존재하는 이유" />
         </div>
         <div class="statement__body">
-          <p class="statement__text"><T en="Good teaching is not scarce. Access to it is. The best tutors we knew were undervalued and hard to find, and the families who needed them were paying more than the tutor ever saw." ko="좋은 가르침이 부족한 것이 아니라, 만날 기회가 부족했습니다. 실력 있는 튜터는 제대로 평가받지 못했고 찾기 어려웠으며, 가족은 튜터가 받는 금액보다 훨씬 많이 내고 있었습니다." /></p>
-          <p class="statement__text statement__text--two"><T en="Seonbae exists to close that gap. One rate per subject, published. One tutor, verified against the score report. One video call, from anywhere." ko="선배는 그 간격을 좁히기 위해 존재합니다. 과목별 요금은 공개하고, 선배의 성적표는 직접 검증하며, 어디서든 영상으로 만납니다." /></p>
+          <p class="statement__text"><T en="Great tutors were already out there. The system around them wasn’t working." ko="좋은 선생님들은 많아도, 설 자리가 없었습니다." /></p>
+          <p class="statement__text statement__text--two"><T en="Families struggled to know who they could trust and what they were really paying for. Tutors struggled to be found and valued fairly. Seonbae was built to make both sides work better." ko="부모님은 어떤 선생님을 믿고 아이를 맡겨야 할지 고민했고, 선생님은 자신의 가치를 알아주는 일자리를 찾기 어려웠습니다. 선배는 이 문제를 해결하기 위해 시작됐습니다." /></p>
         </div>
       </div>
     </div>
@@ -62,11 +56,11 @@ const principles = [
       <div class="story">
         <div class="story__rail reveal">
           <Eyebrow label="Our start" labelKo="우리의 시작" />
-          <p class="story__dateline"><T en="Seoul · One flat · Three tutors" ko="서울 · 한 집 · 세 명의 튜터" /></p>
+          <p class="story__dateline"><T en="Seoul. Three roommates. One idea." ko="서울의 한 기숙사에서 피어난 생각" /></p>
         </div>
         <div class="story__text reveal">
-          <h2 class="h2"><T en="We were roommates with the same complaint." ko="같은 문제를 말하던 세 룸메이트였습니다." /></h2>
-          <p class="story__lede"><T en="Three of us shared a flat in Seoul and tutored to get through university. IB, AP, A Level, whatever came in. We were good at it, and every month we compared notes on the same thing: how little of what the family paid ever reached us." ko="서울에서 함께 살던 세 사람은 대학 생활 동안 IB, AP, A레벨을 가르쳤습니다. 매달 가족이 낸 비용 중 우리에게 돌아오는 금액이 얼마나 적은지 같은 이야기를 나누었습니다." /></p>
+          <h2 class="h2"><T en="The same problems kept coming up." ko="같은 문제로 셋은 꾸준히 골머리를 앓았습니다." /></h2>
+          <p class="story__lede"><T en="The three of us were roommates, and all three of us tutors. After lessons, we often came home talking about the same problems: inconsistent pay, different rates across platforms, scheduling, parent communication, and everything that came with tutoring beyond the teaching itself." ko="저희 셋은 기숙사에서는 룸메이트, 밖에서는 과외 선생님이었습니다. 수업이 끝나면 불규칙한 정산, 플랫폼마다 다른 보수, 갑작스러운 일정 변경과 학부모 소통처럼 수업 이외의 문제를 늘 이야기했습니다. 선생님으로 살며 오히려 가장 쉬운 일은 수업이라고 해도 될 정도였습니다." /></p>
           <figure class="story__photo">
             <img
               src="/images/founders.jpg"
@@ -78,8 +72,8 @@ const principles = [
             />
             <figcaption><T en="The three of us, before any of this had a name." ko="아직 선배라는 이름이 생기기 전, 세 사람." /></figcaption>
           </figure>
-          <p class="body"><T en="One evening we actually worked the numbers out on the kitchen table. The gap was worse than any of us had guessed. Nobody in the middle wanted it written down, so we wrote it down, and Seonbae started there." ko="어느 저녁, 식탁에서 실제 숫자를 계산해 보았습니다. 차이는 예상보다 컸습니다. 누구도 공개하고 싶어 하지 않던 숫자를 직접 적었고, 선배는 거기서 시작했습니다." /></p>
-          <blockquote class="story__quote"><T en="A good tutor should not have to accept a bad rate, and a family should not have to guess what they are paying for." ko="좋은 튜터가 부당한 보수를 받아들일 필요도, 가족이 무엇에 돈을 내는지 짐작할 필요도 없어야 합니다." /></blockquote>
+          <p class="body"><T en="We soon realised it wasn’t just us. Tutors across Korea’s top universities teaching international curricula were saying the same things. Those conversations became the first idea for Seonbae. Yoonjae brought it to Byeongguk and Seungyun, and together we started building the platform we wished we had as tutors." ko="저희만 힘든 것이 아니었습니다. 국제 커리큘럼을 가르치는 최상위권 대학 선생님들도 비슷한 어려움을 겪고 있었습니다. 그 대화들이 선배의 첫 아이디어가 되었고, 윤재가 병국과 승윤에게 제안한 뒤 세 사람은 과외 선생님일 때 필요했던 플랫폼을 함께 만들기 시작했습니다." /></p>
+          <blockquote class="story__quote"><T en="What would tutoring look like if it actually worked better for everyone involved? That question became Seonbae." ko="선생님과 학생 모두 기분 좋게 가르치고 배울 수 있다면 어떨까요? 선배는 그 질문에 대한 답이 되려 합니다." /></blockquote>
         </div>
       </div>
     </div>
@@ -105,7 +99,6 @@ const principles = [
                 <p class="fnd__uni"><T en={f.uni} ko={f.uniKo} /></p>
               </div>
             </div>
-            <p class="fnd__bio"><T en={f.bio} ko={f.bioKo} /></p>
           </article>
         ))}
       </div>
@@ -120,10 +113,8 @@ const principles = [
           <Eyebrow label="A note from the founders" labelKo="창업팀의 글" />
         </div>
         <div class="note__body">
-          <p class="note__lede"><T en="We built the version we wanted to work for." ko="우리가 일하고 싶었던 방식을 직접 만들었습니다." /></p>
-          <p class="body"><T en="Between us we spent years tutoring international curricula, and the same two problems kept showing up. Tutors were underpaid and could not say so. Families were overcharged and could not tell what the money bought. Everyone accepted it because nobody in the middle wanted the numbers in the open." ko="세 사람은 여러 해 동안 국제 커리큘럼을 가르치며 같은 두 문제를 보았습니다. 튜터는 적게 받았고 말하기 어려웠으며, 가족은 많이 냈지만 무엇에 돈을 내는지 알 수 없었습니다." /></p>
-          <p class="body"><T en="So the rules we started with are the rules we still keep. We publish the price of all 125 subjects. We pay each tutor a fixed amount per subject and they keep it in full. We hold the score report before we list anyone. We match by hand rather than by algorithm. If a lesson falls short because of us, we re-teach it or refund it." ko="그래서 시작할 때 정한 원칙을 지금도 지킵니다. 125개 과목의 요금을 공개하고, 선배에게 과목별 보수를 전액 지급합니다. 명부에 올리기 전 성적표를 확인하고, 알고리즘이 아닌 사람이 직접 매칭합니다. 저희 책임으로 수업이 부족하면 다시 수업하거나 환불합니다." /></p>
-          <p class="body"><T en="Seonbae will grow, and the names on the tutor page will change. Those rules will not." ko="선배는 성장하고 명부의 이름은 바뀌겠지만, 이 원칙은 바뀌지 않습니다." /></p>
+          <p class="note__lede"><T en="We think tutoring should be straightforward." ko="과외는 투명해야 합니다." /></p>
+          <p class="body"><T en="Students should be able to find the right person to learn from. Families should know what to expect. Tutors should be able to focus on teaching. Seonbae is built to make those three things work together." ko="학생은 나에게 맞는 선생님을 쉽게 찾고, 부모님은 투자와 결과 사이의 과정이 합리적인지 확인하며, 선생님은 수업과 학생의 목표에만 몰입할 수 있어야 합니다. 선배는 이 세 가지가 함께 작동하도록 만들었습니다." /></p>
           <p class="note__sign"><T en="The Seonbae founders" ko="선배 창업팀" /></p>
         </div>
       </div>
@@ -135,7 +126,7 @@ const principles = [
     <div class="container">
       <div class="ed-head reveal">
         <Eyebrow label="What we hold to" labelKo="지키는 원칙" />
-        <h2 class="h2"><T en="Three principles we do not bend." ko="양보하지 않는 세 가지 원칙." /></h2>
+        <h2 class="h2"><T en="Three things every tutoring experience should get right." ko="과외가 반드시 갖춰야 할 세 가지." /></h2>
       </div>
       <ol class="tenets">
         {principles.map((p, i) => (
@@ -229,7 +220,7 @@ const principles = [
   /* ----- Founders --------------------------------------------------------- */
   .fnd {
     display: grid;
-    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: 4.5rem minmax(0, 1fr);
     gap: clamp(18px, 3vw, 48px);
     align-items: start;
     padding: clamp(24px, 3vw, 36px) 0;
@@ -242,7 +233,6 @@ const principles = [
   .fnd__hangul { font-weight: 500; font-size: 0.98rem; color: var(--muted); }
   .fnd__role { color: var(--violet); font-weight: 600; font-size: 0.92rem; margin-top: 5px; }
   .fnd__uni { color: var(--muted); font-size: 0.88rem; margin-top: 1px; }
-  .fnd__bio { color: var(--muted); font-size: 1.02rem; line-height: 1.6; padding-top: 6px; }
 
   /* ----- Founders' note --------------------------------------------------- */
   .note {

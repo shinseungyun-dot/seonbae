@@ -1,7 +1,7 @@
 ---
 title: English and Writing
 number: "06"
-summary: Reading, essays, and university applications for students building real fluency and a voice that comes through on the page.
+summary: From everyday conversations to school, essays to emails, and personal statements to university applications. Our tutors stay by your side until English feels natural.
 levels: ["Essays", "Reading", "University applications"]
 accent: butter
 order: 6
@@ -22,8 +22,10 @@ lessonFormat:
   - A reading list chosen for the student's level and interests
 ---
 
-Writing well is a skill anyone can learn with the right feedback. Our tutors read widely, studied English and the humanities at Korea's top universities, and know how to help a student find their argument and make it land.
+Learning a language and producing strong writing both require many attempts and detailed feedback. That is why a learning partner helps. Our tutors guide you from reading to speaking and writing.
 
-Lessons balance the mechanics with the bigger picture: how to build a paragraph, hold a thesis, and read a text closely enough to have something worth saying. For students applying to university, we help shape a personal statement that sounds like them at their best.
+From everyday conversations and schoolwork to business situations and meetings, your tutor stays accountable for the learning process. Practice builds confidence, and confidence changes how you use the language.
 
-The written feedback is the heart of it. Every piece comes back marked in a way that shows not only what to fix, but why it matters.
+Tutors identify the real problem and explain why it needs to change, so every attempt becomes progress.
+
+For applications and academic writing, that same attention helps you develop a clear argument and a voice that still sounds like you.

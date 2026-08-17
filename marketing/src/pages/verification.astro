@@ -6,10 +6,9 @@ import Button from '../components/Button.astro';
 import T from '../components/T.astro';
 
 const checks = [
-  { title: 'The score report itself', titleKo: '실제 성적표', copy: 'Not a claim in a profile. We ask for the original document and read it before anything else moves.', copyKo: '프로필의 주장만 믿지 않습니다. 다른 절차보다 먼저 원본 서류를 받아 직접 확인합니다.' },
-  { title: 'The university', titleKo: '대학 재학·학위', copy: 'Enrolment or a degree from Seoul National University, Korea University, or Yonsei University, confirmed in writing.', copyKo: '서울대학교, 고려대학교, 연세대학교의 재학 또는 학위 여부를 서류로 확인합니다.' },
-  { title: 'A teaching sample', titleKo: '수업 시연', copy: 'A short lesson so we can see how a tutor explains, not just what they scored.', copyKo: '점수뿐 아니라 어려운 내용을 어떻게 설명하는지 짧은 수업으로 확인합니다.' },
-  { title: 'A background check', titleKo: '신원 확인', copy: 'Checks for offences against minors before any tutor meets a student. Our COO leads safeguarding.', copyKo: '학생을 만나기 전에 미성년자 대상 범죄 이력을 확인하며 COO가 학생 보호를 책임집니다.' },
+  { title: 'A relevant score report', titleKo: '성적표', copy: 'Claims are easy to make. Official score reports are not. Tutors submit the original report for every subject they want to teach.', copyKo: '사람의 말보다 증명서가 믿음직합니다. 선배들은 담당 과목의 공식 성적표를 제출해 성적을 확인받습니다.' },
+  { title: 'The university', titleKo: '재학 여부', copy: 'A certificate of enrolment, transcript, or admission letter must show attendance at Seoul National University, Yonsei University, or Korea University.', copyKo: '입학통지서, 재학증명서, 성적증명서 중 하나로 SKY 재학 사실을 입증합니다.' },
+  { title: 'A teaching sample', titleKo: '시범 수업', copy: 'A short lesson clip shows whether the tutor is ready to teach, not only willing.', copyKo: '과외를 하고 싶은 것과 잘 가르칠 수 있는 것은 다릅니다. 직접 촬영한 강의 영상으로 수업 역량을 평가받습니다.' },
 ];
 
 // Minimums, not targets. A tutor teaches a subject only if they hold the top
@@ -24,26 +23,26 @@ const standard = [
 ];
 
 const steps = [
-  { n: '01', t: 'Apply', tKo: '지원', c: 'A tutor applies through a student society or a referral from someone already on the platform.', cKo: '학회 또는 기존 선배의 추천을 통해 지원합니다.' },
-  { n: '02', t: 'Documents held', tKo: '서류 확인', c: 'We collect and read the real score reports and proof of university. Nothing is taken on trust.', cKo: '실제 성적표와 대학 증빙을 받아 직접 확인합니다.' },
-  { n: '03', t: 'Teach a sample', tKo: '수업 시연', c: 'A short teaching sample shows us how they explain a hard idea simply.', cKo: '어려운 개념을 쉽게 설명하는지 짧은 시연으로 봅니다.' },
-  { n: '04', t: 'Reach the registry', tKo: '명부 등록', c: 'Only after a background check does a tutor appear where a family can find them.', cKo: '신원 확인까지 끝난 뒤에만 가족이 볼 수 있는 명부에 등록합니다.' },
+  { n: '01', t: 'Application', tKo: '지원', c: 'A tutor applies through the website.', cKo: '웹사이트를 통해 지원합니다.' },
+  { n: '02', t: 'Documents checked', tKo: '서류 심사', c: 'We check the tutor’s score reports and university certificates.', cKo: '제출한 서류로 성적과 대학을 확인합니다.' },
+  { n: '03', t: 'Sample class', tKo: '시범 수업', c: 'Tutors record a short clip of themselves teaching. We evaluate how they teach.', cKo: '짧은 강의 영상으로 강의 실력을 평가합니다.' },
+  { n: '04', t: 'Become a Seonbae', tKo: '합격 이후', c: 'Tutors who complete the screening process can start teaching on the platform.', cKo: '선별 과정이 끝나면 선배에서 수업을 시작합니다.' },
 ];
 ---
-<Base title="Verification — Seonbae" active="/verification">
+<Base title="Verification | Seonbae" active="/verification">
   <PageHero
     eyebrow="Verification"
     eyebrowKo="검증"
     bg="white"
-    copy="Trust is the whole product. A tutor reaches our registry only once we have held the score report in our hands, and never before."
-    copyKo="신뢰가 곧 서비스의 핵심입니다. 성적표를 직접 확인한 뒤에만 선배를 명부에 등록합니다."
+    copy="Trust is the whole product."
+    copyKo="성적 증명과 면접을 통과한 선생님들만이 여러분과 함께할 자격을 얻습니다."
     ctaLabel="Get matched"
     ctaLabelKo="매칭 시작하기"
     secondaryLabel="Meet the tutors"
     secondaryLabelKo="선배 만나보기"
     secondaryHref="/tutors"
   >
-    <T en="We hold the proof before we ever list a tutor." ko="선배를 소개하기 전에 증빙부터 확인합니다." />
+    <T en="Every tutor, verified." ko="검증된 선배들과 함께하세요." />
   </PageHero>
 
   <!-- One sheet, not four cards: the page's argument is that a real document
@@ -54,7 +53,7 @@ const steps = [
         <div class="dossier__head">
           <div>
             <Eyebrow label="Held on file" labelKo="보관·확인" />
-            <h2 class="dossier__title"><T en="Four things we hold before a tutor is listed." ko="선배 등록 전에 확인하는 네 가지." /></h2>
+            <h2 class="dossier__title"><T en="Three things we check before a tutor is listed." ko="선배가 되기까지 확인하는 세 가지." /></h2>
           </div>
           <!-- A rectangular ink stamp rather than a seal: double rule, flat
                caps, set a couple of degrees off square. Reads like something
@@ -90,9 +89,9 @@ const steps = [
         <div class="sp__intro">
           <div>
             <Eyebrow label="Entry requirement" labelKo="등록 기준" tone="light" />
-            <h2 class="sp__title"><T en="The floor, not the ceiling." ko="최고가 아니라 최소 기준입니다." /></h2>
+            <h2 class="sp__title"><T en="A floor higher than most ceilings." ko="학생들이 우러러볼 수 있는 기준." /></h2>
           </div>
-          <p class="sp__copy"><T en="A tutor is approved for a subject only if they hold the top grade in that subject. These are the minimums every Seonbae tutor has already cleared, and most sit well above them." ko="해당 과목에서 최고 등급을 받은 경우에만 그 과목을 가르칠 수 있습니다. 아래는 모든 선배가 이미 통과한 최소 기준이며, 대부분은 이보다 높습니다." /></p>
+          <p class="sp__copy"><T en="Tutors are accepted only for subjects in which they hold the top grade. This is our standard." ko="선배들은 담당 과목의 정상까지 올랐던 분들입니다. 최고에게서 배워야 최고가 됩니다." /></p>
         </div>
         <dl class="sp__list">
           {standard.map((s) => (
@@ -112,7 +111,7 @@ const steps = [
     <div class="container">
       <div class="spine-head reveal">
         <Eyebrow label="The process" labelKo="검증 절차" />
-        <h2 class="h2"><T en="From application to the registry." ko="지원부터 명부 등록까지." /></h2>
+        <h2 class="h2"><T en="Our screening process." ko="튜터 선별 과정." /></h2>
       </div>
 
       <ol class="spine">
@@ -126,10 +125,6 @@ const steps = [
             </div>
           </li>
         ))}
-        <li class="stop stop--end">
-          <span class="stop__dot stop__dot--end" aria-hidden="true"></span>
-          <div class="stop__card"><p class="stop__end"><T en="Listed. A family can now find them." ko="등록 완료. 이제 가족이 이 선배를 만날 수 있습니다." /></p></div>
-        </li>
       </ol>
     </div>
   </section>
@@ -139,19 +134,19 @@ const steps = [
       <div class="safe reveal">
         <div class="safe__head">
           <Eyebrow label="Safeguarding and privacy" labelKo="학생 보호와 개인정보" />
-          <h2 class="h2" style="margin-top:12px"><T en="Careful with children, careful with data." ko="학생도, 데이터도 신중하게 보호합니다." /></h2>
+          <h2 class="h2" style="margin-top:12px"><T en="Safety is our priority." ko="안전 방침" /></h2>
         </div>
         <dl class="safe__list">
           <div class="safe__row">
-            <dt><T en="Lessons are recorded, and disclosed" ko="수업 녹화 사실을 미리 안내합니다" /></dt>
-            <dd><T en="Every lesson is recorded so a student can review it and so we can uphold our standards. Families always know a lesson is being recorded." ko="학생의 복습과 수업 품질 관리를 위해 녹화하며, 가족에게 항상 사전에 알립니다." /></dd>
+            <dt><T en="Lessons are recorded" ko="모든 수업이 녹화됩니다" /></dt>
+            <dd><T en="We record lessons for revision and safety. Supervision helps us maintain a safe learning environment." ko="복습을 위해 녹화하며, 필요한 상황에서는 안전을 지키는 중요한 기록이 됩니다." /></dd>
           </div>
           <div class="safe__row">
             <dt><T en="Your data, on request, gone" ko="요청하면 개인정보를 삭제합니다" /></dt>
-            <dd><T en="Ask us to delete your data and we remove it within two days, keeping only the records the law requires us to hold." ko="삭제를 요청하면 법에 따라 보관해야 하는 기록을 제외하고 이틀 안에 처리합니다." /></dd>
+            <dd><T en="Ask us to delete your data and we act within two working days, keeping only the records the law requires us to hold." ko="정보 삭제를 요청하면 세무와 회계 법령상 필요한 기록을 제외하고 영업일 기준 이틀 안에 삭제합니다." /></dd>
           </div>
           <div class="safe__row">
-            <dt><T en="Questions about safeguarding" ko="학생 보호 관련 문의" /></dt>
+            <dt><T en="The safeguarding team" ko="학생 보호팀" /></dt>
             <dd><T en="Our Chief Operating Officer owns this personally. Write to " ko="COO가 직접 책임집니다. " /><a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a><T en=" and it reaches him." ko="으로 보내면 바로 전달됩니다." /></dd>
           </div>
         </dl>

@@ -90,22 +90,22 @@ const steps = [
 
 const piles = [
   {
-    title: 'You did not know it',
-    titleKo: '몰랐던 내용',
-    copy: 'A real gap in content. This is the only pile that more studying fixes.',
-    copyKo: '실제 개념의 공백입니다. 더 공부하는 것으로 해결되는 유일한 유형입니다.',
+    title: 'Knowledge gaps',
+    titleKo: '모르는지도 몰랐던 것',
+    copy: 'The content or concept was not fully understood. We show you what was missing and what you need to revise.',
+    copyKo: '대충 아는 것과 모르는 것은 시험장에서는 같습니다. 놓친 개념을 정확히 찾아 반드시 메울 수 있도록 알려드립니다.',
   },
   {
-    title: 'You knew it and lost it anyway',
-    titleKo: '알았지만 점수를 잃은 내용',
-    copy: 'A misread question, a slip, an answer to a question you were not asked. More revision will not touch these.',
-    copyKo: '문제를 잘못 읽거나 실수했거나 묻지 않은 것에 답한 경우입니다. 복습만 더해서는 해결되지 않습니다.',
+    title: 'Exam mistakes',
+    titleKo: '사소한 실수',
+    copy: 'The answer was reasonable, but lost marks in the way you explained it, from misreading the question to missing a step, using the wrong method, or not answering exactly what was asked.',
+    copyKo: '내용은 알아도 시험 형식에 익숙하지 않아 점수를 잃을 수 있습니다. 문제를 잘못 읽거나 풀이 단계를 놓친 지점을 구체적으로 짚어드립니다.',
   },
   {
-    title: 'You knew it but ran out of time',
-    titleKo: '알았지만 시간이 부족했던 내용',
-    copy: 'Recognized, could not retrieve fast enough. A practice problem, not a knowledge problem.',
-    copyKo: '알아보았지만 충분히 빠르게 떠올리지 못한 경우입니다. 지식이 아니라 연습의 문제입니다.',
+    title: 'Time management',
+    titleKo: '시간 관리',
+    copy: 'You understood what to do, but could not complete it effectively within the time available. Because your mock is timed through the portal, we can show where exam pressure cost you marks and what to practise next.',
+    copyKo: '내용을 알아도 제한 시간 안에 답으로 표현하지 못하면 점수를 잃습니다. 포털의 응시 기록을 바탕으로 압박 속에서 막힌 지점과 필요한 연습을 알려드립니다.',
   },
 ];
 ---
@@ -120,41 +120,45 @@ const piles = [
     eyebrow="Mock exams"
     eyebrowKo="모의고사"
     bg="cream"
-    copy="A full paper under timed conditions, marked by hand by our research team, and returned with a report that separates what you did not know from what you knew and lost anyway."
-    copyKo="실제 제한 시간에 맞춰 치른 한 회분 시험을 연구팀이 직접 채점하고, 몰랐던 내용과 알았지만 놓친 점수를 나눠 리포트로 돌려드립니다."
-    ctaLabel="See what you get"
-    ctaLabelKo="리포트 구성 보기"
-    ctaHref="#report"
-    secondaryLabel="How it works"
-    secondaryLabelKo="이용 방법"
-    secondaryHref="/how-it-works"
+    copy="Take a full mock entirely through the Seonbae Portal. Start when you are ready, sit it under real exam time limits, and receive detailed feedback within 2 to 4 working days, not only on what you got wrong, but why you lost the marks and how to improve."
+    copyKo="포털에서 모의고사를 풀어보세요. 실전처럼 응시하고, 영업일 기준 2~4일 안에 무엇을 틀렸는지뿐 아니라 왜 점수를 잃었고 어떻게 개선할지 자세한 피드백을 받아보세요."
+    ctaLabel="Choose a mock exam"
+    ctaLabelKo="모의고사 주문하기"
+    ctaHref={orderHref}
+    secondaryLabel="See the report"
+    secondaryLabelKo="피드백 보기"
+    secondaryHref="#report"
   >
-    <span data-l="en">Sit the real thing before the <span class="mark">real thing.</span></span>
-    <span data-l="ko" class="kr">실전 전에 <span class="mark">진짜 시험을</span> 먼저.</span>
+    <span data-l="en">Take the exam before it <span class="mark">counts.</span></span>
+    <span data-l="ko" class="kr"><span class="mark">실전처럼</span> 연습하세요.</span>
   </PageHero>
 
   <section class="section bg-white">
     <div class="container split what-grid">
       <div class="reveal">
         <Eyebrow label="What it is" labelKo="모의고사란" />
-        <h2 class="h2"><T en="A real paper, not a quiz." ko="퀴즈가 아니라 실제 시험지입니다." /></h2>
+        <h2 class="h2"><T en="A test that tells you what to do next." ko="시험을 발판으로 삼으세요." /></h2>
         <div class="what-copy">
-          <p class="lead"><T en="Timed, sat at home, and marked by a person rather than a machine. You get the paper back with every mark accounted for, alongside a written report on what the result actually means and what to do about it." ko="집에서 시간을 재고 응시하며, 기계가 아닌 사람이 채점합니다. 모든 점수가 표시된 답안지와 함께 결과가 실제로 무엇을 뜻하는지, 다음에 무엇을 해야 하는지 적은 리포트를 받습니다." /></p>
-          <p class="body"><T en={`Nothing about it requires you to be a Seonbae student. If you already have a tutor with us, every exam is ${discountPercent} percent less.`} ko={`선배 수강생이 아니어도 응시할 수 있습니다. 현재 정기 수업을 받고 있다면 모든 시험이 ${discountPercent}% 할인됩니다.`} /></p>
+          <p class="lead"><T en="Once purchased, your mock exam or level test appears directly in your Seonbae Portal. Start whenever you are ready. For mock exams, the timer starts when you do and the exam submits automatically when time runs out, because managing time under pressure matters too." ko="구매한 모의고사나 레벨 테스트는 선배 포털에 바로 표시됩니다. 준비가 되면 언제든 시작하세요. 타이머가 함께 시작되고 제한 시간이 끝나면 자동으로 제출됩니다." /></p>
+          <p class="body"><T en="Within 2 to 4 working days, your results and detailed feedback are uploaded to the portal. You see more than a score: what you got wrong, why you lost the marks, and how to improve before the next test." ko="영업일 기준 2~4일 안에 결과와 자세한 피드백이 포털에 올라옵니다. 점수뿐 아니라 무엇을 틀렸고, 왜 점수를 잃었으며, 다음 시험 전 무엇을 개선해야 하는지 확인할 수 있습니다." /></p>
         </div>
       </div>
       <dl class="facts reveal" data-delay="80ms">
+        <div class="fact">
+          <dt>100%</dt>
+          <dd><T en="through the Seonbae Portal" ko="선배 포털에서 응시" /></dd>
+        </div>
         <div class="fact">
           <dt>{exams.length}</dt>
           <dd><T en={`exams at launch, from ${won(priceRange.min)}`} ko={`개 시험, ${won(priceRange.min)}부터`} /></dd>
         </div>
         <div class="fact">
           <dt>{minTurnaround}-{maxTurnaround} <small><T en="days" ko="일" /></small></dt>
-          <dd><T en="from submission to marked report" ko="제출부터 채점 리포트까지" /></dd>
+          <dd><T en="from submission to detailed feedback" ko="제출부터 자세한 피드백까지" /></dd>
         </div>
         <div class="fact">
           <dt>500+</dt>
-          <dd><T en="papers behind every question we write" ko="문항 제작의 바탕이 된 기출 및 연습 문제" /></dd>
+          <dd><T en="past and practice papers behind our exams" ko="시험 제작의 바탕이 된 기출 및 연습 문제" /></dd>
         </div>
       </dl>
     </div>
@@ -186,9 +190,9 @@ const piles = [
       <div class="report-panel reveal">
         <div class="report-intro">
           <Eyebrow label="The report" labelKo="리포트" tone="light" />
-          <h2 class="h2"><T en="Every lost mark goes into one of three piles." ko="잃은 점수는 세 가지로 나눕니다." /></h2>
-          <p class="report-lead"><T en="A score on its own tells you very little. What changes what you do next is knowing why the marks went. So we sort every one of them." ko="점수만으로는 알 수 있는 것이 많지 않습니다. 다음 행동을 바꾸는 것은 왜 점수를 잃었는지 아는 일입니다. 그래서 모든 감점을 분류합니다." /></p>
-          <p class="report-extra"><T en="Alongside the split: your score against the real boundary for that paper, a breakdown by topic, and one specific thing to do next." ko="분류와 함께 실제 등급 경계에 따른 점수, 주제별 분석, 그리고 바로 실행할 다음 한 가지를 제공합니다." /></p>
+          <h2 class="h2"><T en="Every lost mark has a reason." ko="놓치는 점수가 없도록." /></h2>
+          <p class="report-lead"><T en="A score tells you how you did. Understanding why you lost the marks tells you what to do next. That is why we do not just return a mark: we explain why every answer lost marks, and what to improve." ko="무엇을 모르는지 모른 채 공부하는 것은 큰 도움이 되지 않습니다. 시험으로 지식의 빈틈을 찾고, 왜 점수를 잃었는지 이해해야 다음 공부가 달라집니다. 저희 피드백은 바로 그 지점을 겨냥합니다." /></p>
+          <p class="report-extra"><T en="Feedback is organised by topic and question type, so every next step is specific." ko="피드백은 단원과 문제 유형별로 구체적으로 제공됩니다." /></p>
         </div>
         <div class="pile-stack">
           {piles.map((pile, index) => (
@@ -200,7 +204,7 @@ const piles = [
               </div>
             </article>
           ))}
-          <p class="pile-close"><T en="Most students respond to every lost mark the same way, by rereading their notes. That only helps the first pile. The split tells you which student you are right now, and it usually changes the plan." ko="대부분의 학생은 점수를 잃을 때마다 노트를 다시 읽습니다. 하지만 그것은 첫 번째 유형에만 도움이 됩니다. 이 분류는 지금 어떤 상태인지 보여 주고, 대개 공부 계획을 바꿉니다." /></p>
+          <p class="pile-close"><T en="Most students respond to every lost mark the same way: by rereading their notes. But that only fixes the first pile. The split tells you which student you are right now, and it usually changes from exam to exam. The aim is not to make every answer perfect. It is to make it clear what to work on next." ko="틀린 문제를 다음에도 틀리지 않으려면 이유를 기록해야 합니다. 별도의 오답 노트를 만드는 대신 모의고사를 통해 연습하고, 지금 부족한 지점을 종합적으로 보완해 보세요." /></p>
         </div>
       </div>
     </div>
@@ -209,9 +213,9 @@ const piles = [
   <section class="section bg-cream" id="prices">
     <div class="container">
       <div class="price-head reveal">
-        <Eyebrow label="Prices" labelKo="가격" />
+        <Eyebrow label="Prices" labelKo="가격표" />
         <h2 class="h2"><T en="Published, like everything else." ko="다른 모든 요금처럼 공개합니다." /></h2>
-        <p class="lead"><T en={`Every exam is priced on this page. Families in active weekly tutoring with us pay ${discountPercent} percent less after their membership is verified.`} ko={`모든 시험 가격을 이 페이지에 공개합니다. 정기 수업 중인 가족은 수강 여부 확인 후 ${discountPercent}% 할인됩니다.`} /></p>
+        <p class="lead"><T en={`Choose the exam you need and see exactly what is included before you purchase. Once purchased, it is added directly to your Seonbae Portal. Students currently taking weekly lessons with Seonbae receive ${discountPercent} percent off all mock exams and level tests.`} ko={`필요한 시험을 구매하고 포털에서 확인해 보세요. 이미 정기 수업을 등록한 학생은 모의고사와 레벨 테스트를 ${discountPercent}% 할인된 가격으로 응시할 수 있습니다.`} /></p>
       </div>
 
       <div class="exam-table-wrap reveal">
@@ -251,28 +255,14 @@ const piles = [
 
       <div class="order-row reveal">
         <div>
-          <h3><T en="Ready to sit one?" ko="응시할 준비가 되었나요?" /></h3>
-          <p><T en="Tell us which paper you want. We confirm the details and invoice by email." ko="원하는 시험지를 알려주세요. 이메일로 세부 내용을 확인하고 결제를 안내합니다." /></p>
+          <h3><T en="Ready to see where you stand?" ko="내 실력을 확인해 보세요." /></h3>
+          <p><T en="Choose your mock exam or level test, complete your purchase, and it will appear directly in your Seonbae Portal." ko="원하는 모의고사나 레벨 테스트를 구매하고 포털에서 응시해 보세요." /></p>
         </div>
-        <Button href={orderHref} label="Enquire to order" labelKo="주문 문의하기" variant="primary" size="lg" arrow="diag" />
+        <Button href={orderHref} label="Choose your test" labelKo="시험 선택하기" variant="primary" size="lg" arrow="diag" />
       </div>
     </div>
   </section>
 
-  <section class="section bg-white">
-    <div class="container maker-band reveal">
-      <div>
-        <Eyebrow label="Who makes them" labelKo="제작 팀" />
-        <h2 class="h2"><T en="Built from the papers, not from memory." ko="기억이 아니라 실제 시험지에서 만듭니다." /></h2>
-        <p class="lead"><T en="Our research team built these from more than 500 past and practice papers, along with the algorithm that turns a raw score into the grade it would earn in a real sitting." ko="선배 연구팀은 500개가 넘는 기출 및 연습 문제와, 원점수를 실제 시험에서 받을 등급으로 바꾸는 알고리즘을 바탕으로 이 시험들을 만들었습니다." /></p>
-        <Button href="/resources" label="Read what they publish" labelKo="연구팀의 글 보기" variant="secondary" arrow="right" />
-      </div>
-      <dl class="maker-facts">
-        <div><dt>500+</dt><dd><T en="past and practice papers behind every exam" ko="모든 시험의 바탕이 된 기출 및 연습 문제" /></dd></div>
-        <div><dt>SKY</dt><dd><T en="Seoul National, Korea, and Yonsei students on the research team" ko="서울대, 고려대, 연세대 학생으로 구성된 연구팀" /></dd></div>
-      </dl>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -280,7 +270,6 @@ const piles = [
   .what-grid .h2,
   .section-head .h2,
   .price-head .h2,
-  .maker-band .h2 { margin-top: 12px; }
   .what-copy { display: grid; gap: 18px; margin-top: 20px; }
 
   .facts { border-top: 2px solid var(--ink); }
@@ -336,16 +325,8 @@ const piles = [
   .order-row h3 { font-size: 1.35rem; }
   .order-row p { margin-top: 6px; color: var(--muted); }
 
-  .maker-band { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); gap: clamp(30px, 6vw, 86px); align-items: end; padding-block: clamp(38px, 5vw, 64px); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .maker-band .lead { margin: 18px 0 26px; max-width: 45rem; }
-  .maker-facts { display: grid; gap: 22px; }
-  .maker-facts div { padding-top: 18px; border-top: 2px solid var(--ink); }
-  .maker-facts dt { font-family: var(--display); font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--violet); }
-  .maker-facts dd { margin-top: 8px; color: var(--muted); line-height: 1.45; }
-
   @media (max-width: 900px) {
     .report-panel,
-    .maker-band { grid-template-columns: 1fr; }
     .report-extra { max-width: 46rem; }
   }
   @media (max-width: 700px) {

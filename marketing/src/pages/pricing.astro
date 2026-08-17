@@ -45,14 +45,23 @@ const neverCharged = [
 
 const faqs = [
   { q: 'How does billing work?', qKo: '결제는 어떻게 하나요?', a: 'Everything is billed monthly. On a monthly plan you are charged on the same date every month, in advance, for the hours you have set. By the hour, you are charged on the 1st for the hours you used. No packages, no long contracts.', aKo: '모든 결제는 월 단위입니다. 월간 플랜은 매월 같은 날짜에 예정 시간을 선결제하고, 시간제는 사용한 시간을 기준으로 매월 1일에 결제합니다. 패키지나 장기 계약은 없습니다.' },
-  { q: 'Can I cancel a lesson?', qKo: '수업을 취소할 수 있나요?', a: 'Yes. Cancel for free up to 24 hours before and the hour returns to your pool for the month. Cancel later or miss a lesson and it is charged, because the tutor still holds and prepares the time.', aKo: '네. 24시간 전까지 무료로 취소하면 해당 시간이 그달 수업 시간으로 돌아옵니다. 이후 취소나 결석은 선배가 시간을 비우고 준비했기 때문에 결제됩니다.' },
+  { q: 'Can I cancel a lesson?', qKo: '수업을 취소할 수 있나요?', a: 'Yes. If you cancel at least 24 hours before the scheduled lesson, you can choose to reschedule the lesson, carry the credit over to the following month, or receive a refund. Cancellations made less than 24 hours in advance, as well as no-shows, are treated as completed lessons.', aKo: '네. 정규 수업 시간 24시간 전까지 취소하면 보충, 다음 달 이월, 환불 중에서 선택할 수 있습니다. 24시간 이내 취소나 결석은 수업이 진행된 것으로 간주됩니다.' },
   { q: 'What if the tutor is not the right fit?', qKo: '선배와 잘 맞지 않으면 어떻게 하나요?', a: 'Your first lesson comes with a rematch guarantee, no questions asked. If a lesson falls short because of us, we re-teach it or refund it.', aKo: '첫 수업은 이유를 묻지 않는 재매칭을 보장합니다. 저희 책임으로 수업이 기준에 못 미치면 다시 수업하거나 환불합니다.' },
-  { q: 'How are tutors matched?', qKo: '선배는 어떻게 매칭하나요?', a: 'By hand. We read your subject, level, and goals and choose a verified tutor who fits. You see their real results before the first lesson.', aKo: '사람이 직접 합니다. 과목, 수준, 목표를 읽고 잘 맞는 검증된 선배를 고르며 첫 수업 전에 실제 성적을 보여드립니다.' },
-  { q: 'Do prices change by subject?', qKo: '과목마다 요금이 다른가요?', a: 'Yes. Each subject has its own hourly price, from ' + won(FLOOR) + ' to ' + won(CEILING) + '. IB Physics and IB History are not the same rate, so we publish every subject rather than a single starting figure.', aKo: `네. 과목별 시간당 요금은 ${won(FLOOR)}부터 ${won(CEILING)}까지입니다. IB 물리와 IB 역사는 같은 요금이 아니므로 시작가 하나 대신 전 과목 요금을 공개합니다.` },
-  { q: 'Are there discounts or referral credits?', qKo: '할인이나 추천 혜택이 있나요?', a: 'Refer a family or a tutor and you both benefit. We keep pricing simple and skip bundle discounts at launch, so the rate you see is the honest one.', aKo: '가족이나 튜터를 추천하면 양쪽 모두 혜택을 받을 수 있습니다. 묶음 할인 대신 보이는 요금 그대로 운영합니다.' },
+  { q: 'How are tutors matched?', qKo: '선배는 어떻게 매칭하나요?', a: 'A person reviews the student’s subject, level, goals, and availability, then chooses a verified tutor who fits. You see their real results before the first lesson.', aKo: '입력한 과목, 목표, 가능한 시간을 담당자가 직접 확인해 잘 맞는 검증된 선배와 매칭합니다. 첫 수업 전에 실제 성적도 확인할 수 있습니다.' },
+  { q: 'Do prices change by subject?', qKo: '과목마다 요금이 다른가요?', a: 'Yes. Each subject has its own hourly price, from ' + won(FLOOR) + ' to ' + won(CEILING) + '. The rate reflects the subject and its level of difficulty, so a rematch stays within the same subject.', aKo: `네. 난이도에 따라 과목별 시간당 요금은 ${won(FLOOR)}부터 ${won(CEILING)}까지입니다. 재매칭은 같은 과목의 선배로 진행됩니다.` },
+  { q: 'Are there discounts or referral credits?', qKo: '할인이나 추천 혜택이 있나요?', a: 'Yes. Enter a referral code when recommending a student or tutor to receive the available benefit.', aKo: '네. 학생이나 튜터를 추천할 때 추천인 코드를 입력하면 혜택을 받을 수 있습니다.' },
+  { q: 'Can parents track lesson progress?', qKo: '학부모도 수업 진행 상황을 확인할 수 있나요?', a: 'Yes. Parents can use the Seonbae portal to see lessons completed, homework, tutor feedback, and academic progress on a single page.', aKo: '네. 학부모님은 선배 포털에서 학생의 수업 회차, 숙제, 피드백, 성적 관련 자료를 한눈에 확인할 수 있습니다.' },
+  { q: 'How do you verify tutors’ scores?', qKo: '튜터의 성적은 어떻게 검증하나요?', a: 'We check official score reports issued by the relevant exam board or testing organisation. A tutor is listed only after their results have been verified.', aKo: '튜터가 응시한 시험 주관 기관에서 발급한 공식 성적표로 성적을 검증합니다.' },
+  { q: 'Do you offer trial lessons?', qKo: '시범 수업만 먼저 받아볼 수 있나요?', a: 'We do not offer free trial lessons. Your first booking is a full lesson. However, if the tutor is not the right fit, we will rematch you with another tutor.', aKo: '무료 시범 수업은 별도로 제공하지 않습니다. 첫 예약은 정규 수업이며, 선배와 잘 맞지 않으면 다른 선배로 재매칭해 드립니다.' },
+  { q: 'Do I need to prepare lesson materials?', qKo: '수업 자료는 따로 준비해야 하나요?', a: 'No. The materials will be prepared in advance by the tutor or Seonbae.', aKo: '아니요. 선배 또는 튜터가 준비한 자료로 수업을 진행합니다.' },
+  { q: 'Can I get help with schoolwork as well as exam prep?', qKo: '학교 내신과 시험 준비를 함께 할 수 있나요?', a: 'Yes. We cover international school coursework as well as IB, AP, A Level, SAT, and ACT preparation. You can work on both with the same tutor.', aKo: '네. IB, AP, A레벨, SAT, ACT 같은 시험 대비뿐 아니라 국제학교 내신 과목도 함께 수업할 수 있습니다.' },
+  { q: 'Can I choose my own tutor?', qKo: '원하는 선배를 직접 선택할 수 있나요?', a: 'Yes. You can browse tutor profiles and request a consultation with the tutor you are interested in.', aKo: '네. 튜터 찾기에서 원하는 선배를 선택한 뒤 상담을 신청할 수 있습니다.' },
+  { q: 'What if there is a problem during a lesson?', qKo: '수업 중 문제가 생기면 누구에게 문의하면 되나요?', a: 'Contact us at admissions@seonbaetutor.com. If anything feels inappropriate or simply is not working, let us know and we will help sort it out.', aKo: '부적절한 언행이나 다른 문제가 발생하면 즉시 admissions@seonbaetutor.com으로 문의해 주세요.' },
+  { q: 'Can I pay with an overseas card?', qKo: '해외 카드나 해외 결제도 가능한가요?', a: 'Yes. We support card payments and selected digital payment methods, including eligible overseas-issued cards.', aKo: '네. 카드 결제와 일부 간편결제를 지원하며, 사용 가능한 해외 발급 카드도 결제할 수 있습니다.' },
+  { q: 'Can I book short-term lessons before an exam?', qKo: '시험 직전 단기 수업도 가능한가요?', a: 'Yes. You can book a set number of hours for short-term or intensive exam preparation. Choose the hours you need and pay for them in advance.', aKo: '네. 단기 또는 집중 시험 대비에 필요한 총 수업 시간을 정한 뒤 미리 결제해 이용할 수 있습니다.' },
 ];
 ---
-<Base title="Pricing — Seonbae" active="/pricing">
+<Base title="Pricing | Seonbae" active="/pricing">
   <PageHero
     eyebrow="Pricing"
     eyebrowKo="요금"
@@ -139,9 +148,9 @@ const faqs = [
   <section class="section bg-cream" id="faq">
     <div class="container faq-wrap">
       <div class="faq-head reveal">
-        <Eyebrow label="Questions" labelKo="자주 묻는 질문" />
-        <h2 class="h2"><T en="Answers before you ask." ko="궁금한 점을 먼저 답해 드립니다." /></h2>
-        <p class="body" style="margin-top:14px"><T en="Still unsure? Write to " ko="더 궁금하다면 " /><a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a><T en=" and a person answers." ko="으로 문의해 주세요. 담당자가 직접 답합니다." /></p>
+        <Eyebrow label="FAQ" labelKo="FAQ" />
+        <h2 class="h2"><T en="Frequently asked questions." ko="자주 묻는 질문" /></h2>
+        <p class="body" style="margin-top:14px"><T en="For anything else, write to " ko="추가로 궁금하신 부분은 " /><a href="mailto:admissions@seonbaetutor.com">admissions@seonbaetutor.com</a><T en=" and our team will be happy to help." ko="으로 문의해 주세요. 담당자가 친절히 안내해 드립니다." /></p>
       </div>
       <div class="reveal" style="margin-top:8px">
         <FAQ items={faqs} />
@@ -234,7 +243,7 @@ const faqs = [
   }
   .ledger__list--yes li::before { content: "+"; color: var(--violet); }
   .ledger__list--no li { color: var(--muted); }
-  .ledger__list--no li::before { content: "–"; color: var(--muted-soft); }
+  .ledger__list--no li::before { content: "×"; color: var(--muted-soft); }
 
   /* ----- FAQ -------------------------------------------------------------- */
   .faq-wrap { max-width: 860px; }

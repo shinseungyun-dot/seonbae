@@ -33,16 +33,16 @@ const universities = [...new Set(tutors.map((t) => t.data.university))];
 // the page has an honest pre-launch state rather than sample people.
 const roster = withCats.length > 0;
 ---
-<Base title="Tutors — Seonbae" active="/tutors">
+<Base title="Tutors | Seonbae" active="/tutors">
   <PageHero
-    eyebrow="Verified tutor directory"
-    eyebrowKo="검증된 튜터 명부"
-    copy="Browse active tutors whose score reports, enrolment, and identity have been checked by the Seonbae team."
-    copyKo="선배 팀이 성적표, 재학 여부, 신원을 직접 확인한 활성 튜터만 소개합니다."
+    eyebrow="Tutors"
+    eyebrowKo="선배"
+    copy="Meet your tutors. Every tutor is screened for university enrolment, high school results, and identity."
+    copyKo="여러분의 선배들을 만나세요! 선배들은 재학 여부, 성적표, 신원까지 모두 확인된 튜터들입니다."
     bg="white"
     compact={true}
   >
-    <T en="Meet tutors who know how to teach, not just explain." ko="설명만 하는 사람이 아니라, 제대로 가르칠 줄 아는 선배를 만나세요." />
+    <T en="Meet your tutors." ko="여러분의 선배를 만나세요." />
   </PageHero>
 
   <!-- Directory layout: a standing index on the left, the roster on the right.
@@ -101,8 +101,8 @@ const roster = withCats.length > 0;
       <div class="closing reveal">
         <div class="closing__say">
           <span class="eyebrow"><T en="Not sure who to pick" ko="누구를 고를지 고민되시나요?" /></span>
-          <h2 class="h2"><T en="Tell us the subject. We will choose." ko="과목을 알려주시면, 저희가 직접 고르겠습니다." /></h2>
-          <p class="lead" style="margin-top:16px"><T en="Matching is done by hand. Send us the curriculum, level, and what is going wrong, and we will suggest the tutor we would choose for our own family." ko="매칭은 사람이 직접 합니다. 커리큘럼, 학년, 어려운 점을 알려주시면 저희 가족에게 권하고 싶은 튜터를 제안해 드립니다." /></p>
+          <h2 class="h2"><T en="Tell us what you need, and we will find the right fit." ko="과목과 상황을 알려주시면, 저희가 매칭해 드립니다." /></h2>
+          <p class="lead" style="margin-top:16px"><T en="Tell us your subject, level, goals, and availability. A person will review your request and match you with a tutor who fits." ko="과목, 수준, 목표, 가능한 시간을 알려주세요. 담당자가 직접 요청을 확인하고 잘 맞는 선배를 찾아드립니다." /></p>
         </div>
         <div class="closing__do">
           <a href="/get-matched" class="btn btn--primary btn--lg"><span><T en="Request a consultation" ko="상담 신청" /></span><span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>

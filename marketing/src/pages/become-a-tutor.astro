@@ -4,9 +4,9 @@ import Illo from '../components/Illo.astro';
 import T from '../components/T.astro';
 
 const criteria = [
-  { t: { en: 'You study at SKY', ko: 'SKY 재학생' }, c: { en: 'Current students of Seoul National University, Korea University, or Yonsei University.', ko: '서울대, 고려대, 연세대에 재학 중인 학생.' } },
-  { t: { en: 'You have the results', ko: '증명된 실력' }, c: { en: 'SAT 1500+, a 7 in your IB subject, IELTS 8.0+, or an equal top result.', ko: 'SAT 1500점 이상, IB 해당 과목 7점, IELTS 8.0 이상, 또는 그에 준하는 최상위 성적.' } },
-  { t: { en: 'You are verified', ko: '검증 절차' }, c: { en: 'We confirm enrolment, scores, and identity before you ever teach.', ko: '가르치기 전에 재학, 성적, 신원을 확인합니다.' } },
+  { t: { en: 'SKY students', ko: 'SKY 재학생' }, c: { en: 'Students who study at Seoul National University, Yonsei University, or Korea University.', ko: '서울대학교, 연세대학교, 고려대학교에 재학 중인 학생.' } },
+  { t: { en: 'Top performers', ko: '최상위 성적' }, c: { en: 'SAT 1500+, a 7 in your IB subject, IELTS 8.0+, or an equal top result.', ko: 'SAT 1500점 이상, IB 해당 과목 7점, IELTS 8.0 이상, 또는 그에 준하는 최상위 성적.' } },
+  { t: { en: 'A passion to teach', ko: '열정적인 선생님' }, c: { en: 'We want tutors who are eager to teach, not people doing it only for the money.', ko: '물론 돈도 좋지만, 선배는 열정적인 선생님이어야 합니다.' } },
 ];
 
 const steps = [
@@ -22,14 +22,14 @@ const keep = [
   { t: { en: 'Your schedule', ko: '나의 일정' }, c: { en: 'Set your own hours and subjects. Accept or decline each match.', ko: '가능 시간과 과목을 직접 정하고, 매칭을 수락하거나 거절합니다.' } },
 ];
 ---
-<Base title="Become a tutor — Seonbae" active="/become-a-tutor" description="Teach with Seonbae. Verified tutors from Seoul National University, Korea University, and Yonsei University, paid fairly for every lesson.">
+<Base title="Become a tutor | Seonbae" active="/become-a-tutor" description="Teach with Seonbae. Verified tutors from Seoul National University, Korea University, and Yonsei University, paid fairly for every lesson.">
   <!-- Hero -->
   <section class="section bt-hero">
     <div class="container split">
       <div class="reveal is-in">
         <span class="eyebrow"><T en="Teach with Seonbae" ko="선배로 함께하기" /></span>
         <h1 class="display bt-title"><T en="Be the mentor someone needed." ko="누군가에게 꼭 필요한 선배가 되어주세요." /></h1>
-        <p class="lead" style="margin-top:20px"><T en="Share the subject you topped, on your own schedule, and get paid fairly for every lesson. No admin, no chasing payments." ko="당신이 최고 성적을 받은 과목을, 원하는 시간에 가르치고, 매 수업마다 정당한 보수를 받으세요. 번거로운 행정도, 결제 독촉도 없습니다." /></p>
+        <p class="lead" style="margin-top:20px"><T en="Teach the subject you topped, on your own schedule. Get paid fairly, and let the platform handle everything unrelated to the lesson." ko="자신 있는 과목을 원하는 시간에, 만족스러운 보수로 가르치세요. 수업 이외의 일은 저희가 도맡아 합니다." /></p>
         <div class="cta-row" style="margin-top:30px">
           <a href="#apply" class="btn btn--primary btn--lg">
             <span><T en="Apply to teach" ko="지원하기" /></span>
@@ -47,8 +47,8 @@ const keep = [
   <section class="section bg-white">
     <div class="container">
       <div class="sec-intro reveal">
-        <span class="eyebrow"><T en="Who we look for" ko="이런 분을 찾습니다" /></span>
-        <h2 class="h2"><T en="A high bar, and a fair one." ko="높지만, 공정한 기준." /></h2>
+        <span class="eyebrow"><T en="Tutor criteria" ko="선배의 기준" /></span>
+        <h2 class="h2"><T en="Who we look for" ko="이런 분을 찾습니다." /></h2>
       </div>
       <div class="grid three-col">
         {criteria.map((k) => (
@@ -105,7 +105,7 @@ const keep = [
         <div class="bt-apply__lede reveal">
           <span class="eyebrow"><T en="Apply" ko="지원" /></span>
           <h2 class="h2"><T en="Start your application." ko="지원을 시작하세요." /></h2>
-          <p class="lead" style="margin-top:16px"><T en="It takes two minutes. We reply within one business day." ko="2분이면 충분합니다. 영업일 기준 하루 안에 답장드립니다." /></p>
+          <p class="lead" style="margin-top:16px"><T en="It takes two minutes. We reply within two business days." ko="2분이면 충분합니다. 영업일 기준 이틀 안에 답장드립니다." /></p>
         </div>
         <form class="bt-form card reveal" data-delay="80ms" novalidate>
           <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -135,7 +135,7 @@ const keep = [
             <span><T en="Submit application" ko="지원서 제출" /></span>
             <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
-          <p class="bt-done" role="status" hidden data-done><T en="Thanks. Your application is in, we will be in touch within one business day." ko="감사합니다. 지원서가 접수되었습니다. 영업일 기준 하루 안에 연락드릴게요." /></p>
+          <p class="bt-done" role="status" hidden data-done><T en="Thanks. Your application is in. We will be in touch within two business days." ko="감사합니다. 지원서가 접수되었습니다. 영업일 기준 이틀 안에 연락드릴게요." /></p>
         </form>
       </div>
     </div>

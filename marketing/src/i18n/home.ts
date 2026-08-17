@@ -75,18 +75,16 @@ export const ui = {
 export const home = {
   hero: {
     eyebrow: t(
-      'One to one tutoring in IB, AP, A Level, IGCSE and tests',
-      'IB, AP, A레벨, IGCSE, 시험 대비 일대일 과외',
+      '1:1 TUTORING FOR IB, AP, A LEVEL, IGCSE & TEST PREP',
+      'IB, AP, A레벨, IGCSE 및 시험 대비 1:1 과외',
     ),
-    // The headline states the entry requirement as a fact. It is the hardest
-    // thing for a competitor to copy, so it leads.
     titleA: t(
-      'Every tutor holds the top grade in the subject they teach.',
-      '모든 선배는 자신이 가르치는 과목에서 최고 등급을 받았습니다.',
+      'Learn from someone who’s already been there.',
+      '앞서간 선배들을 따라가세요.',
     ),
     copy: t(
-      'We started Seonbae because tutoring was unfair at both ends: the tutor was underpaid and the family overcharged. So we publish every subject rate, pay tutors a fixed amount they keep in full, and teach online, one to one, wherever you are.',
-      '과외는 양쪽 모두에게 불공정했습니다. 가르치는 사람은 적게 받고, 가족은 많이 냈습니다. 그래서 선배는 모든 과목의 요금을 공개하고, 선배에게는 정해진 금액을 전액 지급하며, 어디에 있든 온라인 일대일로 가르칩니다.',
+      'Carefully selected SKY tutors, matched to your goals across international curricula, test preparation, and English. Personal one to one guidance, wherever you are.',
+      'SKY 출신 선배들과 함께 공부하세요. 선배는 당신을 기다립니다.',
     ),
     ctaPrimary: t('Find a tutor', '선배 찾기'),
     ctaSecondary: t('How it works', '이용 방법'),
@@ -126,22 +124,22 @@ export const home = {
   why: {
     eyebrow: t('Why it works', '왜 효과가 있을까요'),
     heading: t(
-      'The right tutor can change how a whole subject feels.',
-      '좋은 선배 한 명이 과목 전체의 느낌을 바꿉니다.',
+      'Follow the path a Seonbae has already cleared.',
+      '선배가 터둔 길로',
     ),
     lead: t(
-      'When the person teaching you scored at the top of the same exam last year, the advice is specific and the path is clear.',
-      '당신을 가르치는 사람이 바로 작년에 같은 시험에서 최고 성적을 받았다면, 조언은 구체적이고 길은 분명해집니다.',
+      'Admissions can feel daunting. Your tutor has already made it through, and now you can study with someone who knows the way.',
+      '막막해 보이는 입시, 선배들은 이미 멋지게 이겨낸 후죠. 그런 선배들과 함께 공부하세요.',
     ),
-    pair1Title: t('Matched by hand', '직접 매칭'),
+    pair1Title: t('A tutor who fits', '나만을 위한 선배'),
     pair1Copy: t(
-      'We read your goals and choose a tutor who fits, subject, level, and personality.',
-      '목표를 읽고 과목, 수준, 성향까지 맞는 선배를 직접 고릅니다.',
+      'Choose a tutor yourself or get matched based on your subject, level, goals, and availability.',
+      '동행할 선배를 직접 고르거나 매칭을 받아보세요. 목표하는 성적에 닿을 때까지 나에게 맞는 선배가 가르쳐 줍니다.',
     ),
-    pair2Title: t('Progress you can see', '보이는 성장'),
+    pair2Title: t('Feedback and homework', '눈에 띄는 성장'),
     pair2Copy: t(
-      'Notes and next steps after every lesson turn effort into something you can track.',
-      '매 수업 뒤의 노트와 다음 단계가, 노력을 확인할 수 있는 결과로 바꿉니다.',
+      'See lesson materials, feedback, and homework directly in the portal, so the work behind your progress stays visible.',
+      '수업 자료, 피드백과 숙제를 포털에서 직접 열람하세요. 결과뿐 아니라 성장의 과정까지 눈으로 확인할 수 있습니다.',
     ),
     cta: t('Meet our tutors', '선배 만나보기'),
     mediaLabel: t('A lesson in progress', '진행 중인 수업'),
@@ -193,25 +191,25 @@ export const home = {
         num: '01', href: '/subjects/ib-diploma', slug: 'ib-diploma',
         title: t('IB Diploma', 'IB 디플로마'),
         levels: t('HL · SL · Core', 'HL · SL · 코어'),
-        copy: t('The full IB Diploma, HL and SL, plus EE, TOK, and IA coaching.', 'HL과 SL 전 과목, 그리고 EE, TOK, IA 코칭까지.'),
+        copy: t('From HL subjects to essays and test strategy. Our tutors guide you through the IB curriculum.', 'HL, SL 과목부터 IA, TOK 그리고 시험까지. 선배가 함께합니다.'),
       },
       {
         num: '02', href: '/subjects/advanced-placement', slug: 'advanced-placement',
         title: t('Advanced Placement', 'AP'),
         levels: t('Capstone to Physics C', '캡스톤부터 물리 C까지'),
-        copy: t('AP across the sciences, mathematics, humanities, and languages.', '과학, 수학, 인문, 언어 전 영역의 AP.'),
+        copy: t('Excel both in class and the exam hall. Our tutors guide you towards a 5.', '내신과 시험, 모두 잡습니다. 선배와 함께 5점을 향해 나아갑니다.'),
       },
       {
         num: '03', href: '/subjects/a-level', slug: 'a-level',
         title: t('A Level', 'A레벨'),
         levels: t('AS · A2', 'AS · A2'),
-        copy: t('A Level maths, sciences, and essay subjects for UK style exams.', '영국식 시험을 위한 수학, 과학, 논술 과목.'),
+        copy: t('Learn AS at pace and absorb A2 in depth. A stars are within reach with the right support.', 'AS는 빠르게, A2는 꼼꼼하게. 어려운 개념도 선배와 함께라면 정복할 수 있습니다.'),
       },
       {
         num: '04', href: '/subjects/igcse', slug: 'igcse',
         title: t('IGCSE', 'IGCSE'),
         levels: t('Year 10 · Year 11', '10학년 · 11학년'),
-        copy: t('A strong foundation across IGCSE subjects, sciences to languages.', '과학부터 언어까지, IGCSE 전 과목의 탄탄한 기초.'),
+        copy: t('Stride towards the A stars and build a strong foundation for the next level.', 'A*를 향해 힘차게 나아갑니다. 선배와 기초를 다지고 고등학교를 준비합니다.'),
       },
       {
         num: '05', href: '/subjects/standardized-tests', slug: 'standardized-tests',
