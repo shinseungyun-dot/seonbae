@@ -9,10 +9,10 @@ featured: true
 priceFrom: 80000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - Subject foundations and syllabus links
+  - HL and SL depth by topic
+  - IA, EE and TOK planning
+  - Past papers, marking criteria and exam strategy
 idealLearner: Students in the diploma years who want steadier grades across demanding HL subjects, or focused help finishing an IA or the extended essay before a deadline.
 ---
 

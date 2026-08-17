@@ -9,10 +9,10 @@ featured: false
 priceFrom: 70000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - AS foundations and efficient coverage
+  - A2 depth and advanced applications
+  - Exam-board questions and answer structure
+  - Revision cycles and grade-target strategy
 idealLearner: Sixth form students working toward firm university offers who need reliable A and A star grades in their strongest subjects.
 ---
 

@@ -9,10 +9,10 @@ featured: true
 priceFrom: 80000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - Course foundations and class support
+  - Unit-by-unit concepts and connections
+  - Multiple-choice and free-response practice
+  - Review plans, timing and exam strategy
 idealLearner: High school students taking one or more AP courses who want to secure college credit and keep their GPA strong at the same time.
 ---
 

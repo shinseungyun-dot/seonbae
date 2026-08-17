@@ -9,10 +9,10 @@ featured: false
 priceFrom: 50000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - Reading, vocabulary and comprehension
+  - Speaking, listening and everyday expression
+  - Essays, argument and academic writing
+  - Applications, personal statements and revision
 idealLearner: Students who want to write with clarity and read with confidence, whether for school English, applications, or life outside the classroom.
 ---
 

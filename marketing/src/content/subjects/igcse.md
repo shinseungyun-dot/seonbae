@@ -9,10 +9,10 @@ featured: false
 priceFrom: 60000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - Foundations across core subjects
+  - Understanding, recall and review
+  - Past-paper practice and clear working
+  - Study habits for the next stage
 idealLearner: Students in the years before the diploma or sixth form who want a solid base and calmer study habits going into their harder courses.
 ---
 

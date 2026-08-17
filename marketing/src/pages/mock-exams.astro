@@ -331,12 +331,27 @@ const piles = [
   .order-row h3 { font-size: 1.35rem; }
   .order-row p { margin-top: 6px; color: var(--muted); }
 
-  .coming-soon { width: min(92vw, 520px); max-width: none; padding: 0; border: 0; border-radius: var(--r-xl); background: transparent; color: var(--ink); box-shadow: var(--shadow-md); }
+  .coming-soon {
+    position: fixed;
+    inset: 0;
+    width: min(calc(100vw - 32px), 680px);
+    max-width: none;
+    max-height: min(calc(100dvh - 32px), 760px);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    border: 0;
+    border-radius: var(--r-xl);
+    background: transparent;
+    color: var(--ink);
+    box-shadow: var(--shadow-lift);
+  }
   .coming-soon::backdrop { background: rgba(19, 24, 27, 0.56); backdrop-filter: blur(4px); }
-  .coming-soon__panel { display: grid; gap: 18px; padding: clamp(28px, 5vw, 44px); background: var(--white); border: 1px solid var(--line-soft); }
+  .coming-soon__panel { display: grid; gap: 22px; min-height: 100%; padding: clamp(38px, 6vw, 64px); background: var(--white); border: 1px solid var(--line-soft); border-radius: inherit; }
   .coming-soon__panel .eyebrow { margin: 0; }
-  .coming-soon__panel .body { max-width: 42ch; }
-  .coming-soon__panel .btn { width: fit-content; margin-top: 4px; }
+  .coming-soon__panel .h3 { max-width: 16ch; font-size: clamp(1.9rem, 4vw, 2.65rem); line-height: 1.08; }
+  .coming-soon__panel .body { max-width: 44ch; font-size: 1.08rem; }
+  .coming-soon__panel .btn { width: fit-content; min-height: 48px; margin-top: 6px; }
 
   @media (max-width: 900px) {
     .report-panel,
@@ -350,6 +365,8 @@ const piles = [
   @media (max-width: 520px) {
     .report-panel { margin-inline: calc(var(--gutter) * -0.35); }
     .pile-row { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+    .coming-soon { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
+    .coming-soon__panel { padding: 32px 26px; }
   }
 </style>
 

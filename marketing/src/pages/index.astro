@@ -21,6 +21,12 @@ const steps = [
   { t: { en: 'Find your match', ko: '선배를 찾아드려요' }, c: { en: 'Browse available tutors yourself, or let us match you based on subject, level, and availability.', ko: '직접 찾으셔도 좋아요. 고민된다면 마음 편히 맡겨주세요.' }, icon: 'match' },
   { t: { en: 'Learn and see progress', ko: '마음껏 배우고 성장하세요' }, c: { en: 'Lesson materials, feedback, and homework keep every next step clear.', ko: '자료와 피드백으로 든든히 지원해드릴게요.' }, icon: 'rise' },
 ];
+const portalRows = [
+  { tab: { en: 'Billing', ko: '결제' }, title: { en: 'Pay for the month', ko: '월간 수업료 결제' }, copy: { en: 'One invoice, one card.', ko: '한 번의 청구, 한 장의 카드.' } },
+  { tab: { en: 'Progress', ko: '성장' }, title: { en: 'See the progress', ko: '성장 확인하기' }, copy: { en: 'Every check stacked on the last.', ko: '모든 점검 결과가 차곡차곡 쌓입니다.' } },
+  { tab: { en: 'Homework', ko: '과제' }, title: { en: 'Pick up homework', ko: '과제 확인하기' }, copy: { en: 'Set, submitted, and marked in place.', ko: '출제부터 제출과 채점까지 한곳에서.' } },
+  { tab: { en: 'Lessons', ko: '수업' }, title: { en: 'Join the lesson', ko: '수업 참여하기' }, copy: { en: 'The same button every week.', ko: '매주 같은 버튼으로 참여합니다.' } },
+];
 const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
 ---
 <Base title="Seonbae | Verified tutors from Korea's top universities" active="/">
@@ -111,7 +117,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     </div>
   </section>
 
-  <!-- ======================= CURRICULA — BENTO ======================= -->
+  <!-- ======================= CURRICULA - BENTO ======================= -->
   <section class="section bento-sec bg-cream">
     <div class="container">
       <div class="sec-head reveal">
@@ -140,7 +146,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     </div>
   </section>
 
-  <!-- ======================= WHY — EDITORIAL PULL-QUOTE ======================= -->
+  <!-- ======================= WHY - EDITORIAL PULL-QUOTE ======================= -->
   <section class="section why2-sec">
     <span class="why2-blob why2-blob--a" aria-hidden="true"></span>
     <span class="why2-blob why2-blob--b" aria-hidden="true"></span>
@@ -199,6 +205,73 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
           ))}
         </div>
       )}
+    </div>
+  </section>
+
+  <!-- ======================= ONE PORTAL ======================= -->
+  <section class="section portal-home">
+    <div class="container portal-home__grid">
+      <div class="portal-home__copy reveal">
+        <span class="eyebrow"><T en="One portal" ko="하나의 포털" /></span>
+        <h2 class="dhead"><T en="Everything after the match lives in one place." ko="매칭 이후의 모든 것이 한곳에 있습니다." /></h2>
+        <p class="lead"><T en="Most tutoring runs on scattered messages and a transfer somebody has to remember. We put the whole thing behind one login, for the family and the tutor both." ko="대부분의 과외는 흩어진 메시지와 누군가 기억해야 하는 송금에 기대어 운영됩니다. 선배는 가족과 튜터 모두가 하나의 로그인으로 모든 과정을 확인할 수 있게 했습니다." /></p>
+
+        <div class="portal-home__rows">
+          {portalRows.map((row) => (
+            <article class="portal-home__row">
+              <span class="portal-home__tab"><T en={row.tab.en} ko={row.tab.ko} /></span>
+              <div>
+                <h3><T en={row.title.en} ko={row.title.ko} /></h3>
+                <p><T en={row.copy.en} ko={row.copy.ko} /></p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="cta-row portal-home__actions">
+          <a href="/portal" class="btn btn--primary btn--lg">
+            <span><T en="Open the portal" ko="포털 열기" /></span>
+            <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+          <a href="/how-it-works" class="textlink">
+            <span><T en="See how a term runs" ko="한 학기의 흐름 보기" /></span>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="portal-window reveal" data-delay="90ms" aria-hidden="true">
+        <div class="portal-window__bar">
+          <span></span><span></span><span></span>
+          <b>seonbaetutor.com</b>
+        </div>
+        <div class="portal-window__body">
+          <nav class="portal-window__nav">
+            <span class="is-active"><T en="Progress" ko="성장" /></span>
+            <span><T en="Homework" ko="과제" /></span>
+            <span><T en="Lessons" ko="수업" /></span>
+            <span><T en="Billing" ko="결제" /></span>
+          </nav>
+          <div class="portal-window__main">
+            <div class="portal-window__head">
+              <div><h3>IB Physics HL</h3><p><T en="Checks this term" ko="이번 학기 점검" /></p></div>
+              <span><T en="Every 4 weeks" ko="4주마다" /></span>
+            </div>
+            <div class="portal-window__score">
+              <strong>6.4</strong>
+              <span><T en="+1.8 since March" ko="3월 이후 +1.8" /></span>
+            </div>
+            <div class="portal-window__chart">
+              <div class="portal-window__bars"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="portal-window__labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+            </div>
+            <div class="portal-window__pills">
+              <span><T en="Next lesson Thu 7pm" ko="다음 수업 목요일 오후 7시" /></span>
+              <span><T en="Paid for March" ko="3월 결제 완료" /></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -408,7 +481,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     .flow__link { top: auto; right: 50%; bottom: -25px; transform: translateX(50%) rotate(90deg); }
   }
 
-  /* ======= CURRICULA — equal cards, no single hero tile ======= */
+  /* ======= CURRICULA - equal cards, no single hero tile ======= */
   .bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: clamp(14px, 1.6vw, 20px); }
   .bento__cell {
     display: grid;
@@ -437,7 +510,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
   @media (max-width: 860px) { .bento { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) { .bento { grid-template-columns: 1fr; } }
 
-  /* ======= WHY — PULL QUOTE ======= */
+  /* ======= WHY - PULL QUOTE ======= */
   .why2-sec { position: relative; overflow: hidden; background: var(--white); }
   .why2-blob { position: absolute; z-index: 0; pointer-events: none; }
   .why2-blob--a {
@@ -471,7 +544,60 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
   .tcard__bio { font-size: 0.92rem; color: var(--muted); line-height: 1.5; }
   @media (max-width: 860px) { .tutor-row { grid-template-columns: 1fr; } }
 
-  /* ======= WHY IT WORKS — centred icon columns, no card behind them ======= */
+  /* ======= ONE PORTAL ======= */
+  .portal-home { background: var(--canvas); }
+  .portal-home__grid { display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: clamp(40px, 6vw, 88px); align-items: center; }
+  .portal-home__copy .dhead { max-width: 15ch; margin-top: 16px; font-size: clamp(2.25rem, 4.4vw, 4rem); }
+  .portal-home__copy>.lead { max-width: 34rem; margin-top: 22px; }
+  .portal-home__rows { margin-top: 30px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-lg); background: rgba(255,253,247,.62); }
+  .portal-home__row { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 22px; align-items: center; padding: 18px 20px; }
+  .portal-home__row+.portal-home__row { border-top: 1px solid var(--line); }
+  .portal-home__tab { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; border-radius: var(--r-sm); background: var(--violet-soft); color: var(--violet); font-size: .78rem; font-weight: 800; letter-spacing: .01em; }
+  .portal-home__row h3 { font-size: 1rem; }
+  .portal-home__row p { margin-top: 3px; color: var(--muted); font-size: .91rem; line-height: 1.4; }
+  .portal-home__actions { margin-top: 28px; }
+
+  .portal-window { overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-xl); background: var(--white); box-shadow: var(--shadow-lift); }
+  .portal-window__bar { display: flex; min-height: 56px; align-items: center; gap: 10px; padding: 0 22px; border-bottom: 1px solid var(--line); background: var(--canvas); }
+  .portal-window__bar>span { width: 10px; height: 10px; border-radius: 50%; background: rgba(32,30,25,.13); }
+  .portal-window__bar b { margin-left: 12px; color: var(--muted-soft); font-size: .77rem; font-weight: 600; letter-spacing: .03em; }
+  .portal-window__body { display: grid; grid-template-columns: 150px minmax(0,1fr); min-height: 460px; }
+  .portal-window__nav { display: flex; flex-direction: column; gap: 6px; padding: 22px 16px; border-right: 1px solid var(--line); }
+  .portal-window__nav span { display: flex; min-height: 50px; align-items: center; padding: 0 16px; border-radius: var(--r-sm); color: var(--muted); font-size: .86rem; font-weight: 700; }
+  .portal-window__nav .is-active { background: var(--violet); color: var(--on-dark); }
+  .portal-window__main { min-width: 0; padding: clamp(24px, 3.2vw, 40px); }
+  .portal-window__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+  .portal-window__head h3 { font-size: 1.18rem; }
+  .portal-window__head p { margin-top: 4px; color: var(--muted-soft); font-size: .82rem; }
+  .portal-window__head>span { flex: none; padding: 7px 13px; border-radius: var(--r-pill); background: var(--yellow-soft); font-size: .75rem; font-weight: 700; }
+  .portal-window__score { display: flex; align-items: center; gap: 12px; margin-top: 30px; }
+  .portal-window__score strong { font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1; letter-spacing: -.05em; }
+  .portal-window__score span { padding: 7px 12px; border-radius: var(--r-pill); background: var(--sage); color: var(--sage-ink); font-size: .75rem; font-weight: 700; }
+  .portal-window__chart { margin-top: 24px; }
+  .portal-window__bars { display: grid; height: 132px; grid-template-columns: repeat(5,1fr); gap: 10px; align-items: end; border-bottom: 1px solid var(--line); }
+  .portal-window__bars i { display: block; height: 36%; border-radius: var(--r-sm) var(--r-sm) 0 0; background: #cfd8de; }
+  .portal-window__bars i:nth-child(2) { height: 50%; background: #afbec8; }
+  .portal-window__bars i:nth-child(3) { height: 62%; background: #91a8b5; }
+  .portal-window__bars i:nth-child(4) { height: 79%; background: #617f90; }
+  .portal-window__bars i:nth-child(5) { height: 96%; background: var(--violet); }
+  .portal-window__labels { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; padding-top: 7px; color: var(--muted-soft); font-size: .7rem; text-align: center; }
+  .portal-window__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .portal-window__pills span { padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--muted); font-size: .72rem; font-weight: 650; }
+  .portal-window__pills span:first-child { border-color: transparent; background: var(--sage); color: var(--sage-ink); }
+  @media (max-width: 1020px) { .portal-home__grid { grid-template-columns: 1fr; } .portal-home__copy { max-width: 720px; } .portal-window { width: min(100%,760px); } }
+  @media (max-width: 600px) {
+    .portal-home__row { grid-template-columns: 96px minmax(0,1fr); gap: 14px; padding: 15px; }
+    .portal-window__body { grid-template-columns: 96px minmax(0,1fr); min-height: 390px; }
+    .portal-window__nav { padding: 14px 9px; }
+    .portal-window__nav span { min-height: 44px; padding: 0 10px; font-size: .7rem; }
+    .portal-window__main { padding: 20px 16px; }
+    .portal-window__head { display: grid; }
+    .portal-window__head>span { width: fit-content; }
+    .portal-window__bars { height: 104px; gap: 6px; }
+    .portal-window__labels { gap: 6px; }
+  }
+
+  /* ======= WHY IT WORKS - centred icon columns, no card behind them ======= */
   .quote-sec { background: var(--white); }
   .promise { text-align: center; margin-bottom: clamp(34px, 5vw, 60px); }
   .promise .dhead { max-width: none; margin-inline: auto; }
