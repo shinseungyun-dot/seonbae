@@ -17,13 +17,13 @@ const tutorsAll = (await getCollection('tutors')).sort((a, b) => a.data.order - 
 const tutorPreview = tutorsAll.slice(0, 3);
 
 const steps = [
-  { t: { en: 'Tell us your goal', ko: '목표를 알려주세요' }, c: { en: 'Subject, level, and what you are working toward.', ko: '과목, 수준, 그리고 이루고 싶은 목표.' }, icon: 'target' },
-  { t: { en: 'We match by hand', ko: '직접 매칭합니다' }, c: { en: 'A verified tutor who fits, not the first name in a list.', ko: '목록의 첫 이름이 아니라, 꼭 맞는 검증된 선배.' }, icon: 'match' },
-  { t: { en: 'Learn and see progress', ko: '배우고, 성장을 확인' }, c: { en: 'Notes and next steps after every lesson.', ko: '매 수업 뒤 노트와 다음 단계.' }, icon: 'rise' },
+  { t: { en: 'Tell us your goal', ko: '목표를 알려주세요' }, c: { en: 'Tell us your subject, current level, and the exam or result you are working toward.', ko: '과목, 성적대, 시험 준비까지 전부 말해주세요.' }, icon: 'target' },
+  { t: { en: 'Find your match', ko: '선배를 찾아드려요' }, c: { en: 'Browse available tutors yourself, or let us match you based on subject, level, and availability.', ko: '직접 찾으셔도 좋아요. 고민된다면 마음 편히 맡겨주세요.' }, icon: 'match' },
+  { t: { en: 'Learn and see progress', ko: '마음껏 배우고 성장하세요' }, c: { en: 'Lesson materials, feedback, and homework keep every next step clear.', ko: '자료와 피드백으로 든든히 지원해드릴게요.' }, icon: 'rise' },
 ];
 const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
 ---
-<Base title="Seonbae — Verified tutors from Korea's top universities" active="/">
+<Base title="Seonbae | Verified tutors from Korea's top universities" active="/">
   <!-- ============================ HERO ============================ -->
   <section class="hero">
     <!-- Ground shapes, muted rather than removed: enough to stop the page
@@ -89,7 +89,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     <div class="container">
       <div class="ed-head reveal">
         <span class="eyebrow"><T en="How it works" ko="이용 방법" /></span>
-        <h2 class="dhead"><T en="Three steps to the right tutor." ko="맞는 선배를 만나기까지, 세 단계." /></h2>
+        <h2 class="dhead"><T en="Three steps to the right tutor." ko="딱, 세 걸음만 딛으세요." /></h2>
       </div>
       <div class="flow">
         {steps.map((s, i) => (
@@ -147,7 +147,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     <div class="container why2-grid">
       <blockquote class="pullquote reveal">
         <span class="eyebrow"><T en={home.why.eyebrow.en} ko={home.why.eyebrow.ko} /></span>
-        <p><T en="The right tutor can change how a whole subject feels." ko="좋은 선배 한 명이 과목 전체의 느낌을 바꿉니다." /></p>
+        <p><T en={home.why.heading.en} ko={home.why.heading.ko} /></p>
       </blockquote>
       <div class="why2-support reveal" data-delay="90ms">
         <p class="lead"><T en={home.why.lead.en} ko={home.why.lead.ko} /></p>
@@ -165,7 +165,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
       <div class="sec-head reveal">
         <div>
           <span class="eyebrow"><T en="Our tutors" ko="선배들" /></span>
-          <h2 class="dhead"><T en="Learn from someone who recently earned a top result." ko="최근에 직접 최고 성적을 받은 선배에게 배웁니다." /></h2>
+          <h2 class="dhead"><T en="Better learning starts with the right fit." ko="나와 꼭 맞는 선배와 공부하세요." /></h2>
         </div>
         <a href="/tutors" class="textlink"><span><T en="Meet all tutors" ko="선배 전체 보기" /></span>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -208,14 +208,14 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
   <section class="section quote-sec">
     <div class="container">
       <div class="promise reveal">
-        <h2 class="dhead"><T en="Why Seonbae works" ko="선배가 효과가 있는 이유" /></h2>
+        <h2 class="dhead"><T en="Why Seonbae works" ko="선배가 특별한 네 가지 이유" /></h2>
       </div>
       <div class="promise-grid">
         {[
-          { icon: 'wallet', tone: 2, t: { en: 'Every price is published', ko: '모든 가격을 공개합니다' }, c: { en: 'All 125 subject rates are on the pricing page. You never have to ask what something costs.', ko: '125개 과목의 요금을 모두 요금 페이지에 공개합니다. 가격을 따로 물어볼 필요가 없습니다.' } },
-          { icon: 'match', tone: 1, t: { en: 'A person reads every request', ko: '사람이 직접 읽습니다' }, c: { en: 'Matching is done by hand, not by an algorithm, and we reply within one business day.', ko: '매칭은 알고리즘이 아니라 사람이 직접 합니다. 영업일 기준 하루 안에 답장드립니다.' } },
-          { icon: 'shield', tone: 3, t: { en: 'Rematch after the first lesson', ko: '첫 수업 후 재매칭' }, c: { en: 'If the fit is wrong, we match you again, no questions asked.', ko: '맞지 않으면 아무것도 묻지 않고 다시 매칭해 드립니다.' } },
-          { icon: 'calendar', tone: 4, t: { en: 'Cancel free up to 24 hours before', ko: '24시간 전 무료 취소' }, c: { en: 'No packages bought up front, no minimum term, no contract.', ko: '선결제 패키지도, 최소 기간도, 계약도 없습니다.' } },
+          { icon: 'wallet', tone: 2, t: { en: 'Every price is published', ko: '가격이 투명해요' }, c: { en: 'All 125 subject rates are on the pricing page. You never have to ask what something costs.', ko: '모든 과목의 요금을 요금 페이지에서 확인할 수 있습니다.' } },
+          { icon: 'match', tone: 1, t: { en: 'Thoughtful matching', ko: '매칭에 진심이에요' }, c: { en: 'A person carefully reviews every request so you can browse tutors or be matched by subject, level, and availability.', ko: '접수된 요청을 하나하나 신중하게 검토해 과목, 수준, 가능한 시간에 맞는 선배를 찾아드립니다.' } },
+          { icon: 'shield', tone: 3, t: { en: 'Rematch after the first lesson', ko: '다시 매칭해도 괜찮아요' }, c: { en: 'If the fit is wrong, we match you again, no questions asked.', ko: '첫 수업이 마음에 들지 않았다면 다음 수업부터 다른 선배와 함께할 수 있습니다.' } },
+          { icon: 'calendar', tone: 4, t: { en: 'Plans change', ko: '급한 일이 생겨도 괜찮아요' }, c: { en: 'Cancel up to 24 hours before, reschedule when possible, or receive a refund for an unused lesson.', ko: '24시간 전에 알려주시면 보강하거나 사용하지 않은 수업료를 다음 달 결제 금액에서 차감해 드립니다.' } },
         ].map((p, i) => (
           <article class="promise-card reveal" data-delay={`${i * 70}ms`}>
             <IconBlob name={p.icon} tone={p.tone as 1 | 2 | 3 | 4} size={86} />
@@ -224,9 +224,14 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
           </article>
         ))}
       </div>
-      <p class="portal-exam-note reveal">
-        <a href="/mock-exams"><T en="Mock exam results land here too, whether or not you have a tutor." ko="모의고사 결과도 이곳에 함께 쌓입니다. 선배와 함께하지 않아도 마찬가지입니다." /></a>
-      </p>
+      <aside class="mock-band reveal">
+        <div>
+          <span class="eyebrow"><T en="Mock exams and level tests" ko="모의고사와 레벨 테스트" /></span>
+          <h2 class="dhead"><T en="Practise under real conditions." ko="실전처럼 연습하세요." /></h2>
+          <p class="body"><T en="We analyse more than 500 past and practice papers to identify recurring question types, marking criteria, scoring patterns, and the details that consistently earn points. Those patterns shape the mock exams and level tests we build, helping us assess not only how a student performed, but where and why marks were lost." ko="500개 이상의 기출 문제지를 분석했습니다. 자주 출제되는 문제 유형과 학제 특유의 채점 기준을 반영해 모의고사와 레벨 테스트를 만들고, 취약한 개념과 문제 유형까지 분석해 드립니다." /></p>
+        </div>
+        <a href="/mock-exams" class="btn btn--secondary"><T en="Choose a test" ko="시험 보기" /></a>
+      </aside>
     </div>
   </section>
 
@@ -242,6 +247,11 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
   .tag--sage { background: var(--sage); color: var(--sage-ink); }
   .tag--gold { background: var(--violet-soft); color: var(--violet); }
   .mini-h { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+  .flow__t { color: var(--ink); }
+  .mock-band { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(24px, 5vw, 64px); align-items: end; margin-top: clamp(44px, 6vw, 72px); padding-top: clamp(30px, 4vw, 46px); border-top: 2px solid var(--ink); }
+  .mock-band .dhead { margin-top: 12px; }
+  .mock-band .body { margin-top: 16px; max-width: 66rem; }
+  @media (max-width: 760px) { .mock-band { grid-template-columns: 1fr; align-items: start; } }
   .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: clamp(30px, 4vw, 48px); flex-wrap: wrap; }
   .sec-head .dhead { margin-top: 12px; }
 

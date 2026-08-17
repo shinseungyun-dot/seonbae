@@ -31,7 +31,6 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
                 <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
               <div class="mega-menu" role="menu">
-                <p class="mega-head"><T en={ui.megaHead.en} ko={ui.megaHead.ko} /></p>
                 <div class="mega-grid">
                   {subjects.map((s) => (
                     <a href={`/subjects/${s.id}`} role="menuitem" class="mega-item">
@@ -138,7 +137,8 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
     border-bottom: 1px solid transparent;
   }
   .header-inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) auto minmax(280px, 1fr);
     align-items: center;
     justify-content: space-between;
     gap: 20px;
@@ -165,6 +165,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
     align-items: center;
     gap: 4px;
   }
+  .nav-desktop { justify-self: center; }
   .nav-link {
     display: inline-flex;
     align-items: center;
@@ -263,7 +264,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   .mega-all svg { width: 16px; height: 16px; }
   .mega-all:hover { gap: 9px; }
 
-  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .header-actions { display: flex; align-items: center; justify-self: end; gap: 10px; }
   .header-auth-link,
   .drawer-auth-link {
     display: inline-flex;
@@ -372,6 +373,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   .drawer-lang { align-self: flex-start; }
 
   @media (max-width: 1180px) {
+    .header-inner { display: flex; }
     .nav-desktop { display: none; }
     .menu-toggle { display: flex; }
     .header-cta, .header-auth-link { display: none; }

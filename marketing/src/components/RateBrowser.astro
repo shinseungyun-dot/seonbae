@@ -20,7 +20,7 @@ const surfaceVar = surface === 'cream' ? 'var(--canvas)' : 'var(--white)';
 
 const total = curricula.reduce((n, c) => n + ratesFor(c.slug).length, 0);
 const groupKo: Record<string, string> = {
-  Languages: '언어', 'Individuals and societies': '개인과 사회', Sciences: '과학',
+  Languages: '언어', 'Humanities and social studies': '사회인문학', Sciences: '과학',
   Mathematics: '수학', Core: '코어', Capstone: '캡스톤', Arts: '예술', English: '영어',
   'History and social science': '역사·사회과학', 'Mathematics and computer science': '수학·컴퓨터과학',
   'World languages': '세계 언어', 'Business and technology': '비즈니스·기술',
@@ -33,7 +33,7 @@ const groupKo: Record<string, string> = {
   <div class="rb__bar">
     <label class="rb__search">
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.7"/><path d="M13.2 13.2L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-      <input type="search" class="rb__input" placeholder="Search a subject, for example Physics or Calculus" data-placeholder-en="Search a subject, for example Physics or Calculus" data-placeholder-ko="물리, 미적분처럼 과목을 검색하세요" aria-label="Search subjects" data-aria-en="Search subjects" data-aria-ko="과목 검색" />
+      <input type="search" class="rb__input" placeholder="Search by subject name. E.g. Physics or Calculus" data-placeholder-en="Search by subject name. E.g. Physics or Calculus" data-placeholder-ko="과목명으로 검색하세요. 예: Physics, Calculus" aria-label="Search subjects" data-aria-en="Search subjects" data-aria-ko="과목 검색" />
     </label>
     <p class="rb__count"><span class="rb__n">{total}</span> <T en="subjects" ko="개 과목" /></p>
   </div>

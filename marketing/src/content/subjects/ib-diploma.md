@@ -1,8 +1,8 @@
 ---
 title: IB Diploma
 number: "01"
-summary: Support across HL and SL subjects, internal assessments, the extended essay, and exam technique, from tutors who scored near the top of the same diploma.
-levels: ["IB Diploma", "Grades 11 to 12", "MYP"]
+summary: From HL subjects all the way to essays and test strategy. Our tutors guide you through the IB curriculum.
+levels: ["HL and SL", "IA, EE and TOK"]
 accent: mint
 order: 1
 featured: true
@@ -22,8 +22,8 @@ lessonFormat:
   - Notes and next steps after every session
 ---
 
-The IB rewards students who understand how it is marked, not only what is on the syllabus. Our tutors sat the same diploma at Korean and international schools, scored 40 and above, and now read the same rubrics your examiners use.
+The IB rewards students who understand how it is marked. Knowing what is on the syllabus is not quite enough. Our tutors sat the same diploma in international schools worldwide, earned 7s in the subjects they teach, and reached the 40 and above milestone. Now they are ready to start learning with you.
 
-Lessons work through the parts of the diploma that cost the most marks: structuring an internal assessment so it hits every criterion, planning an extended essay you can actually finish, and building the exam pace that turns knowledge into a 7. For younger students in the MYP, we lay the groundwork so the jump into the diploma feels smaller.
+Compact guidance on your IA. Detailed explanations of content. Rigorous EE and TOK roadmaps built for our students. Turning ideas into marks on exam day. Everything contributes to your final score, and this burden is not yours alone to carry. It is now your tutor’s as well.
 
-Every family sees the same plan we teach from, so you always know which subject we are on, what is due, and where the grade is heading.
+Let your tutor guide you through the diploma.

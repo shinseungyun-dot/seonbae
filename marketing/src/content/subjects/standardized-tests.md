@@ -1,7 +1,7 @@
 ---
 title: Standardized Tests
 number: "05"
-summary: Score focused coaching for the SAT, ACT, and English proficiency tests, taught by tutors who sat them recently and scored high.
+summary: Dominate standardised exams through experience your peers may not have. Our tutors share their own experience and guide you through test preparation.
 levels: ["SAT", "ACT", "IELTS", "TOEFL"]
 accent: lavender
 order: 5
@@ -22,8 +22,8 @@ lessonFormat:
   - A score plan with checkpoints on the way to the test date
 ---
 
-Test scores open doors, and they reward preparation that is specific rather than general. Our tutors scored in the top few percent on these exams and know the difference between working hard and working on the right things.
+Standardised exams must be approached with specificity. That specificity is what experienced tutors provide. They have already prepared for these tests, and can help you move towards your target quickly and deliberately.
 
-We begin with a full diagnostic to find where the points actually are. From there, lessons focus on the sections that will move your score most, paired with timed practice so the real test feels familiar. For English proficiency exams, we build both the score and the confidence to use the language well.
+Drawing the line between what you know and what you do not is difficult when you are working alone. Your tutor identifies the areas where your score can improve, then trains you for exam conditions through specific strategies and feedback.
 
-You will always know your current score, your target, and the gap between them.
+Practise together until the time limit feels natural and every next step is clear.
