@@ -9,17 +9,11 @@ featured: true
 priceFrom: 90000
 tutorCount: 0
 topics:
-  - SAT Reading and Writing
-  - SAT and ACT Math
-  - Digital SAT format
-  - IELTS and TOEFL
-  - Timing under pressure
-  - Diagnostic and target setting
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: Students preparing for university admissions who want a clear target score and a plan that gets them there without wasted months.
-lessonFormat:
-  - A diagnostic first, so we start from your real baseline
-  - Weekly lessons plus timed practice between them
-  - A score plan with checkpoints on the way to the test date
 ---
 
 Standardised exams must be approached with specificity. That specificity is what experienced tutors provide. They have already prepared for these tests, and can help you move towards your target quickly and deliberately.

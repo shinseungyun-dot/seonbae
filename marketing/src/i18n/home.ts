@@ -23,7 +23,7 @@ export const ui = {
   megaHead: t('Every curriculum, one tutor away', '모든 커리큘럼, 선배 한 명이면'),
   seeAllSubjects: t('See all subjects', '전체 과목 보기'),
   from: t('from', '부터'),
-  seeHow: t('See how it works', '이용 방법 보기'),
+  seeHow: t('See how it works', '이용 안내 보기'),
   logIn: t('Log in', '로그인'),
   getStarted: t('Get started', '시작하기'),
   becomeTutor: t('Become a tutor', '선배로 지원'),
@@ -87,7 +87,7 @@ export const home = {
       'SKY 출신 선배들과 함께 공부하세요. 선배는 당신을 기다립니다.',
     ),
     ctaPrimary: t('Find a tutor', '선배 찾기'),
-    ctaSecondary: t('How it works', '이용 방법'),
+    ctaSecondary: t('How it works', '이용 안내'),
     trust: t(
       '‘선배’ means the one who has gone before. Every Seonbae tutor is one, verified against the record before they ever teach.',
       '‘선배’는 먼저 그 길을 걸어본 사람을 뜻합니다. 모든 선배는 가르치기 전에 실력을 검증받습니다.',
@@ -111,7 +111,7 @@ export const home = {
       'We start from what you are working toward, then shape every lesson around getting there.',
       '당신이 이루고 싶은 것에서 시작해, 모든 수업을 그 목표에 맞춰 설계합니다.',
     ),
-    card1Link: t('How it works', '이용 방법'),
+    card1Link: t('How it works', '이용 안내'),
     card2Title: t('Lessons that fit life abroad', '해외 생활에 맞춘 수업'),
     card2Copy: t(
       'Evenings, weekends, and time zones that actually match yours, with the same tutor each week.',

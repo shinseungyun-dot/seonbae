@@ -11,51 +11,42 @@ const priceRange = examPriceRange();
 const minTurnaround = Math.min(...exams.map((exam) => exam.turnaround));
 const maxTurnaround = Math.max(...exams.map((exam) => exam.turnaround));
 const discountPercent = Math.round(MEMBER_DISCOUNT * 100);
-const orderHref = 'mailto:admissions@seonbaetutor.com?subject=Mock%20exam%20order';
+const orderHref = '#coming-soon';
 
-const examKo: Record<string, { name: string; unit: string; blurb: string }> = {
+const examKo: Record<string, { unit: string; blurb: string }> = {
   'ib-math-placement': {
-    name: 'IB 수학 배치고사',
     unit: '진단 시험지 1회분, 60분',
     blurb: '2년간의 과정을 결정하기 전에 AA와 AI, Higher와 Standard 중 무엇이 맞는지 알려줍니다.',
   },
   sat: {
-    name: 'SAT 전범위 모의고사',
     unit: '두 영역 전체, 실제 시험 시간',
     blurb: '두 영역을 모두 다루는 전범위 선형 시험지로, 실제 점수 경계에 맞춰 채점합니다.',
   },
   'ap-calculus-bc': {
-    name: 'AP Calculus BC',
     unit: '객관식과 서술형을 포함한 시험지 1회분',
     blurb: '두 영역을 모두 다루며, 모든 서술형 풀이 단계를 실제 채점 방식에 맞춰 평가합니다.',
   },
   'ib-chemistry': {
-    name: 'IB Chemistry',
     unit: '시험지 1회분',
     blurb: '서술형을 직접 채점하고, 풀이 과정 점수와 최종 답 점수를 따로 보여줍니다.',
   },
   'ib-physics': {
-    name: 'IB Physics',
     unit: '시험지 1회분',
     blurb: '서술형을 직접 채점하고, 풀이 과정 점수와 최종 답 점수를 따로 보여줍니다.',
   },
   'ib-economics': {
-    name: 'IB Economics',
     unit: '시험지 1회분',
     blurb: '실제 평가 기준에 따라 에세이를 채점하며, 명령어가 요구하는 바를 정확히 반영합니다.',
   },
   'ib-math-aa': {
-    name: 'IB Math AA',
     unit: '시험지 1회분',
     blurb: '풀이를 한 줄씩 채점해 어느 단계에서 점수를 잃었는지 보여줍니다.',
   },
   toefl: {
-    name: 'TOEFL 전범위 모의고사',
     unit: '네 영역 전체, 말하기 녹음 제출',
     blurb: '읽기, 듣기, 말하기, 쓰기를 모두 평가합니다. 말하기는 녹음으로 제출하고 공식 평가 기준에 맞춰 채점합니다.',
   },
   ielts: {
-    name: 'IELTS 전범위 모의고사',
     unit: '네 영역 전체, 말하기 녹음 제출',
     blurb: '읽기, 듣기, 말하기, 쓰기를 모두 공식 평가 기준에 따라 밴드 점수로 평가합니다.',
   },
@@ -226,13 +217,14 @@ const piles = [
               <th scope="col"><T en="What you get" ko="구성" /></th>
               <th scope="col"><T en="Price" ko="가격" /></th>
               <th scope="col"><T en="Member price" ko="수강생 가격" /></th>
+              <th scope="col"><T en="Order" ko="주문" /></th>
             </tr>
           </thead>
           <tbody>
             {exams.map((exam) => (
               <tr>
                 <th scope="row">
-                  <span class="exam-name"><T en={exam.name} ko={examKo[exam.id].name} /></span>
+                  <span class="exam-name"><T en={exam.name} ko={exam.nameKo} /></span>
                   <span class="exam-blurb"><T en={exam.blurb} ko={examKo[exam.id].blurb} /></span>
                 </th>
                 <td>
@@ -241,6 +233,7 @@ const piles = [
                 </td>
                 <td class="money" data-krw={exam.price}>{won(exam.price)}</td>
                 <td class="money money--member" data-krw={memberPrice(exam.price)}>{won(memberPrice(exam.price))}</td>
+                <td><a class="exam-action" href={orderHref}><T en="Order" ko="주문하기" /></a></td>
               </tr>
             ))}
           </tbody>
@@ -262,6 +255,15 @@ const piles = [
       </div>
     </div>
   </section>
+
+  <dialog class="coming-soon" id="coming-soon" aria-labelledby="coming-soon-title">
+    <form method="dialog" class="coming-soon__panel">
+      <span class="eyebrow"><T en="Coming soon" ko="곧 만나요" /></span>
+      <h2 class="h3" id="coming-soon-title"><T en="Mock exam ordering is almost ready." ko="모의고사 주문 기능을 준비하고 있습니다." /></h2>
+      <p class="body"><T en="We are finishing the purchase flow now. Please check back shortly." ko="구매 과정을 마무리하고 있습니다. 조금만 기다려 주세요." /></p>
+      <button type="submit" class="btn btn--primary"><T en="Got it" ko="확인" /></button>
+    </form>
+  </dialog>
 
 </Base>
 
@@ -301,7 +303,7 @@ const piles = [
   .price-head { max-width: 58rem; margin-bottom: clamp(28px, 4vw, 44px); }
   .price-head .lead { margin-top: 16px; }
   .exam-table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); }
-  .exam-table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; }
+  .exam-table { width: 100%; min-width: 940px; border-collapse: collapse; table-layout: fixed; }
   .exam-table th,
   .exam-table td { padding: 20px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
   .exam-table thead th { padding-block: 14px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -309,21 +311,32 @@ const piles = [
   .exam-table tbody th { padding-left: 0; }
   .exam-table thead th:last-child,
   .exam-table tbody td:last-child { padding-right: 0; }
-  .exam-table th:nth-child(1) { width: 34%; }
-  .exam-table th:nth-child(2) { width: 32%; }
+  .exam-table th:nth-child(1) { width: 30%; }
+  .exam-table th:nth-child(2) { width: 28%; }
   .exam-table th:nth-child(3),
-  .exam-table th:nth-child(4) { width: 17%; }
+  .exam-table th:nth-child(4) { width: 14%; }
+  .exam-table th:nth-child(5) { width: 14%; }
   .exam-name { display: block; font-family: var(--display); font-weight: 750; font-size: 1.05rem; color: var(--ink); }
   .exam-blurb { display: block; margin-top: 7px; color: var(--muted); font-weight: 400; font-size: 0.88rem; line-height: 1.45; }
   .exam-table td { color: var(--muted); font-size: 0.94rem; line-height: 1.45; }
   .exam-table td small { display: block; margin-top: 7px; color: var(--muted-soft); }
   .exam-table .money { color: var(--ink); font-family: var(--display); font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .exam-table .money--member { color: var(--violet); }
+  .exam-action { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 0 16px; border: 1px solid var(--ink); border-radius: var(--r-sm); color: var(--ink); font-weight: 700; white-space: nowrap; transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease; }
+  .exam-action:hover { background: var(--ink); color: var(--white); }
+  .exam-action:active { transform: translateY(1px); }
   .price-notes { display: grid; gap: 0; margin-top: 30px; }
   .price-notes li { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 0.94rem; line-height: 1.55; }
   .order-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 36px; padding-top: 30px; border-top: 2px solid var(--ink); }
   .order-row h3 { font-size: 1.35rem; }
   .order-row p { margin-top: 6px; color: var(--muted); }
+
+  .coming-soon { width: min(92vw, 520px); max-width: none; padding: 0; border: 0; border-radius: var(--r-xl); background: transparent; color: var(--ink); box-shadow: var(--shadow-md); }
+  .coming-soon::backdrop { background: rgba(19, 24, 27, 0.56); backdrop-filter: blur(4px); }
+  .coming-soon__panel { display: grid; gap: 18px; padding: clamp(28px, 5vw, 44px); background: var(--white); border: 1px solid var(--line-soft); }
+  .coming-soon__panel .eyebrow { margin: 0; }
+  .coming-soon__panel .body { max-width: 42ch; }
+  .coming-soon__panel .btn { width: fit-content; margin-top: 4px; }
 
   @media (max-width: 900px) {
     .report-panel,
@@ -339,3 +352,26 @@ const piles = [
     .pile-row { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
   }
 </style>
+
+<script>
+  const comingSoon = document.querySelector<HTMLDialogElement>('#coming-soon');
+  let comingSoonTrigger: HTMLElement | null = null;
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href="#coming-soon"]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      comingSoonTrigger = trigger;
+      if (!comingSoon) return;
+      if (typeof comingSoon.showModal === 'function') comingSoon.showModal();
+      else comingSoon.setAttribute('open', '');
+    });
+  });
+
+  comingSoon?.addEventListener('click', (event) => {
+    if (event.target === comingSoon) comingSoon.close();
+  });
+
+  comingSoon?.addEventListener('close', () => {
+    comingSoonTrigger?.focus();
+  });
+</script>

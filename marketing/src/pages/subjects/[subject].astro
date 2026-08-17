@@ -76,6 +76,14 @@ const ko = subjectsKo[entry.id];
         <div data-l="en"><Content /></div>
         <div data-l="ko" class="kr">{(ko?.body ?? []).map((paragraph) => <p>{paragraph}</p>)}</div>
       </div>
+      <aside class="study-scope reveal">
+        <h2><T en="What we will study together" ko="함께 공부할 내용" /></h2>
+        <ul>
+          {s.topics.map((topic, index) => (
+            <li><T en={topic} ko={ko?.topics[index] ?? topic} /></li>
+          ))}
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -99,11 +107,24 @@ const ko = subjectsKo[entry.id];
   {curriculumExams.length > 0 && (
     <section class="mock-subject bg-cream">
       <div class="container mock-subject__inner reveal">
-        <div>
+        <div class="mock-subject__copy">
           <h2 class="h3"><T en="Practise before it counts." ko="실전 전에 먼저 연습하세요." /></h2>
           <p class="body"><T en={`Mock exams and level tests for ${s.title} are timed in the portal and returned with detailed feedback.`} ko={`${ko?.title ?? s.title} 모의고사와 레벨 테스트를 포털에서 응시하고 자세한 피드백을 받아보세요.`} /></p>
+          <div class="cta-row">
+            <Button href="/mock-exams" label="See mock exams" labelKo="모의고사 보기" variant="secondary" arrow="right" />
+          </div>
         </div>
-        <Button href="/mock-exams" label="See mock exams" labelKo="모의고사 보기" variant="secondary" arrow="right" />
+        <div class="available-mocks">
+          <h3><T en="Available mocks" ko="응시 가능한 모의고사" /></h3>
+          <ul>
+            {curriculumExams.map((exam) => (
+              <li>
+                <span><T en={exam.name} ko={exam.nameKo} /></span>
+                <strong>{won(exam.price)}</strong>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   )}
@@ -182,8 +203,18 @@ const ko = subjectsKo[entry.id];
     border-bottom: 1px solid var(--line);
   }
   .mock-subject__inner .body { margin-top: 10px; max-width: 34rem; }
-  .subj-layout { display: block; }
+  .mock-subject__copy .cta-row { margin-top: 22px; }
+  .available-mocks h3,
+  .study-scope h2 { font-family: var(--display); font-size: 1rem; font-weight: 750; letter-spacing: -0.01em; }
+  .available-mocks ul { margin-top: 14px; border-top: 1px solid var(--line); }
+  .available-mocks li { display: flex; justify-content: space-between; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line); color: var(--muted); line-height: 1.4; }
+  .available-mocks strong { flex: none; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .subj-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 0.38fr); gap: clamp(34px, 7vw, 88px); align-items: start; }
   .subj-main { max-width: 54rem; }
+  .study-scope { padding-top: 4px; border-top: 2px solid var(--ink); }
+  .study-scope h2 { padding-top: 18px; }
+  .study-scope ul { margin-top: 16px; }
+  .study-scope li { padding: 11px 0; border-bottom: 1px solid var(--line); color: var(--muted); }
   .prose :global(p) { color: var(--muted); font-size: 1.08rem; line-height: 1.7; margin-bottom: 1.1em; }
   .prose :global(p:first-child) { font-size: 1.2rem; color: var(--ink); }
   .subject-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(24px, 5vw, 64px); align-items: end; padding-top: clamp(28px, 4vw, 44px); border-top: 2px solid var(--ink); }
@@ -193,6 +224,7 @@ const ko = subjectsKo[entry.id];
 
   @media (max-width: 860px) {
     .mock-subject__inner,
+    .subj-layout,
     .subject-cta { grid-template-columns: 1fr; align-items: start; }
   }
 </style>

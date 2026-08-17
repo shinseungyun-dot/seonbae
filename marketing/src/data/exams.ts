@@ -13,6 +13,7 @@ export type ExamFamily = 'ib' | 'ap' | 'english' | 'admissions';
 export interface Exam {
   id: string;
   name: string;
+  nameKo: string;
   family: ExamFamily;
   /** Shown under the name. Says exactly what the buyer receives. */
   unit: string;
@@ -28,6 +29,7 @@ export const exams: Exam[] = [
   {
     id: 'ib-math-placement',
     name: 'IB Math placement test',
+    nameKo: 'IB 수학 배치고사',
     family: 'ib',
     unit: 'One diagnostic paper, 60 minutes',
     price: 35_000,
@@ -38,6 +40,7 @@ export const exams: Exam[] = [
   {
     id: 'sat',
     name: 'SAT full mock',
+    nameKo: 'SAT 전범위 모의고사',
     family: 'admissions',
     unit: 'Both sections, full length',
     price: 50_000,
@@ -48,6 +51,7 @@ export const exams: Exam[] = [
   {
     id: 'ap-calculus-bc',
     name: 'AP Calculus BC',
+    nameKo: 'AP Calculus BC',
     family: 'ap',
     unit: 'One full paper, multiple choice and free response',
     price: 60_000,
@@ -58,6 +62,7 @@ export const exams: Exam[] = [
   {
     id: 'ib-chemistry',
     name: 'IB Chemistry',
+    nameKo: 'IB Chemistry',
     family: 'ib',
     unit: 'One paper',
     price: 65_000,
@@ -68,6 +73,7 @@ export const exams: Exam[] = [
   {
     id: 'ib-physics',
     name: 'IB Physics',
+    nameKo: 'IB Physics',
     family: 'ib',
     unit: 'One paper',
     price: 65_000,
@@ -78,6 +84,7 @@ export const exams: Exam[] = [
   {
     id: 'ib-economics',
     name: 'IB Economics',
+    nameKo: 'IB Economics',
     family: 'ib',
     unit: 'One paper',
     price: 65_000,
@@ -88,6 +95,7 @@ export const exams: Exam[] = [
   {
     id: 'ib-math-aa',
     name: 'IB Math AA',
+    nameKo: 'IB Math AA',
     family: 'ib',
     unit: 'One paper',
     price: 65_000,
@@ -98,6 +106,7 @@ export const exams: Exam[] = [
   {
     id: 'toefl',
     name: 'TOEFL full mock',
+    nameKo: 'TOEFL 전범위 모의고사',
     family: 'english',
     unit: 'All four skills, speaking recorded',
     price: 90_000,
@@ -108,6 +117,7 @@ export const exams: Exam[] = [
   {
     id: 'ielts',
     name: 'IELTS full mock',
+    nameKo: 'IELTS 전범위 모의고사',
     family: 'english',
     unit: 'All four skills, speaking recorded',
     price: 90_000,

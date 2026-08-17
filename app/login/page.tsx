@@ -54,6 +54,8 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accountRole, setAccountRole] = useState<"student" | "parent" | "tutor">("student");
   const [acceptanceLetter, setAcceptanceLetter] = useState<File | null>(null);
   const [remember, setRemember] = useState(false);
@@ -269,6 +271,8 @@ export default function LoginPage() {
     setPhone("");
     setPassword("");
     setConfirmPassword("");
+    setShowPassword(false);
+    setShowConfirmPassword(false);
     setAccountRole("student");
     setAcceptanceLetter(null);
     setPrivacyAgreed(false);
@@ -324,8 +328,8 @@ export default function LoginPage() {
           <h1>{l("수업과 일정을", "Lessons and schedules")}<br /><em>{l("한곳에서.", "in one place.")}</em></h1>
           <p className={styles.intro}>
             {l(
-              "예정된 수업, 담당 튜터, 학습 자료와 전달 사항을 한눈에 확인하세요. 학생, 보호자, 튜터에게 필요한 기능이 계정 유형에 맞게 열립니다.",
-              "See upcoming lessons, tutors, learning materials, and updates at a glance. Each account opens the right tools for students, parents, and tutors.",
+              "예정된 수업, 담당 튜터, 학습 자료와 전달 사항을 한눈에 확인하세요.",
+              "See upcoming lessons, tutors, learning materials, and updates at a glance.",
             )}
           </p>
           <div className={styles.benefits}>
@@ -513,18 +517,34 @@ export default function LoginPage() {
             )}
 
             {(action === "signin" || isSignup) && (
-              <label>
-                <span>{l("비밀번호", "Password")}{isSignup && <RequiredMark />}</span>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  autoComplete={action === "signin" ? "current-password" : "new-password"}
-                  minLength={isSignup ? 12 : undefined}
-                  maxLength={128}
-                  required
-                />
-              </label>
+              <div className={styles.passwordField}>
+                <label htmlFor="account-password">
+                  <span>{l("비밀번호", "Password")}{isSignup && <RequiredMark />}</span>
+                </label>
+                <div className={styles.passwordInput}>
+                  <input
+                    id="account-password"
+                    type={isSignup && showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    autoComplete={action === "signin" ? "current-password" : "new-password"}
+                    minLength={isSignup ? 12 : undefined}
+                    maxLength={128}
+                    required
+                  />
+                  {isSignup && (
+                    <button
+                      className={styles.passwordToggle}
+                      type="button"
+                      aria-pressed={showPassword}
+                      aria-label={showPassword ? l("비밀번호 숨기기", "Hide password") : l("비밀번호 보기", "Show password")}
+                      onClick={() => setShowPassword((visible) => !visible)}
+                    >
+                      {showPassword ? l("숨기기", "Hide") : l("보기", "Show")}
+                    </button>
+                  )}
+                </div>
+              </div>
             )}
 
             {isSignup && (
@@ -545,18 +565,32 @@ export default function LoginPage() {
                     <code>{PASSWORD_ALLOWED_SYMBOLS}</code>
                   </div>
                 </div>
-                <label>
-                  <span>{l("비밀번호 확인", "Confirm password")}<RequiredMark /></span>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(event) => setConfirmPassword(event.target.value)}
-                    autoComplete="new-password"
-                    minLength={12}
-                    maxLength={128}
-                    required
-                  />
-                </label>
+                <div className={styles.passwordField}>
+                  <label htmlFor="confirm-password">
+                    <span>{l("비밀번호 확인", "Confirm password")}<RequiredMark /></span>
+                  </label>
+                  <div className={styles.passwordInput}>
+                    <input
+                      id="confirm-password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(event) => setConfirmPassword(event.target.value)}
+                      autoComplete="new-password"
+                      minLength={12}
+                      maxLength={128}
+                      required
+                    />
+                    <button
+                      className={styles.passwordToggle}
+                      type="button"
+                      aria-pressed={showConfirmPassword}
+                      aria-label={showConfirmPassword ? l("비밀번호 확인 숨기기", "Hide password confirmation") : l("비밀번호 확인 보기", "Show password confirmation")}
+                      onClick={() => setShowConfirmPassword((visible) => !visible)}
+                    >
+                      {showConfirmPassword ? l("숨기기", "Hide") : l("보기", "Show")}
+                    </button>
+                  </div>
+                </div>
                 <div className={styles.consentSummary}>
                   <b>{l("필수 개인정보 수집·이용 안내", "Required personal information notice")}</b>
                   <dl>

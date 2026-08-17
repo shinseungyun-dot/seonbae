@@ -9,17 +9,11 @@ featured: false
 priceFrom: 70000
 tutorCount: 0
 topics:
-  - Mathematics and Further Maths
-  - Physics, Chemistry, Biology
-  - Economics
-  - Board specific past papers
-  - Grade boundary strategy
-  - University offer planning
+  - Core concepts
+  - Deeper understanding
+  - Practice questions and exam preparation
+  - Study planning and strategy
 idealLearner: Sixth form students working toward firm university offers who need reliable A and A star grades in their strongest subjects.
-lessonFormat:
-  - Weekly one to one lessons on video
-  - Practice drawn from your board, whether Edexcel, AQA, CIE, or OCR
-  - A term plan aligned to your predicted grades and offers
 ---
 
 A Levels require a narrow, deep pool of knowledge. Conditional offers can place a huge burden on students. Tutors who earned A stars in these subjects can carry that burden with you until the pressure of the offer feels manageable.

@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import Illo from '../components/Illo.astro';
 import T from '../components/T.astro';
 
 const criteria = [
@@ -25,7 +24,7 @@ const keep = [
 <Base title="Become a tutor | Seonbae" active="/become-a-tutor" description="Teach with Seonbae. Verified tutors from Seoul National University, Korea University, and Yonsei University, paid fairly for every lesson.">
   <!-- Hero -->
   <section class="section bt-hero">
-    <div class="container split">
+    <div class="container bt-hero__inner">
       <div class="reveal is-in">
         <span class="eyebrow"><T en="Teach with Seonbae" ko="선배로 함께하기" /></span>
         <h1 class="display bt-title"><T en="Be the mentor someone needed." ko="누군가에게 꼭 필요한 선배가 되어주세요." /></h1>
@@ -36,9 +35,6 @@ const keep = [
             <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
         </div>
-      </div>
-      <div class="reveal is-in" data-delay="80ms">
-        <div class="illo-panel"><Illo scene="climb" /></div>
       </div>
     </div>
   </section>
@@ -144,6 +140,7 @@ const keep = [
 
 <style>
   .bt-hero { padding-block: clamp(40px, 6vw, 92px); }
+  .bt-hero__inner { max-width: 62rem; }
   .bt-title { font-size: clamp(2.4rem, 5vw, 4rem); margin-top: 18px; }
   .sec-intro { max-width: 720px; margin-bottom: clamp(30px, 4vw, 50px); }
   .sec-intro .h2 { margin-top: 14px; }
