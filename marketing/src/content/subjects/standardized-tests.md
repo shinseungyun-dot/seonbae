@@ -9,10 +9,10 @@ featured: true
 priceFrom: 90000
 tutorCount: 0
 topics:
-  - Core concepts
-  - Deeper understanding
-  - Practice questions and exam preparation
-  - Study planning and strategy
+  - Baseline diagnosis and target setting
+  - Test-specific concepts and question types
+  - Timed sections and pacing
+  - Error review and score-building strategy
 idealLearner: Students preparing for university admissions who want a clear target score and a plan that gets them there without wasted months.
 ---
 
