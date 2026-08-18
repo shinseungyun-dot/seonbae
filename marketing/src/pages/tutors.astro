@@ -4,10 +4,21 @@ import PageHero from '../components/PageHero.astro';
 import T from '../components/T.astro';
 import { leadership } from '../data/people';
 
+const ianTutor = {
+  name: 'Ian Bae',
+  hangul: '배이안',
+  university: 'Korea University',
+  universityKo: '고려대학교',
+  photo: '/images/ian-bae-placeholder.png',
+};
+
+// Keep the server-rendered directory identical to the registry order. This
+// prevents Ian from being the only tutor added later by the client request.
 const withCats = [
-  { entry: leadership[0], cats: ['ib', 'igcse'], score: 'IB · IGCSE', exam: { en: 'Economics', ko: '경제' } },
-  { entry: leadership[1], cats: ['tests'], score: '1510', exam: { en: 'SAT', ko: 'SAT' } },
-  { entry: leadership[2], cats: ['alevel'], score: 'A*A*A*A*', exam: { en: 'A Level', ko: 'A레벨' } },
+  { registryId: 'P-001', entry: ianTutor, cats: ['ib'], score: '43/45', exam: { en: 'IB', ko: 'IB' } },
+  { registryId: 'P-002', entry: leadership[2], cats: ['alevel'], score: 'A*A*A*A*', exam: { en: 'A Level', ko: 'A레벨' } },
+  { registryId: 'P-003', entry: leadership[1], cats: ['tests'], score: '1510', exam: { en: 'SAT', ko: 'SAT' } },
+  { registryId: 'S-001', entry: leadership[0], cats: ['tests'], score: '8', exam: { en: 'IELTS', ko: 'IELTS' } },
 ];
 
 // Counts drive the rail, so a family can see how deep each curriculum runs
@@ -22,7 +33,7 @@ const filters = [
   { key: 'tests', label: 'SAT and ACT' },
 ].map((f) => ({ ...f, n: count(f.key) }));
 
-const universities = [...new Set(leadership.map((person) => person.university))];
+const universities = [...new Set(withCats.map(({ entry }) => entry.university))];
 const roster = true;
 ---
 <Base title="Tutors | Seonbae" active="/tutors">
@@ -73,8 +84,8 @@ const roster = true;
           </div>
 
           <div class="tutor-grid is-loading" id="tutor-grid" aria-busy="true">
-            {withCats.map(({ entry: tutor, cats, score, exam }) => (
-              <div class="tutor-cell reveal is-in" data-cats={cats.join(' ')}>
+            {withCats.map(({ registryId, entry: tutor, cats, score, exam }) => (
+              <div class="tutor-cell reveal is-in" data-cats={cats.join(' ')} data-registry-id={registryId}>
                 <article class="live-tutor-card card">
                   <div class="live-tutor-card__visual">
                     <img class="live-tutor-card__photo" src={tutor.photo} alt={tutor.name} width="800" height="800" loading="lazy" decoding="async" />
@@ -327,9 +338,9 @@ const roster = true;
       const photo = safeAsset(tutor.photo_url);
       const displayName = tr(tutor.name_en || tutor.name, tutor.name);
       const avatar = photo
-        ? `<img class="live-tutor-card__photo" src="${photo}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(displayName)}" loading="lazy" />`
+        ? `<img class="live-tutor-card__photo" src="${photo}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(displayName)}" width="800" height="800" loading="lazy" decoding="async" />`
         : `<span class="live-tutor-card__photo" aria-label="${tr('Photo pending', '사진 준비 중')}">${initials(displayName)}</span>`;
-      return `<div class="tutor-cell" data-cats="${categoryFor(tutor)}">
+      return `<div class="tutor-cell" data-cats="${categoryFor(tutor)}" data-registry-id="${escapeHtml(tutor.registry_id)}">
         <article class="live-tutor-card card">
           <div class="live-tutor-card__visual">${avatar}<span class="live-tutor-card__verified">${tr('Verified', '검증 완료')}</span></div>
           <div class="live-tutor-card__body">
