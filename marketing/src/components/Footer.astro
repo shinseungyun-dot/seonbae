@@ -65,7 +65,7 @@ const socials = [
         ))}
       </ul>
       <p class="footer-copy">© {year} Seonbae · <T en={ui.footer.base.en} ko={ui.footer.base.ko} /></p>
-      <p class="footer-legal"><a href="/privacy"><T en="Privacy policy" ko="개인정보 처리방침" /></a> · <a href="/terms"><T en="Terms" ko="이용약관" /></a> · <a href="/verification"><T en={ui.footer.legalVerify.en} ko={ui.footer.legalVerify.ko} /></a> · <a href="/contact"><T en={ui.footer.legalContact.en} ko={ui.footer.legalContact.ko} /></a> · seonbaetutor.com</p>
+      <p class="footer-legal"><a href="/privacy"><T en="Privacy policy" ko="개인정보 처리방침" /></a> · <a href="/terms"><T en="Terms" ko="이용약관" /></a> · <button type="button" data-cookie-settings><T en="Cookie settings" ko="쿠키 설정" /></button> · <a href="/verification"><T en={ui.footer.legalVerify.en} ko={ui.footer.legalVerify.ko} /></a> · <a href="/contact"><T en={ui.footer.legalContact.en} ko={ui.footer.legalContact.ko} /></a> · seonbaetutor.com</p>
     </div>
   </div>
 </footer>
@@ -168,8 +168,9 @@ const socials = [
     font-size: 0.85rem;
   }
   .footer-copy { flex: 1 1 auto; }
-  .footer-legal a { color: var(--on-dark-soft); text-decoration: underline; text-underline-offset: 3px; }
-  .footer-legal a:hover { color: var(--on-dark); }
+  .footer-legal a, .footer-legal button { color: var(--on-dark-soft); text-decoration: underline; text-underline-offset: 3px; }
+  .footer-legal button { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
+  .footer-legal a:hover, .footer-legal button:hover { color: var(--on-dark); }
 
   @media (max-width: 860px) {
     .footer-grid { grid-template-columns: 1fr; }

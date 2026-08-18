@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "../../../../utils/supabase/server";
+import { resolvePortalDestination } from "../../../../utils/auth/portal-destination";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export async function GET() {
     (role === "admin"
       ? "ssapgoadmin"
       : profile?.email || user.email || "사용자");
+  const destination = await resolvePortalDestination(supabase, user.id, profile);
 
   return NextResponse.json(
     {
@@ -47,14 +49,7 @@ export async function GET() {
       role,
       displayName,
       email: profile?.email || user.email || null,
-      destination:
-        role !== "admin" && profile?.account_status !== "approved"
-          ? "/portal/pending"
-          : role === "admin"
-          ? "/admin"
-          : role === "tutor"
-            ? "/portal/tutor"
-            : "/portal",
+      destination,
     },
     {
       headers: {

@@ -127,6 +127,10 @@ const keep = [
             <label for="subj"><T en="Subjects you can teach" ko="가르칠 수 있는 과목" /></label>
             <input id="subj" name="subjects" class="form-control" type="text" required data-placeholder-en="IB Math AA, AP Calculus…" data-placeholder-ko="IB 수학 AA, AP 미적분…" />
           </div>
+          <div class="form-field">
+            <label for="referral"><T en="Referral code or name (optional)" ko="추천인 또는 추천 코드 (선택)" /></label>
+            <input id="referral" name="referralCode" class="form-control" type="text" maxlength="80" autocomplete="off" data-placeholder-en="Who referred you?" data-placeholder-ko="추천인을 입력해 주세요." />
+          </div>
           <button type="submit" class="btn btn--primary btn--lg bt-submit">
             <span><T en="Submit application" ko="지원서 제출" /></span>
             <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -199,6 +203,7 @@ const keep = [
     const params = new URLSearchParams({ mode: 'signup', role: 'tutor' });
     if (draft.name) params.set('name', draft.name);
     if (draft.email) params.set('email', draft.email);
+    if (draft.referralCode) params.set('referral', draft.referralCode);
     window.location.assign(`/login?${params.toString()}`);
   });
 </script>

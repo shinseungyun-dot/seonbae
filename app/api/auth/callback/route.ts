@@ -7,6 +7,7 @@ import {
   readGoogleLoginAttempt,
 } from "../../../../utils/auth/google-login-attempt";
 import { createAdminClient } from "../../../../utils/supabase/admin";
+import { TUTOR_CONTRACT_VERSION } from "../../../../utils/contracts/tutor-contract";
 
 export const dynamic = "force-dynamic";
 
@@ -108,11 +109,22 @@ async function checkExistingGoogleAccount(
       && profileCreatedAt <= attempt.issuedAt;
 
     if (existedBeforeGoogle) {
+      let contractSigned = true;
+      if (matchingProfile!.role === "tutor" && matchingProfile!.account_status === "approved") {
+        const { data: signature, error: signatureError } = await admin
+          .from("tutor_contract_signatures")
+          .select("id")
+          .eq("tutor_id", matchingProfile!.id)
+          .eq("contract_version", TUTOR_CONTRACT_VERSION)
+          .maybeSingle();
+        contractSigned = !signatureError && Boolean(signature);
+      }
       return {
         allowed: true as const,
         profile: {
           role: matchingProfile!.role,
           accountStatus: matchingProfile!.account_status,
+          contractSigned,
         },
       };
     }
@@ -140,10 +152,14 @@ async function checkExistingGoogleAccount(
 function destinationForGoogleProfile(profile: {
   role: string | null;
   accountStatus: string | null;
+  contractSigned: boolean;
 }) {
   if (profile.role === "admin") return "/admin";
   if (profile.accountStatus !== "approved") return "/portal/pending";
-  return profile.role === "tutor" ? "/portal/tutor" : "/portal";
+  if (profile.role === "tutor") {
+    return profile.contractSigned ? "/portal/tutor" : "/portal/tutor/contract";
+  }
+  return "/portal";
 }
 
 function emailOtpType(value: string | null): EmailOtpType | null {

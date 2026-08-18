@@ -54,6 +54,16 @@
         ? (lang === 'ko' ? '포털' : 'Portal')
         : (lang === 'ko' ? '시작하기' : 'Get started');
     });
+
+    // A returning signed-in user goes straight to their own portal. The
+    // explicit "Back to homepage" link uses ?stay=1 to honor that intent.
+    if (
+      authenticated
+      && window.location.pathname === '/'
+      && new URLSearchParams(window.location.search).get('stay') !== '1'
+    ) {
+      window.location.replace(session.destination || '/portal');
+    }
   }
 
   async function refresh() {
