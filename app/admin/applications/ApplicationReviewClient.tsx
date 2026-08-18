@@ -12,6 +12,7 @@ export type AccountApplication = {
   phone: string;
   requested_role: "student" | "parent" | "tutor";
   acceptance_letter_name: string | null;
+  referral_code: string | null;
   status: string;
   notification_sent_at: string | null;
   notification_error: string | null;
@@ -100,6 +101,9 @@ export default function ApplicationReviewClient({
               {item.documentUrl && item.acceptance_letter_name
                 ? <a className={styles.document} href={item.documentUrl} target="_blank" rel="noreferrer">합격통지서 · {item.acceptance_letter_name}</a>
                 : <span className={styles.noDocument}>추가 제출 서류 없음</span>}
+              {item.requested_role === "tutor" && item.referral_code && (
+                <span className={styles.sent}>추천인 · {item.referral_code}</span>
+              )}
               <span className={item.notification_sent_at ? styles.sent : styles.warning}>
                 {item.notification_sent_at ? "admissions 이메일 전송 완료" : "이메일 전송 대기 · 심사는 포털에서 가능"}
               </span>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
+import { resolvePortalDestination } from "../../../../utils/auth/portal-destination";
 import {
   authRateLimitResponse,
   consumeAuthRateLimit,
@@ -71,16 +72,10 @@ export async function POST(request: NextRequest) {
     ...(remember ? { maxAge: 400 * 24 * 60 * 60 } : {}),
   };
   cookieStore.set("seonbae-remember", remember ? "1" : "0", rememberOptions);
+  const destination = await resolvePortalDestination(supabase, data.user.id, profile);
 
   return NextResponse.json({
-    destination:
-      profile?.role !== "admin" && profile?.account_status !== "approved"
-        ? "/portal/pending"
-        : profile?.role === "admin"
-        ? "/admin"
-        : profile?.role === "tutor"
-          ? "/portal/tutor"
-          : "/portal",
+    destination,
   });
 }
 

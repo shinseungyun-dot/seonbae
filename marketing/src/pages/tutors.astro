@@ -200,19 +200,21 @@ const roster = true;
   .tutor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: clamp(16px, 1.8vw, 22px); }
   .tutor-grid.is-loading { opacity: 0.72; }
   .tutor-cell.is-hidden { display: none; }
-  .live-tutor-card { display: flex; flex-direction: column; min-height: 100%; overflow: hidden; }
+  .live-tutor-card { display: flex; flex-direction: column; min-height: 100%; overflow: hidden; border-radius: 28px; border: 1px solid rgba(22, 48, 69, .12); box-shadow: 0 14px 36px rgba(22, 48, 69, .08); transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease; }
+  .live-tutor-card:hover { transform: translateY(-4px); border-color: rgba(22, 48, 69, .2); box-shadow: 0 22px 48px rgba(22, 48, 69, .13); }
   .live-tutor-card__visual {
     position: relative;
-    min-height: 290px;
+    min-height: 270px;
     aspect-ratio: 4 / 3;
+    padding: 18px 18px 0;
     overflow: hidden;
     background: linear-gradient(150deg, var(--sage), var(--yellow-soft));
     color: #fff;
   }
-  .live-tutor-card__photo { width: 100%; height: 100%; object-fit: cover; object-position: center 28%; display: grid; place-items: center; color: var(--violet); font-family: var(--display); font-size: 2.2rem; font-weight: 800; transition: transform .35s ease; }
-  .live-tutor-card:hover .live-tutor-card__photo { transform: scale(1.025); }
+  .live-tutor-card__photo { width: 100%; height: 100%; object-fit: cover; object-position: center 28%; display: grid; place-items: center; border-radius: 20px 20px 0 0; color: var(--violet); font-family: var(--display); font-size: 2.2rem; font-weight: 800; transition: transform .35s ease; }
+  .live-tutor-card:hover .live-tutor-card__photo { transform: scale(1.012); }
   .live-tutor-card__verified { position: absolute; z-index: 2; top: 14px; right: 14px; padding: 6px 11px; border-radius: var(--r-pill); border: 1px solid var(--line); background: rgba(255,253,247,.94); color: var(--violet); box-shadow: var(--shadow-sm); font-size: .72rem; font-weight: 800; }
-  .live-tutor-card__body { display: flex; flex: 1; flex-direction: column; padding: 24px; }
+  .live-tutor-card__body { display: flex; flex: 1; flex-direction: column; padding: 24px 26px 26px; }
   .live-tutor-card__id { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
   .live-tutor-card__id h3 { font-size: 1.28rem; }
   .live-tutor-card__uni { margin-top: 5px; color: var(--muted); font-size: .92rem; }

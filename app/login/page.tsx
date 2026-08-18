@@ -58,6 +58,7 @@ export default function LoginPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accountRole, setAccountRole] = useState<"student" | "parent" | "tutor">("student");
   const [acceptanceLetter, setAcceptanceLetter] = useState<File | null>(null);
+  const [referralCode, setReferralCode] = useState("");
   const [remember, setRemember] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -124,9 +125,22 @@ export default function LoginPage() {
     }
     const requestedName = params.get("name");
     const requestedEmail = params.get("email");
+    const requestedReferral = params.get("referral");
     const authError = params.get("error");
     if (requestedName) setFullName(requestedName.slice(0, 80));
     if (requestedEmail) setIdentifier(requestedEmail.slice(0, 254));
+    if (requestedReferral) setReferralCode(requestedReferral.slice(0, 80));
+    try {
+      const storedDraft = window.sessionStorage.getItem("seonbae-tutor-application");
+      if (storedDraft) {
+        const draft = JSON.parse(storedDraft) as Record<string, unknown>;
+        if (!requestedName && typeof draft.name === "string") setFullName(draft.name.slice(0, 80));
+        if (!requestedEmail && typeof draft.email === "string") setIdentifier(draft.email.slice(0, 254));
+        if (!requestedReferral && typeof draft.referralCode === "string") setReferralCode(draft.referralCode.slice(0, 80));
+      }
+    } catch {
+      // The application remains usable when session storage is unavailable.
+    }
     if (authError === "google-account-not-found") {
       setMessage(l(
         "등록된 계정과 일치하는 Google 이메일이 없습니다. 먼저 이메일로 회원가입해 주세요.",
@@ -221,6 +235,9 @@ export default function LoginPage() {
         signupForm.set("phone", phone);
         signupForm.set("password", password);
         signupForm.set("accountRole", accountRole);
+        if (accountRole === "tutor" && referralCode.trim()) {
+          signupForm.set("referralCode", referralCode.trim());
+        }
         signupForm.set("privacyAgreed", String(privacyAgreed));
         signupForm.set("termsAgreed", String(termsAgreed));
         signupForm.set("ageConfirmed", String(ageConfirmed));
@@ -303,6 +320,7 @@ export default function LoginPage() {
     setShowConfirmPassword(false);
     setAccountRole("student");
     setAcceptanceLetter(null);
+    setReferralCode("");
     setPrivacyAgreed(false);
     setTermsAgreed(false);
     setAgeConfirmed(false);
@@ -523,18 +541,31 @@ export default function LoginPage() {
             )}
 
             {isTutorSignup && (
-              <label className={styles.fileField}>
-                <span>{l("학교 합격통지서", "University acceptance letter")}<RequiredMark /></span>
-                <input
-                  type="file"
-                  accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
-                  onChange={(event) => setAcceptanceLetter(event.target.files?.[0] || null)}
-                  required
-                />
-                <small className={styles.fieldNote}>
-                  {l("PDF, JPG 또는 PNG · 최대 10MB", "PDF, JPG, or PNG · up to 10 MB")}
-                </small>
-              </label>
+              <>
+                <label className={styles.fileField}>
+                  <span>{l("학교 합격통지서", "University acceptance letter")}<RequiredMark /></span>
+                  <input
+                    type="file"
+                    accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                    onChange={(event) => setAcceptanceLetter(event.target.files?.[0] || null)}
+                    required
+                  />
+                  <small className={styles.fieldNote}>
+                    {l("PDF, JPG 또는 PNG · 최대 10MB", "PDF, JPG, or PNG · up to 10 MB")}
+                  </small>
+                </label>
+                <label>
+                  <span>{l("추천인 또는 추천 코드", "Referral code or name")} <small>{l("(선택)", "(optional)")}</small></span>
+                  <input
+                    type="text"
+                    value={referralCode}
+                    onChange={(event) => setReferralCode(event.target.value.slice(0, 80))}
+                    autoComplete="off"
+                    maxLength={80}
+                    placeholder={l("추천인을 입력해 주세요.", "Who referred you?")}
+                  />
+                </label>
+              </>
             )}
 
             {(isSignup || isRecovery) && (
@@ -640,7 +671,7 @@ export default function LoginPage() {
                       <dt>{l("수집 항목", "Information collected")}</dt>
                       <dd>
                         {isTutorSignup
-                          ? l("이름, 학교 이메일, 휴대전화번호, 합격통지서, 인증·동의 기록", "Name, university email, mobile number, acceptance letter, and authentication and consent records")
+                          ? l("이름, 학교 이메일, 휴대전화번호, 합격통지서, 추천인(입력한 경우), 인증·동의 기록", "Name, university email, mobile number, acceptance letter, referral details (if provided), and authentication and consent records")
                           : l("이름, 이메일, 휴대전화번호, 인증·동의 기록", "Name, email, mobile number, and authentication and consent records")}
                       </dd>
                     </div>

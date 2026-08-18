@@ -258,10 +258,8 @@ const piles = [
 
   <dialog class="coming-soon" id="coming-soon" aria-labelledby="coming-soon-title">
     <form method="dialog" class="coming-soon__panel">
-      <span class="eyebrow"><T en="Coming soon" ko="곧 만나요" /></span>
-      <h2 class="h3" id="coming-soon-title"><T en="Mock exam ordering is almost ready." ko="모의고사 주문 기능을 준비하고 있습니다." /></h2>
-      <p class="body"><T en="We are finishing the purchase flow now. Please check back shortly." ko="구매 과정을 마무리하고 있습니다. 조금만 기다려 주세요." /></p>
-      <button type="submit" class="btn btn--primary"><T en="Got it" ko="확인" /></button>
+      <button type="submit" class="coming-soon__close" aria-label="Close">×</button>
+      <h2 class="h3" id="coming-soon-title"><T en="Please wait just a little longer." ko="조금만 기다려주세요." /></h2>
     </form>
   </dialog>
 
@@ -347,11 +345,10 @@ const piles = [
     box-shadow: var(--shadow-lift);
   }
   .coming-soon::backdrop { background: rgba(19, 24, 27, 0.56); backdrop-filter: blur(4px); }
-  .coming-soon__panel { display: grid; gap: 22px; min-height: 100%; padding: clamp(38px, 6vw, 64px); background: var(--white); border: 1px solid var(--line-soft); border-radius: inherit; }
-  .coming-soon__panel .eyebrow { margin: 0; }
-  .coming-soon__panel .h3 { max-width: 16ch; font-size: clamp(1.9rem, 4vw, 2.65rem); line-height: 1.08; }
-  .coming-soon__panel .body { max-width: 44ch; font-size: 1.08rem; }
-  .coming-soon__panel .btn { width: fit-content; min-width: 132px; min-height: 48px; margin: 6px auto 0; padding-inline: 26px; justify-content: center; text-align: center; }
+  .coming-soon__panel { position: relative; display: grid; place-items: center; min-height: 280px; padding: clamp(52px, 7vw, 80px) clamp(28px, 6vw, 64px); background: var(--white); border: 1px solid var(--line-soft); border-radius: inherit; text-align: center; }
+  .coming-soon__panel .h3 { max-width: 18ch; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.12; }
+  .coming-soon__close { position: absolute; top: 16px; right: 16px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--ink); font-size: 1.65rem; line-height: 1; cursor: pointer; }
+  .coming-soon__close:hover { background: var(--ink); color: var(--white); }
 
   @media (max-width: 900px) {
     .report-panel,

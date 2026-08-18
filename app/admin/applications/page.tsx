@@ -23,7 +23,7 @@ export default async function AdminApplicationsPage() {
   const [{ data: accountRows }, { data: credentialRows }] = await Promise.all([
     admin
       .from("account_creation_requests")
-      .select("id,user_id,full_name,email,phone,requested_role,acceptance_letter_path,acceptance_letter_name,status,notification_sent_at,notification_error,created_at")
+      .select("id,user_id,full_name,email,phone,requested_role,acceptance_letter_path,acceptance_letter_name,referral_code,status,notification_sent_at,notification_error,created_at")
       .eq("status", "pending")
       .order("created_at", { ascending: true }),
     admin

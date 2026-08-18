@@ -166,7 +166,7 @@ export default function PortalSidebar({
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <Link href="/" className={styles.sidebarUtility} aria-label={labels.website} title={expanded ? undefined : labels.website} onClick={closeMobile}>
+          <Link href="/?stay=1" className={styles.sidebarUtility} aria-label={labels.website} title={expanded ? undefined : labels.website} onClick={closeMobile}>
             <span>{labels.website}</span>
           </Link>
 

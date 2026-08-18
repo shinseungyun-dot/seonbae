@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
   const password = formText(form, "password");
   const accountRole = parseRole(formText(form, "accountRole"));
   const isTutor = accountRole === "tutor";
+  const referralCode = isTutor ? formText(form, "referralCode").replace(/\s+/g, " ").slice(0, 80) : "";
   const privacyAgreed = formText(form, "privacyAgreed") === "true";
   const termsAgreed = formText(form, "termsAgreed") === "true";
   const ageConfirmed = formText(form, "ageConfirmed") === "true";
@@ -152,6 +153,7 @@ export async function POST(request: NextRequest) {
       requested_role: accountRole,
       acceptance_letter_path: documentPath,
       acceptance_letter_name: documentName,
+      referral_code: referralCode || null,
     })
     .select("id")
     .single();

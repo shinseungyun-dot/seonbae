@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ConversionPanel from '../components/ConversionPanel.astro';
 import T from '../components/T.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
   title?: string;
@@ -29,6 +30,7 @@ const still = Astro.url.searchParams.has('still');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="stylesheet" href="/cookie-consent.css" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -94,6 +96,7 @@ const still = Astro.url.searchParams.has('still');
     </main>
     {showConversion && <ConversionPanel />}
     <Footer />
+    <CookieConsent />
 
     <style is:global>
       .skip-link {
@@ -186,5 +189,6 @@ const still = Astro.url.searchParams.has('still');
       }
     </script>
     <script src="/site-auth.js" defer></script>
+    <script src="/cookie-consent.js" defer></script>
   </body>
 </html>

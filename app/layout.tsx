@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import CookieConsent from "./CookieConsent";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,6 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        <link rel="stylesheet" href="/cookie-consent.css" />
         <script
           dangerouslySetInnerHTML={{
             __html:
@@ -17,7 +20,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <CookieConsent />
+        <Script src="/cookie-consent.js" strategy="afterInteractive" />
+      </body>
     </html>
   );
 }
