@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "../../../../utils/supabase/admin";
 import { createClient } from "../../../../utils/supabase/server";
+import { TUTOR_CONTRACT_VERSION } from "../../../../utils/contracts/tutor-contract";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,15 @@ export async function PATCH(request: NextRequest) {
 
     let tutorRegistryId: string | null = null;
     if (decision === "approved" && application.requested_role === "tutor") {
+      const { data: signature, error: signatureError } = await admin
+        .from("tutor_contract_signatures")
+        .select("id")
+        .eq("tutor_id", application.user_id)
+        .eq("contract_version", TUTOR_CONTRACT_VERSION)
+        .maybeSingle();
+      if (signatureError || !signature) {
+        return jsonError("튜터 계약 서명이 완료되어야 계정을 승인할 수 있습니다.", 409);
+      }
       const currentProfile = await admin
         .from("profiles")
         .select("tutor_registry_id")

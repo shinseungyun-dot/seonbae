@@ -7,7 +7,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 const publicProfiles: Record<string, { name_en: string; photo_url: string }> = {
-  "P-001": { name_en: "Ian Bae", photo_url: "" },
+  "P-001": { name_en: "Ian Bae", photo_url: "/images/ian-bae-placeholder.png" },
   "P-002": { name_en: "Seung-Yun Shin", photo_url: "/images/seung-yun-shin.png" },
   "P-003": { name_en: "Byeongguk Oh", photo_url: "/images/byeongguk-oh.png" },
   "S-001": { name_en: "Raphael Lee", photo_url: "/images/raphael-lee.png" },
@@ -68,7 +68,7 @@ export async function GET() {
     return {
       ...row,
       name_en: profile?.name_en || row.name,
-      photo_url: row.photo_url || profile?.photo_url || null,
+      photo_url: profile?.photo_url || row.photo_url || null,
     };
   });
 

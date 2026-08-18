@@ -3,6 +3,7 @@ import { createAdminClient } from "../../../utils/supabase/admin";
 import { createClient } from "../../../utils/supabase/server";
 import ApplicationReviewClient, { type AccountApplication, type CredentialApplication } from "./ApplicationReviewClient";
 import AdminSidebar from "../AdminSidebar";
+import { TUTOR_CONTRACT_VERSION } from "../../../utils/contracts/tutor-contract";
 import styles from "./applications.module.css";
 
 export const dynamic = "force-dynamic";
@@ -40,10 +41,25 @@ export default async function AdminApplicationsPage() {
     for (const tutor of tutors ?? []) tutorNames.set(tutor.id, tutor.full_name || tutor.email || "튜터");
   }
 
+  const pendingTutorIds = (accountRows ?? [])
+    .filter((item) => item.requested_role === "tutor")
+    .map((item) => item.user_id);
+  const signedTutorIds = new Set<string>();
+  if (pendingTutorIds.length) {
+    const { data: signatures } = await admin
+      .from("tutor_contract_signatures")
+      .select("tutor_id")
+      .in("tutor_id", pendingTutorIds)
+      .eq("contract_version", TUTOR_CONTRACT_VERSION);
+    for (const signature of signatures ?? []) signedTutorIds.add(signature.tutor_id);
+  }
+
   const accounts: AccountApplication[] = await Promise.all((accountRows ?? []).map(async (item) => {
-    if (!item.acceptance_letter_path) return { ...item, documentUrl: null };
+    if (!item.acceptance_letter_path) {
+      return { ...item, contract_signed: item.requested_role !== "tutor" || signedTutorIds.has(item.user_id), documentUrl: null };
+    }
     const signed = await admin.storage.from("account-documents").createSignedUrl(item.acceptance_letter_path, 60 * 60);
-    return { ...item, documentUrl: signed.data?.signedUrl || null };
+    return { ...item, contract_signed: item.requested_role !== "tutor" || signedTutorIds.has(item.user_id), documentUrl: signed.data?.signedUrl || null };
   }));
   const credentials: CredentialApplication[] = await Promise.all((credentialRows ?? []).map(async (item) => {
     const signed = await admin.storage.from("tutor-credentials").createSignedUrl(item.proof_path, 60 * 60);

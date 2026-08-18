@@ -12,17 +12,16 @@ export async function resolvePortalDestination(
   profile: PortalProfile | null,
 ) {
   if (profile?.role === "admin") return "/admin";
+  if (profile?.role === "tutor" && profile.account_status === "pending") {
+    const { data: signature, error } = await supabase
+      .from("tutor_contract_signatures")
+      .select("id")
+      .eq("tutor_id", userId)
+      .eq("contract_version", TUTOR_CONTRACT_VERSION)
+      .maybeSingle();
+
+    return !error && signature ? "/portal/pending" : "/portal/tutor/contract";
+  }
   if (profile?.account_status !== "approved") return "/portal/pending";
-  if (profile.role !== "tutor") return "/portal";
-
-  const { data: signature, error } = await supabase
-    .from("tutor_contract_signatures")
-    .select("id")
-    .eq("tutor_id", userId)
-    .eq("contract_version", TUTOR_CONTRACT_VERSION)
-    .maybeSingle();
-
-  // Fail closed: a tutor never reaches student data until the current
-  // contract signature is positively confirmed.
-  return !error && signature ? "/portal/tutor" : "/portal/tutor/contract";
+  return profile.role === "tutor" ? "/portal/tutor" : "/portal";
 }

@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  if (!profile || profile.role !== "tutor" || profile.account_status !== "approved" || !profile.tutor_registry_id) {
-    return jsonError("관리자 승인이 완료된 튜터만 계약할 수 있습니다.", 403);
+  if (!profile || profile.role !== "tutor" || profile.account_status !== "pending") {
+    return jsonError("관리자 승인 대기 중인 튜터 계정만 계약할 수 있습니다.", 403);
   }
   if (!sameIdentity(signerName, profile.full_name || "")) {
     return jsonError("서명자 성명은 승인된 계정의 이름과 같아야 합니다.", 400);
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   const [{ data: application }, { data: existing }] = await Promise.all([
     admin
       .from("account_creation_requests")
-      .select("id,status,reviewed_by,reviewed_at")
+      .select("id,status,created_at,full_name,email")
       .eq("user_id", user.id)
       .eq("requested_role", "tutor")
       .maybeSingle(),
@@ -97,14 +97,38 @@ export async function POST(request: NextRequest) {
       .maybeSingle(),
   ]);
 
-  if (!application || application.status !== "approved" || !application.reviewed_at) {
-    return jsonError("관리자 승인 기록을 확인하지 못했습니다.", 403);
+  if (!application || application.status !== "pending") {
+    return jsonError("관리자 승인 대기 상태를 확인하지 못했습니다.", 403);
   }
   if (existing) {
     return NextResponse.json(
-      { signed: true, signedAt: existing.signed_at, destination: "/portal/tutor" },
+      { signed: true, signedAt: existing.signed_at, destination: "/portal/pending" },
       { headers: { "Cache-Control": "private, no-store, max-age=0" } },
     );
+  }
+
+  let tutorRegistryId = profile.tutor_registry_id;
+  if (!tutorRegistryId) {
+    tutorRegistryId = `T-${user.id.slice(0, 8).toUpperCase()}`;
+    const { error: tutorError } = await admin.from("tutors").upsert({
+      registry_id: tutorRegistryId,
+      name: application.full_name,
+      exam: "자격 검증 중",
+      score: "검토 중",
+      category: "english",
+      tier: "standard",
+      zoom_host_email: application.email,
+      active: false,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "registry_id" });
+    if (tutorError) return jsonError("계약용 튜터 기록을 준비하지 못했습니다.", 500);
+
+    const { error: profileError } = await admin
+      .from("profiles")
+      .update({ tutor_registry_id: tutorRegistryId, updated_at: new Date().toISOString() })
+      .eq("id", user.id)
+      .eq("account_status", "pending");
+    if (profileError) return jsonError("계약용 튜터 기록을 연결하지 못했습니다.", 500);
   }
 
   const signedAt = new Date().toISOString();
@@ -123,7 +147,7 @@ export async function POST(request: NextRequest) {
     .insert({
       tutor_id: user.id,
       application_request_id: application.id,
-      tutor_registry_id: profile.tutor_registry_id,
+      tutor_registry_id: tutorRegistryId,
       contract_version: TUTOR_CONTRACT_VERSION,
       contract_title: TUTOR_CONTRACT_TITLE,
       contract_hash: serverContractHash,
@@ -141,8 +165,8 @@ export async function POST(request: NextRequest) {
       approval_snapshot: {
         applicationRequestId: application.id,
         status: application.status,
-        reviewedBy: application.reviewed_by,
-        reviewedAt: application.reviewed_at,
+        applicationCreatedAt: application.created_at,
+        signedBeforeAdminDecision: true,
       },
       ip_address_hash: auditHash(auditSecret, clientIp(request)),
       user_agent_hash: auditHash(auditSecret, request.headers.get("user-agent") || "unknown"),
@@ -154,7 +178,7 @@ export async function POST(request: NextRequest) {
     await admin.storage.from("tutor-contract-signatures").remove([signaturePath]);
     if (insert.error?.code === "23505") {
       return NextResponse.json(
-        { signed: true, destination: "/portal/tutor" },
+        { signed: true, destination: "/portal/pending" },
         { headers: { "Cache-Control": "private, no-store, max-age=0" } },
       );
     }
@@ -163,7 +187,7 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json(
-    { signed: true, signedAt: insert.data.signed_at, destination: "/portal/tutor" },
+    { signed: true, signedAt: insert.data.signed_at, destination: "/portal/pending" },
     { headers: { "Cache-Control": "private, no-store, max-age=0" } },
   );
 }

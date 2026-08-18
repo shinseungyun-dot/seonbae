@@ -28,13 +28,13 @@ export type SignedContractReceipt = {
 
 export default function TutorContractClient({
   contractHash,
-  approvalDate,
+  applicationDate,
   identity,
   receipt,
 }: {
   contractHash: string;
-  approvalDate: string;
-  identity: { name: string; email: string; phone: string; registryId: string };
+  applicationDate: string;
+  identity: { name: string; email: string; phone: string; applicationId: number };
   receipt: SignedContractReceipt | null;
 }) {
   const router = useRouter();
@@ -131,13 +131,13 @@ export default function TutorContractClient({
     <main className={styles.page}>
       <header className={styles.hero}>
         <div>
-          <p>APPROVED TUTOR · CONTRACT</p>
+          <p>PENDING TUTOR · CONTRACT</p>
           <h1>{receipt ? l("계약이 체결되었습니다.", "Your contract is signed.") : l("튜터 계약을 확인하고 서명해 주세요.", "Review and sign your tutor contract.")}</h1>
-          <span>{l("관리자 승인", "Admin approval")} · {formatDate(approvalDate, locale)}</span>
+          <span>{l("계정 심사 대기", "Account review pending")} · {formatDate(applicationDate, locale)}</span>
         </div>
         <aside>
           <span>{l("계약 버전", "Contract version")}</span><b>{TUTOR_CONTRACT_VERSION}</b>
-          <span>{l("튜터 번호", "Tutor ID")}</span><b>{identity.registryId}</b>
+          <span>{l("신청 번호", "Application ID")}</span><b>#{identity.applicationId}</b>
         </aside>
       </header>
 
@@ -184,7 +184,7 @@ export default function TutorContractClient({
             <div className={styles.signingHeading}>
               <p>SIGNATURE</p>
               <h2>{l("본인 정보를 확인해 주세요.", "Confirm your identity.")}</h2>
-              <span>{l("이 서명은 승인된 계정과 계약서 원문에 함께 연결됩니다.", "This signature is linked to your approved account and this exact contract version.")}</span>
+              <span>{l("이 서명은 승인 대기 중인 신청과 계약서 원문에 함께 연결됩니다.", "This signature is linked to your pending application and this exact contract version.")}</span>
             </div>
             <div className={styles.formGrid}>
               <label><span>{l("성명", "Legal name")}</span><input value={signerName} onChange={(event) => setSignerName(event.target.value)} minLength={2} maxLength={80} autoComplete="name" required /></label>
