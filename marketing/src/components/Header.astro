@@ -80,8 +80,8 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
       <a href="/login" class="header-auth-link auth-pending" data-auth-primary aria-busy="true" aria-hidden="true" tabindex="-1">
         <span data-auth-primary-label></span>
       </a>
-      <a href="/get-matched" class="btn btn--primary header-cta">
-        <span><T en="Get started" ko="시작하기" /></span>
+      <a href="/get-matched" class="btn btn--primary header-cta" data-auth-portal>
+        <span data-auth-portal-label><T en="Get started" ko="시작하기" /></span>
         <span class="btn__disc" aria-hidden="true">
           <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
@@ -116,8 +116,8 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
       <a href="/login" class="drawer-auth-link auth-pending" data-auth-primary aria-busy="true" aria-hidden="true" tabindex="-1">
         <span data-auth-primary-label></span>
       </a>
-      <a href="/get-matched" class="btn btn--primary btn--lg drawer-btn">
-        <span><T en="Get started" ko="시작하기" /></span>
+      <a href="/get-matched" class="btn btn--primary btn--lg drawer-btn" data-auth-portal>
+        <span data-auth-portal-label><T en="Get started" ko="시작하기" /></span>
         <span class="btn__disc" aria-hidden="true">
           <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
@@ -138,7 +138,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   }
   .header-inner {
     display: grid;
-    grid-template-columns: minmax(150px, 1fr) auto minmax(280px, 1fr);
+    grid-template-columns: minmax(150px, 1fr) auto minmax(320px, 1fr);
     align-items: center;
     justify-content: space-between;
     gap: 20px;
@@ -272,24 +272,32 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
     align-items: center;
     justify-content: center;
     color: var(--ink);
-    font-size: 0.84rem;
-    font-weight: 700;
+    font-size: 0.98rem;
+    font-weight: 800;
     text-decoration: underline;
     text-decoration-color: transparent;
     text-underline-offset: 5px;
     transition: color 0.16s ease, text-decoration-color 0.16s ease;
   }
   .header-auth-link { padding-inline: 8px; }
+  .header-auth-link,
+  .drawer-auth-link { flex: none; white-space: nowrap; }
   .header-auth-link:hover,
   .drawer-auth-link:hover { color: var(--violet); text-decoration-color: currentColor; }
   .site-header:not(.is-solid) .header-auth-link { color: var(--on-dark); }
   .site-header:not(.is-solid) .header-auth-link:hover { color: #fff; }
+  .header-auth-link.is-logout,
+  .drawer-auth-link.is-logout { color: #bd332d; }
+  .header-auth-link.is-logout:hover,
+  .drawer-auth-link.is-logout:hover { color: #8f211d; }
+  .site-header:not(.is-solid) .header-auth-link.is-logout { color: #ff8e86; }
+  .site-header:not(.is-solid) .header-auth-link.is-logout:hover { color: #ffb1ab; }
   .header-auth-link:focus-visible,
   .drawer-auth-link:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
   .auth-pending { visibility: hidden; pointer-events: none; }
 
   .drawer-btn { width: 100%; justify-content: space-between; }
-  .drawer-auth-link { align-self: flex-start; font-size: 1.05rem; }
+  .drawer-auth-link { align-self: flex-start; font-size: 1.12rem; }
   .drawer-tutorlink {
     display: inline-flex;
     font-weight: 600;

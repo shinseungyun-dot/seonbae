@@ -65,6 +65,8 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
 
   const passwordChecks = useMemo(() => getPasswordChecks(password), [password]);
   const allRequiredAgreed = privacyAgreed && termsAgreed && ageConfirmed;
@@ -87,6 +89,30 @@ export default function LoginPage() {
     if (locale === "ko" || !/[가-힣]/.test(value)) return value;
     return fallbackEn;
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/session", {
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    })
+      .then((response) => response.ok ? response.json() : { authenticated: false })
+      .then((session) => {
+        if (cancelled) return;
+        if (session.authenticated) {
+          setRedirecting(true);
+          router.replace(session.destination || "/portal");
+          router.refresh();
+          return;
+        }
+        setCheckingSession(false);
+      })
+      .catch(() => {
+        if (!cancelled) setCheckingSession(false);
+      });
+    return () => { cancelled = true; };
+  }, [router]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -218,6 +244,7 @@ export default function LoginPage() {
       }
 
       if (result.destination) {
+        setRedirecting(true);
         router.replace(result.destination);
         router.refresh();
         return;
@@ -253,6 +280,7 @@ export default function LoginPage() {
         return;
       }
 
+      setRedirecting(true);
       window.location.assign(result.url);
     } catch {
       setMessage(l("Google 인증 서버에 연결하지 못했습니다. 네트워크를 확인해 주세요.", "Could not connect to Google authentication. Check your connection."));
@@ -302,6 +330,20 @@ export default function LoginPage() {
     setPrivacyAgreed(checked);
     setTermsAgreed(checked);
     setAgeConfirmed(checked);
+  }
+
+  if (checkingSession || redirecting) {
+    return (
+      <main className={styles.loadingScreen} aria-busy="true">
+        <div className={styles.loadingMark} aria-hidden="true">
+          <img src="/logo.png" alt="" width="92" height="72" />
+          <span />
+        </div>
+        <p className={styles.loadingEyebrow}>SEONBAE PORTAL</p>
+        <h1>{redirecting ? l("포털을 여는 중입니다.", "Opening your portal.") : l("계정을 확인하고 있습니다.", "Checking your account.")}</h1>
+        <p>{l("잠시만 기다려 주세요.", "Just a moment.")}</p>
+      </main>
+    );
   }
 
   return (

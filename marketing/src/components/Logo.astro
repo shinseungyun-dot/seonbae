@@ -1,6 +1,6 @@
 ---
-// Seonbae wordmark + the supplied brand mark. The transparent master is shared
-// with the authenticated product through /logo.png.
+// Seonbae wordmark + the supplied brand marks. Each tone uses its original
+// artwork rather than recolouring one raster in CSS.
 interface Props {
   tone?: 'ink' | 'light';
   href?: string;
@@ -8,10 +8,11 @@ interface Props {
 }
 const { tone = 'ink', href = '/', class: cls = '' } = Astro.props;
 const wordColor = tone === 'light' ? 'var(--on-dark)' : 'var(--ink)';
+const mark = tone === 'light' ? '/logo-light.png' : '/logo.png';
 ---
 
 <a href={href} class={`logo ${cls}`} aria-label={href === '/' ? 'Seonbae home' : 'About Seonbae'}>
-  <img src="/logo.png" alt="" class:list={['logo__img', { 'logo__img--light': tone === 'light' }]} width="46" height="36" />
+  <img src={mark} alt="" class="logo__img" width="46" height="36" />
   <span class="logo__word" style={`color:${wordColor}`}>Seonbae</span>
 </a>
 
@@ -22,9 +23,6 @@ const wordColor = tone === 'light' ? 'var(--on-dark)' : 'var(--ink)';
     gap: 9px;
   }
   .logo__img { width: 46px; height: 36px; flex: none; object-fit: contain; }
-  /* The supplied reverse mark is the same silhouette, so the transparent
-     master can be rendered white without loading a second large raster. */
-  .logo__img--light { filter: brightness(0) invert(1); }
   .logo__word {
     font-family: var(--display);
     font-weight: 800;

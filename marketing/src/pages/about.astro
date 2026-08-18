@@ -2,20 +2,8 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Eyebrow from '../components/Eyebrow.astro';
-import Avatar from '../components/Avatar.astro';
 import T from '../components/T.astro';
-
-const founders = [
-  {
-    name: 'Yoonjae Lee', hangul: '이윤재', role: 'Founder & CEO', roleKo: '창업자 & CEO', uni: 'Korea University, International Studies', uniKo: '고려대학교 국제학부', accent: 'mint' as const,
-  },
-  {
-    name: 'Byeongguk Oh', hangul: '오병국', role: 'Co-Founder & COO', roleKo: '공동창업자 & COO', uni: 'Korea University, Business Administration', uniKo: '고려대학교 경영학과', accent: 'lavender' as const,
-  },
-  {
-    name: 'Seungyun Shin', hangul: '신승윤', role: 'Co-Founder & CTO', roleKo: '공동창업자 & CTO', uni: 'Seoul National University, Computer Science', uniKo: '서울대학교 컴퓨터공학부', accent: 'violet' as const,
-  },
-];
+import { leadership as founders } from '../data/people';
 
 const principles = [
   { title: 'Know who you are learning from', titleKo: '선생님이 믿음직해야 해요', copy: 'Every tutor is verified before appearing on Seonbae. We check academic records and university qualifications before anyone is listed.', copyKo: '부모님이 안심하고 고를 수 있도록 성적부터 대학까지 모두 확인합니다.' },
@@ -72,7 +60,7 @@ const principles = [
             />
             <figcaption><T en="The three of us, before any of this had a name." ko="아직 선배라는 이름이 생기기 전, 세 사람." /></figcaption>
           </figure>
-          <p class="body"><T en="We soon realised it wasn’t just us. Tutors across Korea’s top universities teaching international curricula were saying the same things. Those conversations became the first idea for Seonbae. Yoonjae brought it to Byeongguk and Seungyun, and together we started building the platform we wished we had as tutors." ko="저희만 힘든 것이 아니었습니다. 국제 커리큘럼을 가르치는 최상위권 대학 선생님들도 비슷한 어려움을 겪고 있었습니다. 그 대화들이 선배의 첫 아이디어가 되었고, 윤재가 병국과 승윤에게 제안한 뒤 세 사람은 과외 선생님일 때 필요했던 플랫폼을 함께 만들기 시작했습니다." /></p>
+          <p class="body"><T en="We soon realised it wasn’t just us. Tutors across Korea’s top universities teaching international curricula were saying the same things. Those conversations became the first idea for Seonbae. Raphael brought it to Byeongguk and Seung-Yun, and together we started building the platform we wished we had as tutors." ko="저희만 힘든 것이 아니었습니다. 국제 커리큘럼을 가르치는 최상위권 대학 선생님들도 비슷한 어려움을 겪고 있었습니다. 그 대화들이 선배의 첫 아이디어가 되었고, 윤재가 병국과 승윤에게 제안한 뒤 세 사람은 과외 선생님일 때 필요했던 플랫폼을 함께 만들기 시작했습니다." /></p>
           <blockquote class="story__quote"><T en="What would tutoring look like if it actually worked better for everyone involved? That question became Seonbae." ko="선생님과 학생 모두 기분 좋게 가르치고 배울 수 있다면 어떨까요? 선배는 그 질문에 대한 답이 되려 합니다." /></blockquote>
         </div>
       </div>
@@ -92,13 +80,17 @@ const principles = [
           <article class="fnd reveal" data-delay={`${i * 70}ms`}>
             <span class="fnd__n" aria-hidden="true">{`0${i + 1}`}</span>
             <div class="fnd__id">
-              <Avatar name={f.name} accent={f.accent} size={72} />
+              <img class="fnd__portrait" src={f.photo} alt={f.name} width="96" height="96" loading="lazy" decoding="async" />
               <div>
                 <h3 class="fnd__name"><T en={`${f.name} ${f.hangul}`} ko={f.hangul} /></h3>
                 <p class="fnd__role"><T en={f.role} ko={f.roleKo} /></p>
-                <p class="fnd__uni"><T en={f.uni} ko={f.uniKo} /></p>
+                <p class="fnd__uni"><T en={f.university} ko={f.universityKo} /></p>
               </div>
             </div>
+            <a class="fnd__linkedin" href={f.linkedin} target="_blank" rel="noreferrer" aria-label={`Open ${f.name} on LinkedIn`}>
+              <span>LinkedIn</span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </article>
         ))}
       </div>
@@ -220,7 +212,7 @@ const principles = [
   /* ----- Founders --------------------------------------------------------- */
   .fnd {
     display: grid;
-    grid-template-columns: 4.5rem minmax(0, 1fr);
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
     gap: clamp(18px, 3vw, 48px);
     align-items: start;
     padding: clamp(24px, 3vw, 36px) 0;
@@ -229,10 +221,14 @@ const principles = [
   .fnd:last-child { border-bottom: none; }
   .fnd__n { font-family: var(--display); font-weight: 800; font-size: 0.95rem; color: var(--violet); padding-top: 6px; }
   .fnd__id { display: flex; gap: 18px; align-items: center; }
+  .fnd__portrait { width: 96px; height: 96px; flex: none; border-radius: 50%; object-fit: cover; object-position: center 24%; border: 1px solid var(--line); background: var(--canvas); }
   .fnd__name { font-family: var(--display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; }
   .fnd__hangul { font-weight: 500; font-size: 0.98rem; color: var(--muted); }
   .fnd__role { color: var(--violet); font-weight: 600; font-size: 0.92rem; margin-top: 5px; }
   .fnd__uni { color: var(--muted); font-size: 0.88rem; margin-top: 1px; }
+  .fnd__linkedin { align-self: center; display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--violet); font-weight: 700; font-size: 0.88rem; transition: background 0.16s ease, border-color 0.16s ease; }
+  .fnd__linkedin:hover { background: var(--violet-soft); border-color: var(--violet); }
+  .fnd__linkedin svg { width: 16px; height: 16px; }
 
   /* ----- Founders' note --------------------------------------------------- */
   .note {
@@ -290,6 +286,7 @@ const principles = [
     .statement__word { font-size: clamp(3.4rem, 18vw, 6rem); }
     .story__text { border-left: none; padding-left: 0; }
     .fnd, .tenet { grid-template-columns: 3rem minmax(0, 1fr); }
+    .fnd__linkedin { grid-column: 2; justify-self: start; }
     .fnd__bio, .tenet__c { grid-column: 2; }
     .tenet__n { font-size: 2.2rem; }
   }
