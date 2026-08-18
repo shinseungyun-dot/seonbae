@@ -15,7 +15,7 @@ for (const entry of ["_astro", "fonts", "images"]) {
   await cp(resolve(dist, entry), destination, { recursive: true });
 }
 
-for (const entry of ["favicon.png", "favicon.svg", "logo.png", "site-auth.js"]) {
+for (const entry of ["favicon.png", "favicon.svg", "logo.png", "logo-light.png", "site-auth.js"]) {
   await cp(resolve(dist, entry), resolve(root, "public", entry));
 }
 

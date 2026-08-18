@@ -1,19 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import TutorCard from '../components/TutorCard.astro';
-import TutorPlaceholder from '../components/TutorPlaceholder.astro';
 import T from '../components/T.astro';
+import { leadership } from '../data/people';
 
-const tutors = (await getCollection('tutors')).sort((a, b) => a.data.order - b.data.order);
-
-const catMap: Record<string, string> = { IB: 'ib', AP: 'ap', 'A Level': 'alevel', IGCSE: 'igcse', SAT: 'tests', ACT: 'tests' };
-const withCats = tutors.map((t) => {
-  const cats = new Set<string>();
-  t.data.levels.forEach((l) => { if (catMap[l]) cats.add(catMap[l]); });
-  return { entry: t, cats: [...cats] };
-});
+const withCats = [
+  { entry: leadership[0], cats: ['ib', 'igcse'], score: 'IB · IGCSE', exam: { en: 'Economics', ko: '경제' } },
+  { entry: leadership[1], cats: ['tests'], score: '1510', exam: { en: 'SAT', ko: 'SAT' } },
+  { entry: leadership[2], cats: ['alevel'], score: 'A*A*A*A*', exam: { en: 'A Level', ko: 'A레벨' } },
+];
 
 // Counts drive the rail, so a family can see how deep each curriculum runs
 // before they click anything.
@@ -27,11 +22,8 @@ const filters = [
   { key: 'tests', label: 'SAT and ACT' },
 ].map((f) => ({ ...f, n: count(f.key) }));
 
-const universities = [...new Set(tutors.map((t) => t.data.university))];
-
-// No profile goes on this page until a real tutor has cleared verification, so
-// the page has an honest pre-launch state rather than sample people.
-const roster = withCats.length > 0;
+const universities = [...new Set(leadership.map((person) => person.university))];
+const roster = true;
 ---
 <Base title="Tutors | Seonbae" active="/tutors">
   <PageHero
@@ -81,8 +73,23 @@ const roster = withCats.length > 0;
           </div>
 
           <div class="tutor-grid is-loading" id="tutor-grid" aria-busy="true">
-            {[1, 2, 3, 4].map((n) => (
-              <div class="tutor-cell reveal is-in"><TutorPlaceholder index={n} /></div>
+            {withCats.map(({ entry: tutor, cats, score, exam }) => (
+              <div class="tutor-cell reveal is-in" data-cats={cats.join(' ')}>
+                <article class="live-tutor-card card">
+                  <div class="live-tutor-card__visual">
+                    <img class="live-tutor-card__photo" src={tutor.photo} alt={tutor.name} width="800" height="800" loading="lazy" decoding="async" />
+                    <span class="live-tutor-card__verified"><T en="Verified" ko="검증 완료" /></span>
+                  </div>
+                  <div class="live-tutor-card__body">
+                    <div class="live-tutor-card__id"><h3><T en={tutor.name} ko={tutor.hangul} /></h3></div>
+                    <p class="live-tutor-card__uni"><T en={tutor.university} ko={tutor.universityKo} /></p>
+                    <p class="live-tutor-card__score"><strong>{score}</strong><span><T en={exam.en} ko={exam.ko} /></span></p>
+                    <a class="textlink live-tutor-card__action" href={`/get-matched?tutor=${encodeURIComponent(tutor.name)}`}><T en="Request this tutor" ko="이 튜터로 상담 신청" />
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                  </div>
+                </article>
+              </div>
             ))}
           </div>
 
@@ -187,6 +194,8 @@ const roster = withCats.length > 0;
   .roster__count { font-size: 0.95rem; color: var(--muted); }
   .roster__count strong { font-family: var(--display); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin-right: 4px; font-variant-numeric: tabular-nums; }
   .roster__unis { font-size: 0.85rem; color: var(--muted); }
+  .roster__main, .tutor-grid, .tutor-cell, .live-tutor-card { min-width: 0; }
+  .roster__unis { overflow-wrap: anywhere; }
 
   .tutor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: clamp(16px, 1.8vw, 22px); }
   .tutor-grid.is-loading { opacity: 0.72; }
@@ -194,27 +203,23 @@ const roster = withCats.length > 0;
   .live-tutor-card { display: flex; flex-direction: column; min-height: 100%; overflow: hidden; }
   .live-tutor-card__visual {
     position: relative;
-    min-height: 190px;
-    padding: 24px;
-    display: flex;
-    align-items: flex-end;
+    min-height: 290px;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
-    background: var(--violet);
+    background: linear-gradient(150deg, var(--sage), var(--yellow-soft));
     color: #fff;
   }
-  .live-tutor-card__visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 28%, rgba(15, 40, 54, 0.72)); }
-  .live-tutor-card__banner { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.28; }
-  .live-tutor-card__photo { position: relative; z-index: 2; width: 76px; height: 76px; border-radius: 50%; border: 2px solid rgba(255,255,255,.76); background: rgba(255,255,255,.18); object-fit: cover; display: grid; place-items: center; font-family: var(--display); font-size: 1.45rem; font-weight: 800; }
-  .live-tutor-card__verified { position: absolute; z-index: 2; top: 18px; right: 18px; padding: 5px 9px; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,.42); background: rgba(15,40,54,.42); font-size: .72rem; font-weight: 700; }
+  .live-tutor-card__photo { width: 100%; height: 100%; object-fit: cover; object-position: center 28%; display: grid; place-items: center; color: var(--violet); font-family: var(--display); font-size: 2.2rem; font-weight: 800; transition: transform .35s ease; }
+  .live-tutor-card:hover .live-tutor-card__photo { transform: scale(1.025); }
+  .live-tutor-card__verified { position: absolute; z-index: 2; top: 14px; right: 14px; padding: 6px 11px; border-radius: var(--r-pill); border: 1px solid var(--line); background: rgba(255,253,247,.94); color: var(--violet); box-shadow: var(--shadow-sm); font-size: .72rem; font-weight: 800; }
   .live-tutor-card__body { display: flex; flex: 1; flex-direction: column; padding: 24px; }
   .live-tutor-card__id { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
   .live-tutor-card__id h3 { font-size: 1.28rem; }
-  .live-tutor-card__id span { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .live-tutor-card__uni { margin-top: 5px; color: var(--muted); font-size: .92rem; }
   .live-tutor-card__score { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
   .live-tutor-card__score strong { display: block; font-family: var(--display); font-size: 2.25rem; line-height: 1; color: var(--violet); }
   .live-tutor-card__score span { display: block; margin-top: 6px; color: var(--muted); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
-  .live-tutor-card__action { margin-top: 22px; }
+  .live-tutor-card__action { margin-top: 22px; white-space: normal; }
   .roster__note { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 0.95rem; line-height: 1.55; max-width: 68ch; }
   .roster__note a { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
   .no-match { margin-top: 24px; color: var(--muted); }
@@ -259,6 +264,7 @@ const roster = withCats.length > 0;
   type Tutor = {
     registry_id: string;
     name: string;
+    name_en?: string;
     exam: string;
     score: string;
     category?: string;
@@ -266,9 +272,8 @@ const roster = withCats.length > 0;
     university?: string;
     university_en?: string;
     photo_url?: string | null;
-    banner_url?: string | null;
   };
-  let cells: HTMLElement[] = [];
+  let cells: HTMLElement[] = [...document.querySelectorAll('.tutor-cell')] as HTMLElement[];
 
   const categoryFor = (tutor: Tutor) => {
     const value = `${tutor.exam} ${tutor.category || ''}`.toUpperCase();
@@ -317,18 +322,17 @@ const roster = withCats.length > 0;
     grid.classList.remove('is-loading');
     grid.removeAttribute('aria-busy');
     grid.innerHTML = tutors.map((tutor) => {
-      const banner = safeAsset(tutor.banner_url);
       const photo = safeAsset(tutor.photo_url);
-      const visual = banner ? `<img class="live-tutor-card__banner" src="${banner}" alt="" loading="lazy" />` : '';
+      const displayName = tr(tutor.name_en || tutor.name, tutor.name);
       const avatar = photo
-        ? `<img class="live-tutor-card__photo" src="${photo}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(tutor.name)}" loading="lazy" />`
-        : `<span class="live-tutor-card__photo" aria-label="${tr('Photo pending', '사진 준비 중')}">${initials(tutor.name)}</span>`;
+        ? `<img class="live-tutor-card__photo" src="${photo}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(displayName)}" loading="lazy" />`
+        : `<span class="live-tutor-card__photo" aria-label="${tr('Photo pending', '사진 준비 중')}">${initials(displayName)}</span>`;
       return `<div class="tutor-cell" data-cats="${categoryFor(tutor)}">
         <article class="live-tutor-card card">
-          <div class="live-tutor-card__visual">${visual}${avatar}<span class="live-tutor-card__verified">${tr('Verified', '검증 완료')}</span></div>
+          <div class="live-tutor-card__visual">${avatar}<span class="live-tutor-card__verified">${tr('Verified', '검증 완료')}</span></div>
           <div class="live-tutor-card__body">
-            <div class="live-tutor-card__id"><h3>${escapeHtml(tutor.name)}</h3><span>${escapeHtml(tutor.registry_id)}</span></div>
-            <p class="live-tutor-card__uni">${escapeHtml(tutor.university || tutor.university_en || '')}</p>
+            <div class="live-tutor-card__id"><h3>${escapeHtml(displayName)}</h3></div>
+            <p class="live-tutor-card__uni">${escapeHtml(tr(tutor.university_en || tutor.university || '', tutor.university || tutor.university_en || ''))}</p>
             <p class="live-tutor-card__score"><strong>${escapeHtml(tutor.score)}</strong><span>${escapeHtml(tutor.exam)}</span></p>
             <a class="textlink live-tutor-card__action" href="/get-matched?tutor=${encodeURIComponent(tutor.name)}">${tr('Request this tutor', '이 튜터로 상담 신청')}
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -363,11 +367,18 @@ const roster = withCats.length > 0;
 
   fetch('/api/tutors', { cache: 'no-store', headers: { Accept: 'application/json' } })
     .then((response) => response.ok ? response.json() : Promise.reject(new Error('Tutor directory unavailable')))
-    .then((rows) => renderTutors(Array.isArray(rows) ? rows : []))
+    .then((rows) => {
+      if (Array.isArray(rows) && rows.length > 0) renderTutors(rows);
+      else {
+        const grid = document.getElementById('tutor-grid');
+        grid?.classList.remove('is-loading');
+        grid?.removeAttribute('aria-busy');
+      }
+    })
     .catch(() => {
-      renderTutors([]);
-      const note = document.getElementById('roster-note');
-      if (note) { note.hidden = false; note.textContent = tr('The live tutor registry is temporarily unavailable. Please try again shortly.', '현재 튜터 명부를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.'); }
+      const grid = document.getElementById('tutor-grid');
+      grid?.classList.remove('is-loading');
+      grid?.removeAttribute('aria-busy');
     });
   document.querySelectorAll('[data-set-lang]').forEach((button) => button.addEventListener('click', () => location.reload()));
 </script>
