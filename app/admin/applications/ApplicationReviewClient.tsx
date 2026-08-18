@@ -13,6 +13,7 @@ export type AccountApplication = {
   requested_role: "student" | "parent" | "tutor";
   acceptance_letter_name: string | null;
   referral_code: string | null;
+  contract_signed: boolean;
   status: string;
   notification_sent_at: string | null;
   notification_error: string | null;
@@ -104,6 +105,11 @@ export default function ApplicationReviewClient({
               {item.requested_role === "tutor" && item.referral_code && (
                 <span className={styles.sent}>추천인 · {item.referral_code}</span>
               )}
+              {item.requested_role === "tutor" && (
+                <span className={item.contract_signed ? styles.sent : styles.warning}>
+                  {item.contract_signed ? "튜터 계약 서명 완료" : "튜터 계약 서명 대기"}
+                </span>
+              )}
               <span className={item.notification_sent_at ? styles.sent : styles.warning}>
                 {item.notification_sent_at ? "admissions 이메일 전송 완료" : "이메일 전송 대기 · 심사는 포털에서 가능"}
               </span>
@@ -115,7 +121,12 @@ export default function ApplicationReviewClient({
               />
               <div className={styles.actions}>
                 <button type="button" onClick={() => decide("account", item.id, "rejected")}>보완 요청</button>
-                <button type="button" onClick={() => decide("account", item.id, "approved")}>계정 승인</button>
+                <button
+                  type="button"
+                  disabled={item.requested_role === "tutor" && !item.contract_signed}
+                  onClick={() => decide("account", item.id, "approved")}
+                  title={item.requested_role === "tutor" && !item.contract_signed ? "계약 서명 후 승인할 수 있습니다." : undefined}
+                >계정 승인</button>
               </div>
             </article>
           );

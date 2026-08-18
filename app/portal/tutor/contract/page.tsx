@@ -14,19 +14,21 @@ export default async function TutorContractPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,email,phone,role,account_status,tutor_registry_id")
+    .select("full_name,email,phone,role,account_status")
     .eq("id", user.id)
     .single();
 
   if (profile?.role === "admin") redirect("/admin");
-  if (profile?.account_status !== "approved") redirect("/portal/pending");
-  if (profile?.role !== "tutor" || !profile.tutor_registry_id) redirect("/portal");
+  if (profile?.role !== "tutor") redirect(profile?.account_status === "approved" ? "/portal" : "/portal/pending");
+  if (profile.account_status !== "pending") {
+    redirect(profile.account_status === "approved" ? "/portal/tutor" : "/portal/pending");
+  }
 
   const admin = createAdminClient();
   const [{ data: application }, { data: signed }] = await Promise.all([
     admin
       .from("account_creation_requests")
-      .select("id,status,reviewed_at")
+      .select("id,status,created_at")
       .eq("user_id", user.id)
       .eq("requested_role", "tutor")
       .maybeSingle(),
@@ -38,7 +40,7 @@ export default async function TutorContractPage() {
       .maybeSingle(),
   ]);
 
-  if (!application || application.status !== "approved" || !application.reviewed_at) {
+  if (!application || application.status !== "pending") {
     redirect("/portal/pending");
   }
 
@@ -65,12 +67,12 @@ export default async function TutorContractPage() {
   return (
     <TutorContractClient
       contractHash={getTutorContractHash()}
-      approvalDate={application.reviewed_at}
+      applicationDate={application.created_at}
       identity={{
         name: profile.full_name || "",
         email: profile.email || user.email || "",
         phone: profile.phone || "",
-        registryId: profile.tutor_registry_id,
+        applicationId: application.id,
       }}
       receipt={receipt}
     />

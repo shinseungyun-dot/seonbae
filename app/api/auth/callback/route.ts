@@ -110,7 +110,7 @@ async function checkExistingGoogleAccount(
 
     if (existedBeforeGoogle) {
       let contractSigned = true;
-      if (matchingProfile!.role === "tutor" && matchingProfile!.account_status === "approved") {
+      if (matchingProfile!.role === "tutor" && matchingProfile!.account_status === "pending") {
         const { data: signature, error: signatureError } = await admin
           .from("tutor_contract_signatures")
           .select("id")
@@ -155,11 +155,11 @@ function destinationForGoogleProfile(profile: {
   contractSigned: boolean;
 }) {
   if (profile.role === "admin") return "/admin";
-  if (profile.accountStatus !== "approved") return "/portal/pending";
-  if (profile.role === "tutor") {
-    return profile.contractSigned ? "/portal/tutor" : "/portal/tutor/contract";
+  if (profile.role === "tutor" && profile.accountStatus === "pending") {
+    return profile.contractSigned ? "/portal/pending" : "/portal/tutor/contract";
   }
-  return "/portal";
+  if (profile.accountStatus !== "approved") return "/portal/pending";
+  return profile.role === "tutor" ? "/portal/tutor" : "/portal";
 }
 
 function emailOtpType(value: string | null): EmailOtpType | null {
