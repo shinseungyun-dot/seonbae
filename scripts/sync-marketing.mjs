@@ -15,7 +15,7 @@ for (const entry of ["_astro", "fonts", "images"]) {
   await cp(resolve(dist, entry), destination, { recursive: true });
 }
 
-for (const entry of ["favicon.png", "favicon.svg", "logo.png", "logo-light.png", "site-auth.js", "cookie-consent.js", "cookie-consent.css"]) {
+for (const entry of ["favicon.png", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "og-image.png", "logo.png", "logo-light.png", "site-auth.js", "cookie-consent.js", "cookie-consent.css"]) {
   await cp(resolve(dist, entry), resolve(root, "public", entry));
 }
 
