@@ -138,11 +138,15 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   }
   .header-inner {
     display: grid;
-    grid-template-columns: minmax(150px, 1fr) auto minmax(320px, 1fr);
+    /* Equal side columns so the nav sits on the true centre line. A wider
+       header container with a tighter gutter pushes the logo and the CTA
+       outward, which is what stops "Log in" wrapping at laptop widths. */
+    grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    height: 76px;
+    gap: 24px;
+    height: 86px;
+    max-width: min(1560px, 100%);
+    --gutter: clamp(20px, 3.2vw, 40px);
   }
 
   /* Solid state (default pages + hero pages after scroll) */
@@ -154,7 +158,7 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   }
 
   /* Logo swap */
-  .header-logo { position: relative; display: inline-flex; }
+  .header-logo { position: relative; display: inline-flex; flex: none; }
   .logo-light { display: none; }
   .site-header:not(.is-solid) .logo-ink { display: none; }
   .site-header:not(.is-solid) .logo-light { display: inline-flex; }
@@ -264,7 +268,8 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   .mega-all svg { width: 16px; height: 16px; }
   .mega-all:hover { gap: 9px; }
 
-  .header-actions { display: flex; align-items: center; justify-self: end; gap: 10px; }
+  .header-actions { display: flex; align-items: center; justify-self: end; gap: 12px; flex-wrap: nowrap; }
+  .header-logo { justify-self: start; }
   .header-auth-link,
   .drawer-auth-link {
     display: inline-flex;
@@ -380,14 +385,14 @@ const subjects = (await getCollection('subjects')).sort((a, b) => a.data.order -
   .drawer-cta { margin-top: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
   .drawer-lang { align-self: flex-start; }
 
-  @media (max-width: 1180px) {
+  @media (max-width: 1240px) {
     .header-inner { display: flex; }
     .nav-desktop { display: none; }
     .menu-toggle { display: flex; }
     .header-cta, .header-auth-link { display: none; }
     .header-lang { display: none; }
   }
-  @media (min-width: 1181px) {
+  @media (min-width: 1241px) {
     .drawer { display: none !important; }
   }
 </style>
