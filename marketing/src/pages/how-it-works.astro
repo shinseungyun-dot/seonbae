@@ -22,17 +22,17 @@ const inclusions = [
 ];
 
 const progressSteps = [
-  { title: 'Your child sits the check', titleKo: '학생이 점검 시험을 봅니다', copy: 'A short written check, on a date you already know.', copyKo: '미리 알려드린 날짜에 짧은 필기 시험을 봅니다.' },
-  { title: 'Your tutor marks it by hand', titleKo: '선배가 직접 채점합니다', copy: 'Marked by the person who taught it, so the feedback knows the history.', copyKo: '가르친 선배가 채점하니 그동안의 학습 흐름까지 반영됩니다.' },
-  { title: 'It appears in your portal', titleKo: '결과가 포털에 쌓입니다', copy: 'Scored and stacked on the last one, before the next lesson.', copyKo: '다음 수업 전에 점수와 피드백이 지난 결과 위에 쌓입니다.' },
-  { title: 'Then it runs again', titleKo: '그리고 다시 반복됩니다', copy: 'On the same cycle, for as long as you are with us.', copyKo: '선배와 함께하는 동안 같은 주기로 이어집니다.' },
+  { title: 'The check-up', titleKo: '확인', copy: 'Your tutor gives you a check-up session in a suiting format.', copyKo: '선생님이 적절하다 판단하는 형식으로 학습 현황 확인을 해요.' },
+  { title: 'Marked immediately', titleKo: '채점', copy: 'Your tutor marks it on the spot. Feedback is given verbally and recorded onto the portal.', copyKo: '선생님이 그 자리에서 즉시 채점해서 구두로 한 번, 서면으로 한 번 피드백을 해줘요. 서면 피드백은 포털에서 볼 수 있어요.' },
+  { title: 'The portal', titleKo: '포털', copy: 'Having been graded, the feedback report is uploaded to the portal.', copyKo: '피드백은 리포트 형식으로 쌓여요.' },
+  { title: 'Repeat', titleKo: '반복해요', copy: 'Check-ups build up to show progress over time.', copyKo: '배우고 확인하는 걸 반복하다 보면, 어느새 성장한 내 자신을 볼 수 있어요.' },
 ];
 
 const portalItems = [
-  { icon: 'wallet', title: 'Pay for the month', titleKo: '월간 수업료 결제', copy: 'One invoice, one card, nothing to chase.', copyKo: '한 번의 청구와 한 장의 카드로, 따로 챙길 일이 없습니다.' },
-  { icon: 'chart', title: 'See the progress', titleKo: '성장 확인하기', copy: 'Every check plotted against the last, so the direction is obvious.', copyKo: '모든 점검 결과를 이어서 비교하니 성장 방향이 분명하게 보입니다.' },
-  { icon: 'notes', title: 'Pick up homework', titleKo: '과제 확인하기', copy: 'Set, submitted, and marked in one place.', copyKo: '출제부터 제출과 채점까지 한곳에서 확인합니다.' },
-  { icon: 'board', title: 'Join the lesson', titleKo: '수업 참여하기', copy: 'The same button every week, no links to hunt for.', copyKo: '매주 같은 버튼으로 참여하니 수업 링크를 다시 찾을 필요가 없습니다.' },
+  { icon: 'chart', title: 'See the progress', titleKo: '성장 과정', copy: 'Every report in the pile is another step you took forward.', copyKo: '피드백 리포트가 쌓일수록, 과거의 실수와 멀어져요.' },
+  { icon: 'notes', title: 'Homework', titleKo: '숙제', copy: 'Set, submitted and marked in one place.', copyKo: '과제물 지급부터 제출까지 포털에서 해결해요.' },
+  { icon: 'board', title: 'Join the lesson', titleKo: '수업', copy: 'The same button every week. No waiting for links.', copyKo: '버튼 한 번만 누르면 수업이 시작돼요.' },
+  { icon: 'match', title: 'Shared', titleKo: '공유', copy: 'Student accounts and their progress are visible on parent accounts post-verification.', copyKo: '학생 계정은 인증 후 학부모 계정과 연동 가능해요. 부모님들은 아이의 성장을 실시간으로 볼 수 있어요.' },
 ];
 ---
 <Base title="How it works | Seonbae" active="/how-it-works">
@@ -100,8 +100,8 @@ const portalItems = [
       <div class="progress-panel reveal">
         <div class="progress-panel__intro">
           <Eyebrow label="Progress" labelKo="성장" tone="light" />
-          <h2><T en="You should not have to wait until the end of term." ko="학기가 끝날 때까지 기다릴 필요가 없습니다." /></h2>
-          <p><T en="Your tutor sets a check every two, four, or six weeks, marks it themselves, and uploads it. The results build up in your portal." ko="선배가 2주, 4주, 6주 중 주기를 정해 시험을 내고 직접 채점해 올립니다. 결과는 포털에 그대로 쌓입니다." /></p>
+          <h2><T en="Go sprinting towards your goal." ko="목표를 향해 질주하세요." /></h2>
+          <p><T en="Your tutor sets a checking session every 2, 4, or 6 weeks. You get to check how well you are following the content, and the check-ups build up to show progress on the portal." ko="선생님의 판단 하에 2주, 4주 혹은 6주마다 한 번씩 진도를 잘 따라오고 있는지 확인해요. 확인 결과는 리포트로 작성되고, 성장 곡선을 눈으로 볼 수 있어요." /></p>
           <span class="progress-panel__label"><T en="Your tutor picks one" ko="선배가 고르는 주기" /></span>
           <div class="progress-panel__pills">
             <span><T en="2 weeks" ko="2주" /></span>
@@ -132,8 +132,8 @@ const portalItems = [
     <div class="container portal-split">
       <div class="portal-split__intro reveal">
         <Eyebrow label="The portal" labelKo="포털" />
-        <h2 class="h2"><T en="Everything after the match lives in one place." ko="매칭 이후의 모든 것이 한곳에 있습니다." /></h2>
-        <p class="lead"><T en="Most tutoring runs on scattered messages and a transfer somebody has to remember. We put all of it behind one login, for the family and the tutor both." ko="대부분의 과외는 흩어진 메시지와 누군가 기억해야 하는 송금에 기대어 운영됩니다. 선배는 가족과 튜터 모두가 하나의 로그인으로 모든 과정을 확인할 수 있게 했습니다." /></p>
+        <h2 class="h2"><T en="Your Online Campus" ko="수업부터 숙제까지, 포털에서 진행해요" /></h2>
+        <p class="lead"><T en="Tutoring usually runs through messages and files that are forgotten over time. On our portal, you can traverse through your learning journey at one glance." ko="과외 선생님과 학생이 문자로 소통하는 데에는 한계가 있어요. 옛날에 보냈던 파일이 없어지기도 하고, 연락을 유지하는 자체도 부담돼요. 포털에서는 학습 전반의 과정을 한 눈에 볼 수 있어요." /></p>
         <div class="cta-row portal-split__actions">
           <Button href="/portal" label="Open the portal" labelKo="포털 열기" variant="primary" size="lg" arrow="diag" />
           <Button href="/get-matched" label="Not matched yet?" labelKo="아직 매칭 전인가요?" variant="text" arrow="right" />
@@ -158,8 +158,8 @@ const portalItems = [
       <div class="verify-teaser has-contour reveal">
         <div class="verify-teaser__text">
           <Eyebrow label="Verification" labelKo="검증" />
-          <h2 class="h2"><T en="A tutor is registered only after we have the official score report in our hands." ko="공식 성적표를 직접 확인한 뒤에만 선배로 등록합니다." /></h2>
-          <p class="lead" style="margin-top:16px"><T en="Every credential is checked against the real document before a tutor is registered. This is non-negotiable." ko="선배로 등록하기 전에 모든 자격을 실제 서류와 대조합니다. 이 과정은 절대 생략하지 않습니다." /></p>
+          <h2 class="h2"><T en="No tutor bypasses our screening." ko="공식 성적표를 직접 확인한 뒤에만 선배로 등록합니다." /></h2>
+          <p class="lead" style="margin-top:16px"><T en="Every credential is checked against their relative documents. This is non-negotiable." ko="선배로 등록하기 전에 모든 자격을 실제 서류와 대조합니다. 이 과정은 절대 생략하지 않습니다." /></p>
           <div class="cta-row" style="margin-top:26px">
             <Button href="/verification" label="How we verify" labelKo="검증 방식 보기" variant="secondary" arrow="diag" />
           </div>
@@ -171,24 +171,6 @@ const portalItems = [
     </div>
   </section>
 
-  <section class="section section--tight bg-white resources-band">
-    <div class="container">
-      <div class="resources-band__head reveal">
-        <div>
-          <Eyebrow label="Resources" labelKo="학습 자료" />
-          <h2 class="h2"><T en="The people who write the checks also write the guides." ko="점검 시험을 만드는 사람들이 학습 가이드도 씁니다." /></h2>
-        </div>
-        <p class="lead"><T en="Our research team builds every progress check from a library of past and mock papers, then publishes what they learn as free articles. No account needed, whether you learn with us or not." ko="연구팀은 기출과 모의고사 자료를 바탕으로 모든 점검 시험을 만들고, 그 과정에서 얻은 내용을 무료 글로 공개합니다. 선배와 공부하지 않아도, 계정이 없어도 읽을 수 있습니다." /></p>
-      </div>
-      <div class="resources-band__foot reveal">
-        <div class="resources-band__facts">
-          <p><strong>500+</strong><span><T en="past and mock papers behind the checks" ko="점검 시험의 바탕이 된 기출 및 모의고사" /></span></p>
-          <p><strong>SKY</strong><span><T en="Seoul National, Korea, and Yonsei students" ko="서울대·고려대·연세대 학생 연구팀" /></span></p>
-        </div>
-        <Button href="/resources" label="Read the articles" labelKo="학습 자료 읽기" variant="secondary" arrow="diag" />
-      </div>
-    </div>
-  </section>
 
 </Base>
 
@@ -269,28 +251,17 @@ const portalItems = [
   .portal-feature-grid .portal-feature-card:nth-child(3) { --check: var(--b5); }
   .portal-feature-grid .portal-feature-card:nth-child(4) { --check: var(--b6); }
 
-  .resources-band__head { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); gap: clamp(34px,7vw,100px); align-items: end; padding-bottom: clamp(28px,4vw,44px); border-bottom: 2px solid var(--ink); }
-  .resources-band__head .h2 { max-width: 15ch; margin-top: 16px; }
-  .resources-band__head>.lead { max-width: 44rem; padding-bottom: 4px; }
-  .resources-band__foot { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding-top: clamp(28px,4vw,44px); }
-  .resources-band__facts { display: flex; flex-wrap: wrap; gap: clamp(24px,5vw,72px); }
-  .resources-band__facts p { display: flex; align-items: baseline; gap: 14px; }
-  .resources-band__facts strong { color: var(--violet); font-size: clamp(1.8rem,3vw,2.55rem); line-height: 1; letter-spacing: -.04em; }
-  .resources-band__facts span { color: var(--muted); font-size: .94rem; }
 
   @media (max-width: 900px) {
     .steps { grid-template-columns: 1fr 1fr; }
     .verify-teaser { grid-template-columns: 1fr; }
     .verify-teaser__media { order: -1; }
-    .progress-panel,.portal-split,.resources-band__head { grid-template-columns: 1fr; }
-    .resources-band__foot { align-items: flex-start; flex-direction: column; }
+    .progress-panel,.portal-split { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) {
     .steps { grid-template-columns: 1fr; }
     .progress-panel { margin-inline: calc(var(--gutter) * -.35); padding: 32px 24px; }
     .progress-panel__pills span { min-width: 0; flex: 1; padding-inline: 10px; }
     .progress-step { grid-template-columns: 42px minmax(0,1fr); gap: 13px; padding: 18px 16px; }
-    .resources-band__facts { display: grid; gap: 22px; }
-    .resources-band__facts p { align-items: flex-start; flex-direction: column; gap: 6px; }
   }
 </style>

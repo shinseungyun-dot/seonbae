@@ -127,7 +127,7 @@ const piles = [
     <div class="container split what-grid">
       <div class="reveal">
         <Eyebrow label="What it is" labelKo="모의고사란" />
-        <h2 class="h2"><T en="A test that tells you what to do next." ko="시험을 발판으로 삼으세요." /></h2>
+        <h2 class="h2"><T en="A test that tells you what to do next." ko="시험을 발판 삼으세요." /></h2>
         <div class="what-copy">
           <p class="lead"><T en="Test, submit, and improve—all through your Seonbae Portal." ko="응시부터 제출, 실력 향상까지 모두 선배 포털에서." /></p>
           <p class="body"><T en={`You do not need to be taking lessons with Seonbae to use our mock exams or level tests — but if you are currently learning with Seonbae Tutors, you will receive ${discountPercent}% off.`} ko={`모의고사와 레벨 테스트는 선배 수업을 듣지 않아도 이용할 수 있습니다. 선배 튜터와 수업 중이라면 ${discountPercent}% 할인이 적용됩니다.`} /></p>
@@ -254,8 +254,10 @@ const piles = [
 
   <dialog class="coming-soon" id="coming-soon" aria-labelledby="coming-soon-title">
     <form method="dialog" class="coming-soon__panel">
-      <button type="submit" class="coming-soon__close" aria-label="Close">×</button>
+      <Eyebrow label="Coming soon" labelKo="곧 만나요" />
       <h2 class="h3" id="coming-soon-title"><T en="Please wait just a little longer." ko="조금만 기다려주세요." /></h2>
+      <p class="coming-soon__note"><T en="We are finishing the ordering flow." ko="구매 과정을 마무리하고 있습니다." /></p>
+      <button type="submit" class="coming-soon__ok"><T en="OK" ko="확인" /></button>
     </form>
   </dialog>
 
@@ -346,10 +348,28 @@ const piles = [
     box-shadow: var(--shadow-lift);
   }
   .coming-soon::backdrop { background: rgba(19, 24, 27, 0.56); backdrop-filter: blur(4px); }
-  .coming-soon__panel { position: relative; display: grid; place-items: center; min-height: 280px; padding: clamp(52px, 7vw, 80px) clamp(28px, 6vw, 64px); background: var(--white); border: 1px solid var(--line-soft); border-radius: inherit; text-align: center; }
-  .coming-soon__panel .h3 { max-width: 18ch; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.12; }
-  .coming-soon__close { position: absolute; top: 16px; right: 16px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--ink); font-size: 1.65rem; line-height: 1; cursor: pointer; }
-  .coming-soon__close:hover { background: var(--ink); color: var(--white); }
+  .coming-soon__panel { padding: clamp(40px, 5vw, 60px) clamp(28px, 5vw, 56px); background: var(--white); border: 1px solid var(--line-soft); border-radius: inherit; text-align: left; }
+  .coming-soon__panel .h3 { max-width: 14ch; margin-top: 20px; font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 800; line-height: 1.16; color: var(--ink); }
+  .coming-soon__note { margin-top: 18px; color: var(--muted); font-size: 1.02rem; line-height: 1.5; }
+  .coming-soon__ok {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    min-width: 92px;
+    padding: 17px 30px;
+    border: none;
+    border-radius: var(--r-pill);
+    background: var(--violet);
+    color: #fff;
+    font-family: var(--body);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.16s ease;
+  }
+  .coming-soon__ok:hover { background: var(--violet-deep); }
 
   @media (max-width: 900px) {
     .report-panel,
@@ -364,7 +384,7 @@ const piles = [
     .report-panel { margin-inline: calc(var(--gutter) * -0.35); }
     .pile-row { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
     .coming-soon { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
-    .coming-soon__panel { padding: 32px 26px; }
+    .coming-soon__panel { padding: 30px 24px; }
   }
 </style>
 

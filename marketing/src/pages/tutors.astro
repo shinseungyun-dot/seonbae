@@ -288,6 +288,19 @@ const roster = true;
   };
   let cells: HTMLElement[] = [...document.querySelectorAll('.tutor-cell')] as HTMLElement[];
 
+  // Astro scopes this page's CSS with a data-astro-cid-* attribute. Cards built
+  // from a template string do not carry it, so the live roster rendered unstyled
+  // once the fetch replaced the server markup. Capture the attribute now, while
+  // the server-rendered cards are still in the DOM, and stamp it on the ones we
+  // inject.
+  const scopeAttr = [...(cells[0]?.attributes ?? [])]
+    .map((attribute) => attribute.name)
+    .find((name) => name.startsWith('data-astro-cid-'));
+  const applyScope = (root: HTMLElement) => {
+    if (!scopeAttr) return;
+    root.querySelectorAll<HTMLElement>('*').forEach((node) => node.setAttribute(scopeAttr, ''));
+  };
+
   const categoryFor = (tutor: Tutor) => {
     const value = `${tutor.exam} ${tutor.category || ''}`.toUpperCase();
     if (value.includes('IB')) return 'ib';
@@ -354,6 +367,7 @@ const roster = true;
         </article>
       </div>`;
     }).join('');
+    applyScope(grid);
     cells = [...grid.querySelectorAll('.tutor-cell')] as HTMLElement[];
     Object.keys(staticFilterCounts).forEach((key) => { staticFilterCounts[key] = 0; });
     staticFilterCounts.all = tutors.length;
