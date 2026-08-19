@@ -4,7 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
 
-export type AdminSection = "tutors" | "sessions" | "consultations" | "applications";
+export type AdminSection =
+  | "tutors"
+  | "tutor-accounts"
+  | "sessions"
+  | "consultation-sessions"
+  | "consultations"
+  | "applications"
+  | "credentials";
 
 export default function AdminSidebar({
   active,
@@ -23,11 +30,16 @@ export default function AdminSidebar({
     router.refresh();
   }
 
+  // One workspace per tab. Pages that used to stack two unrelated sections are
+  // split so a tab is a single job.
   const links: Array<{ key: AdminSection; href: string; label: string }> = [
     { key: "tutors", href: "/admin", label: "튜터 명부" },
-    { key: "sessions", href: "/admin/sessions", label: "수업 · Zoom" },
+    { key: "tutor-accounts", href: "/admin/tutor-accounts", label: "튜터 계정 생성" },
+    { key: "sessions", href: "/admin/sessions", label: "Zoom 수업" },
+    { key: "consultation-sessions", href: "/admin/consultation-sessions", label: "보호자 상담 일정" },
     { key: "consultations", href: "/admin/consultations", label: "상담 신청" },
-    { key: "applications", href: "/admin/applications", label: "가입 · 검증 심사" },
+    { key: "applications", href: "/admin/applications", label: "가입 심사" },
+    { key: "credentials", href: "/admin/credentials", label: "자격 검증" },
   ];
 
   return (

@@ -11,3 +11,13 @@
 @media(prefers-reduced-motion:reduce){.sidebar nav a,.page button,.page a{transition:none!important}}
 :global(html[data-theme="dark"]) .page{--paper:#111b22!important;--card:#17262e!important;--line:rgba(240,238,235,.16)!important;--blue:#d5e6ef!important;--sage:#24382e;--honey:#3b3423;background:var(--paper)!important;color:#f3f0ea!important}:global(html[data-theme="dark"]) .sidebar{background:var(--card)!important}:global(html[data-theme="dark"]) .brand b,:global(html[data-theme="dark"]) .heading h1,:global(html[data-theme="dark"]) .adminAccount b,:global(html[data-theme="dark"]) .sidebar>div b{color:#f3f0ea!important}:global(html[data-theme="dark"]) .sidebar nav a{color:#bdc5c4!important}:global(html[data-theme="dark"]) .sidebar nav .active{background:#d5e6ef!important;color:#14232b!important}
 @media(max-width:980px){.sidebar nav a{display:flex!important;min-height:44px!important}.sidebar nav a:not(.active){color:#777f7a!important}.sidebar nav a:not(.active) i{display:block!important}.sidebar nav a em{display:none}}@media(max-width:780px){.sidebar{display:grid!important;grid-template-columns:auto minmax(0,1fr)!important;gap:12px!important}.sidebar nav{display:flex!important;min-width:0!important;margin:0!important;overflow-x:auto!important;scrollbar-width:none}.sidebar nav::-webkit-scrollbar{display:none}.sidebar nav a,.sidebar nav .active{display:flex!important;min-width:max-content!important;padding:0 11px!important}.sidebar nav a i{display:none!important}}
+
+/* Direct tutor-account form on the provisioning tab. */
+.createForm{display:grid;gap:14px}
+.createForm label{display:grid;gap:6px}
+.createForm label>span{font-size:.72rem;font-weight:800;color:#505969}
+.createForm input{min-height:46px;padding:10px 13px;border:1px solid rgba(10,32,70,.19);border-radius:11px;background:#fffdfa;color:inherit;font:inherit}
+.createForm input:focus{outline:0;border-color:#163a51;box-shadow:0 0 0 3px rgba(22,58,81,.12)}
+:global(html[data-theme="dark"]) .createForm input{background:#111b2b;border-color:rgba(219,228,241,.2);color:#f7f9fc}
+.provisionLink{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border:1px solid rgba(10,32,70,.2);border-radius:999px;font-size:.78rem;font-weight:700;color:#163a51}
+.provisionLink:hover{background:rgba(22,58,81,.06)}

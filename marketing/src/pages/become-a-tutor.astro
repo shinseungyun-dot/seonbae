@@ -95,51 +95,106 @@ const keep = [
   </section>
 
   <!-- Apply -->
-  <section class="section bg-cream" id="apply">
+  <!-- The application itself, not a hand-off. Centred and wide on purpose: it
+       is the only thing this page asks anyone to do. -->
+  <section class="section bg-cream apply" id="apply">
     <div class="container">
-      <div class="bt-apply">
-        <div class="bt-apply__lede reveal">
-          <span class="eyebrow"><T en="Apply" ko="지원" /></span>
-          <h2 class="h2"><T en="Start your application." ko="지원을 시작하세요." /></h2>
-          <p class="lead" style="margin-top:16px"><T en="It takes two minutes. We reply within two business days." ko="2분이면 충분합니다. 영업일 기준 이틀 안에 답장드립니다." /></p>
+      <form class="apply-form card reveal" novalidate>
+        <h2 class="h2 apply-form__title"><T en="Apply to tutor." ko="지원서 작성" /></h2>
+
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="ap-name"><T en="Full name" ko="이름" /></label>
+            <input id="ap-name" name="fullName" class="form-control" type="text" required autocomplete="name" minlength="2" maxlength="80" />
+          </div>
+          <div class="form-field">
+            <label for="ap-phone"><T en="Mobile number" ko="휴대전화번호" /></label>
+            <input id="ap-phone" name="phone" class="form-control" type="tel" required autocomplete="tel" inputmode="tel" maxlength="24" placeholder="01012345678" />
+          </div>
         </div>
-        <form class="bt-form card reveal" data-delay="80ms" novalidate>
-          <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="form-field">
+          <label for="ap-email"><T en="University email" ko="학교 이메일" /></label>
+          <input id="ap-email" name="email" class="form-control" type="email" required autocomplete="email" maxlength="254" placeholder="you@snu.ac.kr" aria-describedby="ap-email-hint" />
+          <p class="apply-hint" id="ap-email-hint"><T en="Must end in .ac.kr. Enrolment is verified against this address." ko="ac.kr로 끝나는 주소만 가능합니다. 재학 여부를 이 주소로 확인합니다." /></p>
+        </div>
+
+        <div class="form-grid">
           <div class="form-field">
-            <label for="name"><T en="Full name" ko="이름" /></label>
-            <input id="name" name="name" class="form-control" type="text" required autocomplete="name" />
-          </div>
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="uni"><T en="University" ko="대학" /></label>
-              <select id="uni" name="university" class="form-control" required>
-                <option value="snu" data-label-en="Seoul National University" data-label-ko="서울대학교">서울대학교</option>
-                <option value="ku" data-label-en="Korea University" data-label-ko="고려대학교">고려대학교</option>
-                <option value="yonsei" data-label-en="Yonsei University" data-label-ko="연세대학교">연세대학교</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="mail"><T en="Email" ko="이메일" /></label>
-              <input id="mail" name="email" class="form-control" type="email" required autocomplete="email" placeholder="you@email.com" />
-            </div>
+            <label for="ap-uni"><T en="University" ko="대학" /></label>
+            <select id="ap-uni" name="university" class="form-control" required>
+              <option value="서울대학교" data-label-en="Seoul National University" data-label-ko="서울대학교">서울대학교</option>
+              <option value="고려대학교" data-label-en="Korea University" data-label-ko="고려대학교">고려대학교</option>
+              <option value="연세대학교" data-label-en="Yonsei University" data-label-ko="연세대학교">연세대학교</option>
+            </select>
           </div>
           <div class="form-field">
-            <label for="subj"><T en="Subjects you can teach" ko="가르칠 수 있는 과목" /></label>
-            <input id="subj" name="subjects" class="form-control" type="text" required data-placeholder-en="IB Math AA, AP Calculus…" data-placeholder-ko="IB 수학 AA, AP 미적분…" />
+            <label for="ap-major"><T en="Course and year" ko="전공과 학년" /></label>
+            <input id="ap-major" name="major" class="form-control" type="text" required maxlength="120" data-placeholder-en="International Studies, 2nd year" data-placeholder-ko="국제학부 2학년" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="ap-curriculum"><T en="Curriculum" ko="지원 커리큘럼" /></label>
+            <select id="ap-curriculum" name="curriculum" class="form-control" required>
+              <option>IB</option>
+              <option>AP</option>
+              <option>A-Level</option>
+              <option>IGCSE</option>
+              <option>SAT</option>
+              <option>ACT</option>
+              <option>TOEFL</option>
+              <option>IELTS</option>
+            </select>
           </div>
           <div class="form-field">
-            <label for="referral"><T en="Referral code or name (optional)" ko="추천인 또는 추천 코드 (선택)" /></label>
-            <input id="referral" name="referralCode" class="form-control" type="text" maxlength="80" autocomplete="off" data-placeholder-en="Who referred you?" data-placeholder-ko="추천인을 입력해 주세요." />
+            <label for="ap-score"><T en="Official score" ko="공식 성적" /></label>
+            <input id="ap-score" name="score" class="form-control" type="text" required maxlength="120" placeholder="IB 43/45" />
           </div>
-          <button type="submit" class="btn btn--primary btn--lg bt-submit">
-            <span><T en="Submit application" ko="지원서 제출" /></span>
-            <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
-          <p class="bt-done" role="status" hidden data-done><T en="Thanks. Your application is in. We will be in touch within two business days." ko="감사합니다. 지원서가 접수되었습니다. 영업일 기준 이틀 안에 연락드릴게요." /></p>
-        </form>
-      </div>
+        </div>
+
+        <div class="form-field">
+          <label for="ap-subjects"><T en="Subjects you can teach" ko="가르칠 수 있는 과목" /></label>
+          <input id="ap-subjects" name="subjects" class="form-control" type="text" required maxlength="300" data-placeholder-en="IB Math AA, AP Calculus" data-placeholder-ko="IB 수학 AA, AP 미적분" />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="ap-letter"><T en="Acceptance letter" ko="학교 합격통지서" /></label>
+            <input id="ap-letter" name="acceptanceLetter" class="form-control apply-file" type="file" required accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png" aria-describedby="ap-letter-hint" />
+            <p class="apply-hint" id="ap-letter-hint"><T en="PDF, JPG, or PNG. Up to 10 MB." ko="PDF, JPG 또는 PNG. 최대 10MB." /></p>
+          </div>
+          <div class="form-field">
+            <label for="ap-credential"><T en="Official score report" ko="공식 성적표 원본" /></label>
+            <input id="ap-credential" name="credential" class="form-control apply-file" type="file" required accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png" aria-describedby="ap-credential-hint" />
+            <p class="apply-hint" id="ap-credential-hint"><T en="PDF, JPG, or PNG. Up to 10 MB." ko="PDF, JPG 또는 PNG. 최대 10MB." /></p>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="ap-referral"><T en="Referral code or name" ko="추천인 또는 추천 코드" /> <span class="apply-optional"><T en="optional" ko="선택" /></span></label>
+          <input id="ap-referral" name="referralCode" class="form-control" type="text" maxlength="80" autocomplete="off" />
+        </div>
+
+        <div class="form-field">
+          <label for="ap-intro"><T en="Teaching experience" ko="소개 및 수업 경험" /></label>
+          <textarea id="ap-intro" name="introduction" class="form-control" required rows="5" maxlength="2000" data-placeholder-en="Why you are applying, what you have taught, and when you are free." data-placeholder-ko="지원 동기와 수업 경험, 가능한 시간대를 적어 주세요."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg apply-submit">
+          <span data-submit-label><T en="Submit application" ko="지원서 제출" /></span>
+          <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+        <p class="apply-status" role="status" aria-live="polite" data-status hidden></p>
+        <p class="apply-note"><T en="Accounts are created by the Seonbae team after review. Submitting this form does not create a login." ko="계정은 심사 후 선배 팀이 직접 만들어 드립니다. 이 폼을 제출해도 계정이 생성되지는 않습니다." /></p>
+      </form>
     </div>
   </section>
+
 </Base>
 
 <style>
@@ -163,27 +218,61 @@ const keep = [
   .bt-step__n { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--violet); background: var(--violet-soft); width: 42px; height: 42px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 4px; }
   .bt-step__t { font-family: var(--display); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; }
 
-  .bt-apply { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
-  .bt-form { padding: clamp(24px, 3vw, 38px); display: flex; flex-direction: column; gap: 16px; }
-  .bt-submit { width: 100%; justify-content: space-between; margin-top: 4px; }
-  .bt-done { font-size: 0.92rem; color: var(--violet); background: var(--violet-soft); padding: 12px 14px; border-radius: var(--r-sm); line-height: 1.5; }
-  @media (max-width: 860px) { .bt-apply { grid-template-columns: 1fr; } }
+  /* One column, centred, and wide enough that the form is the page, not a
+     sidebar on it. Field sizing is bumped over the site default because this
+     is the only thing anyone does here. */
+  .apply { padding-block: clamp(52px, 7vw, 104px); }
+  .apply-form {
+    max-width: 46rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: clamp(28px, 4vw, 56px);
+    box-shadow: var(--shadow-md);
+  }
+  .apply-form__title { margin-bottom: 4px; font-size: clamp(1.9rem, 3.4vw, 2.6rem); }
+  .apply-form .form-control { padding: 14px 16px; font-size: 1rem; }
+  .apply-form textarea.form-control { min-height: 132px; }
+  .apply-file { padding: 11px 14px; line-height: 1.4; }
+  .apply-file::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: var(--violet);
+    color: #fff;
+    font-family: var(--body);
+    font-weight: 700;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+  .apply-hint { margin-top: 2px; font-size: 0.84rem; color: var(--muted); line-height: 1.45; }
+  .apply-optional { font-weight: 500; color: var(--muted-soft); }
+  .apply-submit { width: 100%; justify-content: space-between; margin-top: 6px; }
+  .apply-submit[disabled] { opacity: 0.65; cursor: progress; }
+  .apply-status { padding: 13px 16px; border-radius: var(--r-sm); font-size: 0.94rem; line-height: 1.5; }
+  .apply-status[data-tone='error'] { background: #fbeeea; color: #8f302b; }
+  .apply-status[data-tone='ok'] { background: var(--sage); color: var(--sage-ink); }
+  .apply-note { color: var(--muted); font-size: 0.86rem; line-height: 1.55; }
+  .apply-form .form-control:invalid:not(:placeholder-shown) { border-color: #bd332d; }
 </style>
 
 <script>
-  import { validate } from '../lib/forms';
-
-  const form = document.querySelector('.bt-form') as HTMLFormElement | null;
-  const btn = form?.querySelector('.bt-submit') as HTMLButtonElement | null;
-  const btnLabel = btn?.querySelector('span:first-child') as HTMLElement | null;
+  const form = document.querySelector('.apply-form') as HTMLFormElement | null;
+  const submit = form?.querySelector('.apply-submit') as HTMLButtonElement | null;
+  const submitLabel = form?.querySelector('[data-submit-label]') as HTMLElement | null;
+  const status = form?.querySelector('[data-status]') as HTMLElement | null;
   const language = () => document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
+  const t = (en: string, ko: string) => language() === 'en' ? en : ko;
+
   const refreshLanguage = () => {
     const lang = language();
     document.querySelectorAll<HTMLOptionElement>('[data-label-en]').forEach((option) => {
       option.textContent = lang === 'en' ? (option.dataset.labelEn || '') : (option.dataset.labelKo || '');
     });
-    document.querySelectorAll<HTMLInputElement>('[data-placeholder-en]').forEach((input) => {
-      input.placeholder = lang === 'en' ? (input.dataset.placeholderEn || '') : (input.dataset.placeholderKo || '');
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-placeholder-en]').forEach((field) => {
+      field.placeholder = lang === 'en' ? (field.dataset.placeholderEn || '') : (field.dataset.placeholderKo || '');
     });
   };
   refreshLanguage();
@@ -191,15 +280,45 @@ const keep = [
     button.addEventListener('click', () => requestAnimationFrame(refreshLanguage));
   });
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!validate(form)) return;
+  const show = (message: string, tone: 'ok' | 'error') => {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.tone = tone;
+    status.hidden = false;
+  };
 
-    if (btn) btn.disabled = true;
-    if (btnLabel) btnLabel.textContent = language() === 'en' ? 'Sending…' : '전송 중…';
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
 
-    // Tutor accounts are created by an admin after review, so this hands off to
-    // the application form rather than to sign-up.
-    window.location.assign('/tutor-apply');
+    // Honeypot: bots fill hidden fields, people do not.
+    const data = new FormData(form);
+    if (String(data.get('company') || '')) return;
+    data.delete('company');
+
+    if (submit) submit.disabled = true;
+    if (submitLabel) submitLabel.textContent = t('Sending', '제출 중');
+    if (status) status.hidden = true;
+
+    try {
+      const response = await fetch('/api/tutor-applications', { method: 'POST', body: data });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || t('The application could not be sent.', '지원서를 접수하지 못했습니다.'));
+
+      form.reset();
+      refreshLanguage();
+      show(
+        t(
+          'Your application is in. We reply within two business days, and the Seonbae team creates your account after review.',
+          '지원서가 접수되었습니다. 영업일 기준 이틀 안에 연락드리고, 심사 후 선배 팀이 계정을 만들어 드립니다.',
+        ),
+        'ok',
+      );
+    } catch (error) {
+      show(error instanceof Error ? error.message : t('Please try again shortly.', '잠시 후 다시 시도해 주세요.'), 'error');
+    } finally {
+      if (submit) submit.disabled = false;
+      if (submitLabel) submitLabel.textContent = t('Submit application', '지원서 제출');
+    }
   });
 </script>

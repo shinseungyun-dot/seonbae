@@ -1,7 +1,7 @@
 import "server-only";
 
 type TutorAccountEmail = {
-  requestId: number;
+  requestId: number | string;
   fullName: string;
   email: string;
   temporaryPassword: string;

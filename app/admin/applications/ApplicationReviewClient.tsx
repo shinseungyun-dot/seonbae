@@ -41,19 +41,22 @@ export type CredentialApplication = {
   documentUrl: string | null;
 };
 
+// One tab renders one queue. `show` picks which, so the two lists no longer
+// stack on the same page.
 export default function ApplicationReviewClient({
   accounts,
   credentials,
+  show = "both",
 }: {
   accounts: AccountApplication[];
   credentials: CredentialApplication[];
+  show?: "accounts" | "credentials" | "both";
 }) {
   const router = useRouter();
   const [accountItems, setAccountItems] = useState(accounts);
   const [credentialItems, setCredentialItems] = useState(credentials);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
-  const [creating, setCreating] = useState<number | null>(null);
 
   useEffect(() => setAccountItems(accounts), [accounts]);
   useEffect(() => setCredentialItems(credentials), [credentials]);
@@ -91,32 +94,10 @@ export default function ApplicationReviewClient({
     }
   }
 
-  // Applications submitted before an account exists are provisioned here: the
-  // API creates the login and emails the temporary password.
-  async function createTutorAccount(id: number) {
-    setCreating(id);
-    setMessage("튜터 계정을 만들고 있습니다…");
-    try {
-      const response = await fetch("/api/admin/tutor-accounts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requestId: id }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "계정을 만들지 못했습니다.");
-      setAccountItems((items) => items.filter((item) => item.id !== id));
-      setMessage("계정을 만들고 임시 비밀번호를 보냈습니다.");
-      router.refresh();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "네트워크 연결을 확인하고 다시 시도해 주세요.");
-    } finally {
-      setCreating(null);
-    }
-  }
-
   return (
     <div className={styles.reviewGrid}>
       {message && <p className={styles.message} aria-live="polite">{message}</p>}
+      {show !== "credentials" && (
       <section>
         <header><div><p>ACCOUNT REQUESTS</p><h2>계정 가입 심사</h2></div><span>{accountItems.length}</span></header>
         {accountItems.length ? accountItems.map((item) => {
@@ -156,12 +137,7 @@ export default function ApplicationReviewClient({
               <div className={styles.actions}>
                 <button type="button" onClick={() => decide("account", item.id, "rejected")}>보완 요청</button>
                 {item.requested_role === "tutor" && !item.user_id ? (
-                  <button
-                    type="button"
-                    disabled={creating === item.id}
-                    onClick={() => createTutorAccount(item.id)}
-                    title="계정을 만들고 임시 비밀번호를 이메일로 보냅니다."
-                  >{creating === item.id ? "생성 중…" : "튜터 계정 생성"}</button>
+                  <a className={styles.provisionLink} href="/admin/tutor-accounts">튜터 계정 생성 탭에서 계정 만들기</a>
                 ) : (
                   <button
                     type="button"
@@ -175,6 +151,8 @@ export default function ApplicationReviewClient({
           );
         }) : <div className={styles.empty}>대기 중인 가입 요청이 없습니다.</div>}
       </section>
+      )}
+      {show !== "accounts" && (
       <section>
         <header><div><p>TUTOR CREDENTIALS</p><h2>튜터 자격 검증</h2></div><span>{credentialItems.length}</span></header>
         {credentialItems.length ? credentialItems.map((item) => {
@@ -200,6 +178,7 @@ export default function ApplicationReviewClient({
           );
         }) : <div className={styles.empty}>대기 중인 자격 자료가 없습니다.</div>}
       </section>
+      )}
     </div>
   );
 }
