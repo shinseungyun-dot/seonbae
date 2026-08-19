@@ -5,9 +5,8 @@ import Eyebrow from '../components/Eyebrow.astro';
 import Button from '../components/Button.astro';
 import T from '../components/T.astro';
 import { won } from '../lib/format';
-import { MEMBER_DISCOUNT, examPriceRange, exams, memberPrice } from '../data/exams';
+import { MEMBER_DISCOUNT, exams, memberPrice } from '../data/exams';
 
-const priceRange = examPriceRange();
 const minTurnaround = Math.min(...exams.map((exam) => exam.turnaround));
 const maxTurnaround = Math.max(...exams.map((exam) => exam.turnaround));
 const discountPercent = Math.round(MEMBER_DISCOUNT * 100);
@@ -54,28 +53,28 @@ const examKo: Record<string, { unit: string; blurb: string }> = {
 
 const steps = [
   {
-    title: 'Choose and enquire',
-    titleKo: '시험을 고르고 문의하기',
-    copy: 'Pick the paper. The price is published, so there is nothing to ask. We confirm the paper and invoice by email.',
-    copyKo: '시험지를 고르세요. 가격은 모두 공개되어 있습니다. 이메일로 시험지를 확인하고 결제를 안내합니다.',
+    title: 'Choose your test',
+    titleKo: '시험 선택하기',
+    copy: 'Select the mock exam or level test you need and complete your purchase.',
+    copyKo: '필요한 모의고사나 레벨 테스트를 선택하고 결제를 완료하세요.',
   },
   {
-    title: 'Sit it timed, at home',
-    titleKo: '집에서 시간을 재고 응시하기',
-    copy: 'You get the paper and the exact timing. No supervision, because the point is the diagnosis, not the invigilation.',
-    copyKo: '시험지와 정확한 제한 시간을 받습니다. 감독이 아니라 진단이 목적이므로 별도 감독은 없습니다.',
+    title: 'Find it in your portal',
+    titleKo: '포털에서 바로 확인하기',
+    copy: 'Your test is added directly to your Seonbae Portal, ready whenever you are. Everything you need is already there — just open it when you are ready to begin.',
+    copyKo: '구매한 시험은 선배 포털에 바로 추가되어 언제든 응시할 수 있습니다. 필요한 것은 이미 모두 준비되어 있으니, 시작할 준비가 되면 열기만 하면 됩니다.',
   },
   {
-    title: 'Submit a scan',
-    titleKo: '스캔본 제출하기',
-    copy: 'Photograph or scan and return it by email. For TOEFL and IELTS, speaking is recorded and sent the same way.',
-    copyKo: '사진이나 스캔본을 이메일로 보내세요. TOEFL과 IELTS 말하기는 녹음 파일을 같은 방식으로 제출합니다.',
+    title: 'Take it under real exam conditions',
+    titleKo: '실전과 같은 조건에서 응시하기',
+    copy: 'Answer everything directly in the portal while the timer runs. When time is up, the exam closes and submits automatically, because managing your time is part of the test too.',
+    copyKo: '타이머가 도는 동안 포털에서 바로 답안을 작성하세요. 제한 시간이 끝나면 시험은 자동으로 종료되고 제출됩니다. 시간 관리도 시험의 일부이기 때문입니다.',
   },
   {
-    title: 'Get it back marked',
-    titleKo: '채점 결과 받기',
-    copy: 'Your paper with every mark shown, plus the report. Two to four working days, depending on the exam.',
-    copyKo: '모든 점수가 표시된 답안지와 리포트를 받습니다. 시험에 따라 영업일 기준 2-4일이 걸립니다.',
+    title: 'Get feedback you can use',
+    titleKo: '바로 쓸 수 있는 피드백 받기',
+    copy: 'Within 2–4 working days, your results are uploaded directly to your portal with detailed feedback on where you lost marks, why, and how to improve.',
+    copyKo: '영업일 기준 2~4일 안에 결과가 포털에 바로 올라옵니다. 어디에서 점수를 잃었는지, 왜 그랬는지, 어떻게 개선할지 자세한 피드백이 함께 제공됩니다.',
   },
 ];
 
@@ -130,18 +129,14 @@ const piles = [
         <Eyebrow label="What it is" labelKo="모의고사란" />
         <h2 class="h2"><T en="A test that tells you what to do next." ko="시험을 발판으로 삼으세요." /></h2>
         <div class="what-copy">
-          <p class="lead"><T en="Once purchased, your mock exam or level test appears directly in your Seonbae Portal. Start whenever you are ready. For mock exams, the timer starts when you do and the exam submits automatically when time runs out, because managing time under pressure matters too." ko="구매한 모의고사나 레벨 테스트는 선배 포털에 바로 표시됩니다. 준비가 되면 언제든 시작하세요. 타이머가 함께 시작되고 제한 시간이 끝나면 자동으로 제출됩니다." /></p>
-          <p class="body"><T en="Within 2 to 4 working days, your results and detailed feedback are uploaded to the portal. You see more than a score: what you got wrong, why you lost the marks, and how to improve before the next test." ko="영업일 기준 2~4일 안에 결과와 자세한 피드백이 포털에 올라옵니다. 점수뿐 아니라 무엇을 틀렸고, 왜 점수를 잃었으며, 다음 시험 전 무엇을 개선해야 하는지 확인할 수 있습니다." /></p>
+          <p class="lead"><T en="Test, submit, and improve—all through your Seonbae Portal." ko="응시하고, 제출하고, 실력을 끌어올리세요. 모두 선배 포털에서." /></p>
+          <p class="body"><T en={`You do not need to be taking lessons with Seonbae to use our mock exams or level tests — but if you are currently learning with Seonbae Tutors, you will receive ${discountPercent}% off.`} ko={`모의고사와 레벨 테스트는 선배 수업을 듣지 않아도 이용할 수 있습니다. 다만 현재 선배 튜터와 수업 중이라면 ${discountPercent}% 할인을 받습니다.`} /></p>
         </div>
       </div>
       <dl class="facts reveal" data-delay="80ms">
         <div class="fact">
           <dt>100%</dt>
           <dd><T en="through the Seonbae Portal" ko="선배 포털에서 응시" /></dd>
-        </div>
-        <div class="fact">
-          <dt>{exams.length}</dt>
-          <dd><T en={`exams at launch, from ${won(priceRange.min)}`} ko={`개 시험, ${won(priceRange.min)}부터`} /></dd>
         </div>
         <div class="fact">
           <dt>{minTurnaround}-{maxTurnaround} <small><T en="days" ko="일" /></small></dt>
@@ -160,6 +155,7 @@ const piles = [
       <div class="section-head reveal">
         <Eyebrow label="How it runs" labelKo="진행 방식" />
         <h2 class="h2"><T en="Four steps, all from home." ko="집에서 끝내는 네 단계." /></h2>
+        <p class="lead run-lead"><T en="From purchase to feedback, all in one place." ko="구매부터 피드백까지, 한 곳에서." /></p>
       </div>
       <div class="run-grid">
         {steps.map((step, index) => (
@@ -172,7 +168,7 @@ const piles = [
           </article>
         ))}
       </div>
-      <p class="delivery-note reveal"><T en="For launch, the paper, your scan, and the marked report travel by email. Results will also land in your portal as that service rolls out, whether or not you have a tutor." ko="출시 시점에는 시험지, 답안 스캔본, 채점 리포트를 이메일로 주고받습니다. 포털 기능이 제공되면 선배 수강 여부와 관계없이 결과도 함께 쌓입니다." /></p>
+      <p class="delivery-note reveal"><T en="No emails to chase, files to download, or separate platforms to manage. Your exam, answers, results, and feedback all stay inside your Seonbae Portal." ko="챙겨야 할 이메일도, 내려받을 파일도, 따로 관리할 플랫폼도 없습니다. 시험과 답안, 결과와 피드백이 모두 선배 포털 안에 남습니다." /></p>
     </div>
   </section>
 
@@ -279,11 +275,16 @@ const piles = [
   .fact dd { color: var(--muted); line-height: 1.45; }
 
   .section-head { max-width: 48rem; margin-bottom: clamp(28px, 4vw, 44px); }
+  .run-lead { margin-top: 16px; }
   .run-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .run-card { display: flex; gap: 18px; padding: clamp(22px, 3vw, 30px); background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); }
-  .run-number { flex: none; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); background: var(--yellow-soft); color: var(--violet); font-family: var(--display); font-weight: 800; }
-  .run-card:nth-child(2) .run-number,
-  .run-card:nth-child(4) .run-number { background: var(--sage); }
+  .run-number { flex: none; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); background: var(--b2); color: var(--violet); font-family: var(--display); font-weight: 800; }
+  /* One marker colour per step, drawn from the same blob palette the rest of
+     the site uses. No two steps repeat. */
+  .run-card:nth-child(1) .run-number { background: var(--b2); }
+  .run-card:nth-child(2) .run-number { background: var(--b1); }
+  .run-card:nth-child(3) .run-number { background: var(--b4); }
+  .run-card:nth-child(4) .run-number { background: var(--b5); }
   .run-card h3 { font-size: 1.18rem; margin-bottom: 8px; }
   .delivery-note { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); }
 

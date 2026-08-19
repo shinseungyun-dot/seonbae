@@ -12,7 +12,7 @@ const mark = tone === 'light' ? '/logo-light.png' : '/logo.png';
 ---
 
 <a href={href} class={`logo ${cls}`} aria-label={href === '/' ? 'Seonbae home' : 'About Seonbae'}>
-  <img src={mark} alt="" class="logo__img" width="46" height="36" />
+  <img src={mark} alt="" class="logo__img" width="58" height="45" />
   <span class="logo__word" style={`color:${wordColor}`}>Seonbae</span>
 </a>
 
@@ -20,13 +20,13 @@ const mark = tone === 'light' ? '/logo-light.png' : '/logo.png';
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    gap: 11px;
   }
-  .logo__img { width: 46px; height: 36px; flex: none; object-fit: contain; }
+  .logo__img { width: 58px; height: 45px; flex: none; object-fit: contain; }
   .logo__word {
     font-family: var(--display);
     font-weight: 800;
-    font-size: 1.32rem;
+    font-size: 1.48rem;
     letter-spacing: -0.03em;
   }
 </style>

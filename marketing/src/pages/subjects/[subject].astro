@@ -111,7 +111,7 @@ const ko = subjectsKo[entry.id];
           <h2 class="h3"><T en="Practise before it counts." ko="실전 전에 먼저 연습하세요." /></h2>
           <p class="body"><T en={`Mock exams and level tests for ${s.title} are timed in the portal and returned with detailed feedback.`} ko={`${ko?.title ?? s.title} 모의고사와 레벨 테스트를 포털에서 응시하고 자세한 피드백을 받아보세요.`} /></p>
           <div class="cta-row">
-            <Button href="/mock-exams" label="See mock exams" labelKo="모의고사 보기" variant="secondary" arrow="right" />
+            <Button href="/mock-exams" label="See mock exams" labelKo="모의고사 보기" variant="primary" arrow="right" class="mock-subject__cta" />
           </div>
         </div>
         <div class="available-mocks">
@@ -203,7 +203,11 @@ const ko = subjectsKo[entry.id];
     border-bottom: 1px solid var(--line);
   }
   .mock-subject__inner .body { margin-top: 10px; max-width: 34rem; }
-  .mock-subject__copy .cta-row { margin-top: 22px; }
+  .mock-subject__copy .cta-row { margin-top: 22px; justify-content: flex-start; }
+  /* Keep the CTA at its own intrinsic width: it sits in a grid column, and
+     without this it stretches the full column and reads as a banner. */
+  .mock-subject__copy .cta-row :global(.btn) { flex: 0 0 auto; width: auto; align-self: flex-start; }
+  .mock-subject__copy :global(.mock-subject__cta) { padding: 10px 12px 10px 24px; }
   .available-mocks h3,
   .study-scope h2 { font-family: var(--display); font-size: 1rem; font-weight: 750; letter-spacing: -0.01em; }
   .available-mocks ul { margin-top: 14px; border-top: 1px solid var(--line); }

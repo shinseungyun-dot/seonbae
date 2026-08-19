@@ -16,7 +16,12 @@ marketing/dist/
 /public/images/
 /public/favicon.png
 /public/favicon.svg
+/public/icon-192.png
+/public/icon-512.png
+/public/apple-touch-icon.png
+/public/og-image.png
 /public/logo.png
+/public/logo-light.png
 /public/site-auth.js
 
 # Environment variables
