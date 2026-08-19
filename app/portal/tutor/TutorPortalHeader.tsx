@@ -32,7 +32,7 @@ export default function TutorPortalHeader({
   const items: PortalSidebarItem[] = [
     { href: "/portal/tutor", label: l("개요", "Overview"), active: pathname === "/portal/tutor" },
     { href: "/portal/tutor/homework", label: l("숙제", "Homework"), active: pathname.startsWith("/portal/tutor/homework") },
-    { href: "/portal/tutor/verification", label: l("자격 검증", "Verification"), active: pathname.startsWith("/portal/tutor/verification") },
+    { href: "/portal/tutor/sessions", label: l("Zoom 수업", "Zoom lessons"), active: pathname.startsWith("/portal/tutor/sessions") },
   ];
 
   return (

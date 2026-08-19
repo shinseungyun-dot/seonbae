@@ -162,12 +162,6 @@ export default function TutorPortalDashboard({
             )}
           </div>
         </section>
-
-        <ChatPanel
-          currentUserId={currentUserId}
-          threads={chatThreads}
-          heading={l("학생 채팅", "Student chat")}
-        />
       </section>
     </main>
   );

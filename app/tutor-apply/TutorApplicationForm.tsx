@@ -5,29 +5,44 @@ import Link from "next/link";
 import { sanitizePhoneInput } from "../../utils/auth/phone";
 import styles from "./tutor-apply.module.css";
 
+const DOCUMENT_ACCEPT = "application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png";
+
 export default function TutorApplicationForm() {
+  const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  function submitApplication(event: FormEvent<HTMLFormElement>) {
+  async function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const body = [
-      `이름: ${data.get("name")}`,
-      `이메일: ${data.get("email")}`,
-      `휴대전화번호: ${data.get("phone")}`,
-      `대학교: ${data.get("university")}`,
-      `전공 / 학년: ${data.get("major")}`,
-      `지원 커리큘럼: ${data.get("curriculum")}`,
-      `공식 성적: ${data.get("score")}`,
-      `수업 가능 과목: ${data.get("subjects")}`,
-      `소개 및 수업 경험: ${data.get("introduction")}`,
-    ].join("\n");
+    setBusy(true);
+    setError("");
+    const response = await fetch("/api/tutor-applications", {
+      method: "POST",
+      body: new FormData(event.currentTarget),
+    }).catch(() => null);
+    setBusy(false);
 
+    if (!response || !response.ok) {
+      const payload = response ? await response.json().catch(() => null) : null;
+      setError(payload?.error || "지원서를 접수하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      return;
+    }
     setSubmitted(true);
-    window.location.href = `mailto:admissions@seonbae.com?subject=${encodeURIComponent(
-      "선배 튜터 지원",
-    )}&body=${encodeURIComponent(body)}`;
+  }
+
+  if (submitted) {
+    return (
+      <div className={styles.form}>
+        <div className={styles.formHeading}>
+          <span>TUTOR APPLICATION</span>
+          <h3>지원서가 접수되었습니다.</h3>
+        </div>
+        <p className={styles.formNote}>
+          제출하신 서류를 검토한 뒤 영업일 기준 이틀 안에 연락드립니다. 승인되면 선배 팀이 튜터 계정을
+          만들어 임시 비밀번호를 이메일로 보내드립니다.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -39,11 +54,18 @@ export default function TutorApplicationForm() {
       <div className={styles.fields}>
         <label>
           <span>이름</span>
-          <input name="name" autoComplete="name" required />
+          <input name="fullName" autoComplete="name" minLength={2} maxLength={80} required />
         </label>
         <label>
-          <span>이메일</span>
-          <input name="email" type="email" autoComplete="email" required />
+          <span>학교 이메일</span>
+          <input
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@snu.ac.kr"
+            maxLength={254}
+            required
+          />
         </label>
         <label>
           <span>휴대전화번호</span>
@@ -53,6 +75,7 @@ export default function TutorApplicationForm() {
             autoComplete="tel"
             inputMode="tel"
             placeholder="01012345678"
+            maxLength={24}
             onInput={(event) => {
               event.currentTarget.value = sanitizePhoneInput(event.currentTarget.value);
             }}
@@ -73,7 +96,7 @@ export default function TutorApplicationForm() {
         </label>
         <label>
           <span>전공 / 학년</span>
-          <input name="major" placeholder="예: 국제학부 / 2학년" required />
+          <input name="major" placeholder="예: 국제학부 / 2학년" maxLength={120} required />
         </label>
         <label>
           <span>지원 커리큘럼</span>
@@ -92,17 +115,32 @@ export default function TutorApplicationForm() {
         </label>
         <label>
           <span>공식 성적</span>
-          <input name="score" placeholder="예: IB 43/45" required />
+          <input name="score" placeholder="예: IB 43/45" maxLength={120} required />
         </label>
         <label>
           <span>수업 가능 과목</span>
-          <input name="subjects" placeholder="예: Economics HL, Business" required />
+          <input name="subjects" placeholder="예: Economics HL, Business" maxLength={300} required />
+        </label>
+        <label>
+          <span>학교 합격통지서</span>
+          <input type="file" name="acceptanceLetter" accept={DOCUMENT_ACCEPT} required />
+          <small>PDF, JPG 또는 PNG · 최대 10MB</small>
+        </label>
+        <label>
+          <span>성적·자격 증빙 서류</span>
+          <input type="file" name="credential" accept={DOCUMENT_ACCEPT} required />
+          <small>공식 성적표 원본 · PDF, JPG 또는 PNG · 최대 10MB</small>
+        </label>
+        <label>
+          <span>추천인 또는 추천 코드 (선택)</span>
+          <input name="referralCode" maxLength={80} autoComplete="off" />
         </label>
         <label className={styles.full}>
           <span>소개 및 수업 경험</span>
           <textarea
             name="introduction"
             rows={5}
+            maxLength={2000}
             placeholder="지원 동기, 수업 경험, 가능한 시간대를 간단히 적어 주세요."
             required
           />
@@ -117,13 +155,11 @@ export default function TutorApplicationForm() {
           </Link>
         </span>
       </label>
-      <button className={styles.submit} type="submit">
-        이메일로 지원서 보내기 <span aria-hidden="true">↗</span>
+      <button className={styles.submit} type="submit" disabled={busy}>
+        {busy ? "접수 중..." : "지원서 제출"} <span aria-hidden="true">↗</span>
       </button>
       <p className={styles.formNote} aria-live="polite">
-        {submitted
-          ? "이메일 작성 화면이 열렸습니다. 내용을 확인한 뒤 전송해 주세요."
-          : "제출하면 기본 이메일 앱이 열립니다. 첨부 서류는 첫 회신 후 요청드립니다."}
+        {error || "튜터 계정은 심사 후 선배 팀이 직접 만들어 드립니다. 이 화면에서는 계정이 생성되지 않습니다."}
       </p>
     </form>
   );

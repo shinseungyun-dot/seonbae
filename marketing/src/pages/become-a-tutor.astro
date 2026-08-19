@@ -171,7 +171,7 @@ const keep = [
 </style>
 
 <script>
-  import { readForm, validate } from '../lib/forms';
+  import { validate } from '../lib/forms';
 
   const form = document.querySelector('.bt-form') as HTMLFormElement | null;
   const btn = form?.querySelector('.bt-submit') as HTMLButtonElement | null;
@@ -198,12 +198,8 @@ const keep = [
     if (btn) btn.disabled = true;
     if (btnLabel) btnLabel.textContent = language() === 'en' ? 'Sending…' : '전송 중…';
 
-    const draft = readForm(form);
-    try { sessionStorage.setItem('seonbae-tutor-application', JSON.stringify(draft)); } catch {}
-    const params = new URLSearchParams({ mode: 'signup', role: 'tutor' });
-    if (draft.name) params.set('name', draft.name);
-    if (draft.email) params.set('email', draft.email);
-    if (draft.referralCode) params.set('referral', draft.referralCode);
-    window.location.assign(`/login?${params.toString()}`);
+    // Tutor accounts are created by an admin after review, so this hands off to
+    // the application form rather than to sign-up.
+    window.location.assign('/tutor-apply');
   });
 </script>

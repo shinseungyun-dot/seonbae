@@ -24,7 +24,7 @@ export default async function AdminApplicationsPage() {
   const [{ data: accountRows }, { data: credentialRows }] = await Promise.all([
     admin
       .from("account_creation_requests")
-      .select("id,user_id,full_name,email,phone,requested_role,acceptance_letter_path,acceptance_letter_name,referral_code,status,notification_sent_at,notification_error,created_at")
+      .select("id,user_id,full_name,email,phone,requested_role,acceptance_letter_path,acceptance_letter_name,credential_path,credential_name,university,subjects,referral_code,status,notification_sent_at,notification_error,created_at")
       .eq("status", "pending")
       .order("created_at", { ascending: true }),
     admin
@@ -41,9 +41,11 @@ export default async function AdminApplicationsPage() {
     for (const tutor of tutors ?? []) tutorNames.set(tutor.id, tutor.full_name || tutor.email || "튜터");
   }
 
+  // Applications without a user_id have not been provisioned yet, so there is
+  // no contract to look up for them.
   const pendingTutorIds = (accountRows ?? [])
-    .filter((item) => item.requested_role === "tutor")
-    .map((item) => item.user_id);
+    .filter((item) => item.requested_role === "tutor" && item.user_id)
+    .map((item) => item.user_id as string);
   const signedTutorIds = new Set<string>();
   if (pendingTutorIds.length) {
     const { data: signatures } = await admin
@@ -54,13 +56,20 @@ export default async function AdminApplicationsPage() {
     for (const signature of signatures ?? []) signedTutorIds.add(signature.tutor_id);
   }
 
-  const accounts: AccountApplication[] = await Promise.all((accountRows ?? []).map(async (item) => {
-    if (!item.acceptance_letter_path) {
-      return { ...item, contract_signed: item.requested_role !== "tutor" || signedTutorIds.has(item.user_id), documentUrl: null };
-    }
-    const signed = await admin.storage.from("account-documents").createSignedUrl(item.acceptance_letter_path, 60 * 60);
-    return { ...item, contract_signed: item.requested_role !== "tutor" || signedTutorIds.has(item.user_id), documentUrl: signed.data?.signedUrl || null };
-  }));
+  const signUrl = async (path: string | null) => {
+    if (!path) return null;
+    const signed = await admin.storage.from("account-documents").createSignedUrl(path, 60 * 60);
+    return signed.data?.signedUrl || null;
+  };
+  const accounts: AccountApplication[] = await Promise.all((accountRows ?? []).map(async (item) => ({
+    ...item,
+    contract_signed:
+      item.requested_role !== "tutor"
+      || !item.user_id
+      || signedTutorIds.has(item.user_id),
+    documentUrl: await signUrl(item.acceptance_letter_path),
+    credentialUrl: await signUrl(item.credential_path),
+  })));
   const credentials: CredentialApplication[] = await Promise.all((credentialRows ?? []).map(async (item) => {
     const signed = await admin.storage.from("tutor-credentials").createSignedUrl(item.proof_path, 60 * 60);
     return { ...item, tutorName: tutorNames.get(item.tutor_id) || "튜터", documentUrl: signed.data?.signedUrl || null };

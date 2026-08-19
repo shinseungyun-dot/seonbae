@@ -6,3 +6,8 @@
 
 /* Transparent bridge prevents hover closing between trigger and menu. */
 .tutorMenu::after{content:"";position:absolute;left:-8px;right:-8px;top:100%;height:10px}
+
+/* File-field hint under the credential inputs. */
+.fields label>small{color:#818896;font-size:.64rem;line-height:1.5}
+.fields input[type=file]{height:auto;min-height:49px;padding:11px 12px}
+.submit:disabled{opacity:.6;cursor:progress}

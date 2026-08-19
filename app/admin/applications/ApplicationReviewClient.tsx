@@ -6,12 +6,16 @@ import styles from "./applications.module.css";
 
 export type AccountApplication = {
   id: number;
-  user_id: string;
+  user_id: string | null;
   full_name: string;
   email: string;
   phone: string;
   requested_role: "student" | "parent" | "tutor";
   acceptance_letter_name: string | null;
+  credential_name: string | null;
+  credentialUrl: string | null;
+  university: string | null;
+  subjects: string | null;
   referral_code: string | null;
   contract_signed: boolean;
   status: string;
@@ -49,6 +53,7 @@ export default function ApplicationReviewClient({
   const [credentialItems, setCredentialItems] = useState(credentials);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
+  const [creating, setCreating] = useState<number | null>(null);
 
   useEffect(() => setAccountItems(accounts), [accounts]);
   useEffect(() => setCredentialItems(credentials), [credentials]);
@@ -86,6 +91,29 @@ export default function ApplicationReviewClient({
     }
   }
 
+  // Applications submitted before an account exists are provisioned here: the
+  // API creates the login and emails the temporary password.
+  async function createTutorAccount(id: number) {
+    setCreating(id);
+    setMessage("튜터 계정을 만들고 있습니다…");
+    try {
+      const response = await fetch("/api/admin/tutor-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: id }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "계정을 만들지 못했습니다.");
+      setAccountItems((items) => items.filter((item) => item.id !== id));
+      setMessage("계정을 만들고 임시 비밀번호를 보냈습니다.");
+      router.refresh();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "네트워크 연결을 확인하고 다시 시도해 주세요.");
+    } finally {
+      setCreating(null);
+    }
+  }
+
   return (
     <div className={styles.reviewGrid}>
       {message && <p className={styles.message} aria-live="polite">{message}</p>}
@@ -102,10 +130,16 @@ export default function ApplicationReviewClient({
               {item.documentUrl && item.acceptance_letter_name
                 ? <a className={styles.document} href={item.documentUrl} target="_blank" rel="noreferrer">합격통지서 · {item.acceptance_letter_name}</a>
                 : <span className={styles.noDocument}>추가 제출 서류 없음</span>}
+              {item.credentialUrl && item.credential_name && (
+                <a className={styles.document} href={item.credentialUrl} target="_blank" rel="noreferrer">성적·자격 증빙 · {item.credential_name}</a>
+              )}
+              {item.requested_role === "tutor" && (item.university || item.subjects) && (
+                <span className={styles.sent}>{[item.university, item.subjects].filter(Boolean).join(" · ")}</span>
+              )}
               {item.requested_role === "tutor" && item.referral_code && (
                 <span className={styles.sent}>추천인 · {item.referral_code}</span>
               )}
-              {item.requested_role === "tutor" && (
+              {item.requested_role === "tutor" && item.user_id && (
                 <span className={item.contract_signed ? styles.sent : styles.warning}>
                   {item.contract_signed ? "튜터 계약 서명 완료" : "튜터 계약 서명 대기"}
                 </span>
@@ -121,12 +155,21 @@ export default function ApplicationReviewClient({
               />
               <div className={styles.actions}>
                 <button type="button" onClick={() => decide("account", item.id, "rejected")}>보완 요청</button>
-                <button
-                  type="button"
-                  disabled={item.requested_role === "tutor" && !item.contract_signed}
-                  onClick={() => decide("account", item.id, "approved")}
-                  title={item.requested_role === "tutor" && !item.contract_signed ? "계약 서명 후 승인할 수 있습니다." : undefined}
-                >계정 승인</button>
+                {item.requested_role === "tutor" && !item.user_id ? (
+                  <button
+                    type="button"
+                    disabled={creating === item.id}
+                    onClick={() => createTutorAccount(item.id)}
+                    title="계정을 만들고 임시 비밀번호를 이메일로 보냅니다."
+                  >{creating === item.id ? "생성 중…" : "튜터 계정 생성"}</button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={item.requested_role === "tutor" && !item.contract_signed}
+                    onClick={() => decide("account", item.id, "approved")}
+                    title={item.requested_role === "tutor" && !item.contract_signed ? "계약 서명 후 승인할 수 있습니다." : undefined}
+                  >계정 승인</button>
+                )}
               </div>
             </article>
           );

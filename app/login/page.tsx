@@ -9,7 +9,7 @@ import {
   PASSWORD_ALLOWED_SYMBOLS,
 } from "../../utils/auth/password";
 import { normalizePhone, sanitizePhoneInput } from "../../utils/auth/phone";
-import { isEmailAddress, isKoreanSchoolEmail } from "../../utils/auth/school-email";
+import { isEmailAddress } from "../../utils/auth/school-email";
 import {
   setSeonbaeLocale,
   useSeonbaeLocale,
@@ -56,9 +56,7 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [accountRole, setAccountRole] = useState<"student" | "parent" | "tutor">("student");
-  const [acceptanceLetter, setAcceptanceLetter] = useState<File | null>(null);
-  const [referralCode, setReferralCode] = useState("");
+  const [accountRole, setAccountRole] = useState<"student" | "parent">("student");
   const [remember, setRemember] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -120,27 +118,20 @@ export default function LoginPage() {
     const requestedAction = params.get("mode");
     const requestedRole = params.get("role");
     if (requestedAction === "signup") setAction("signup");
-    if (requestedRole === "student" || requestedRole === "parent" || requestedRole === "tutor") {
+    if (requestedRole === "tutor") {
+      // Tutor accounts are created by an admin after review, so a tutor link
+      // belongs on the application page rather than the sign-up form.
+      window.location.replace("/tutor-apply");
+      return;
+    }
+    if (requestedRole === "student" || requestedRole === "parent") {
       setAccountRole(requestedRole);
     }
     const requestedName = params.get("name");
     const requestedEmail = params.get("email");
-    const requestedReferral = params.get("referral");
     const authError = params.get("error");
     if (requestedName) setFullName(requestedName.slice(0, 80));
     if (requestedEmail) setIdentifier(requestedEmail.slice(0, 254));
-    if (requestedReferral) setReferralCode(requestedReferral.slice(0, 80));
-    try {
-      const storedDraft = window.sessionStorage.getItem("seonbae-tutor-application");
-      if (storedDraft) {
-        const draft = JSON.parse(storedDraft) as Record<string, unknown>;
-        if (!requestedName && typeof draft.name === "string") setFullName(draft.name.slice(0, 80));
-        if (!requestedEmail && typeof draft.email === "string") setIdentifier(draft.email.slice(0, 254));
-        if (!requestedReferral && typeof draft.referralCode === "string") setReferralCode(draft.referralCode.slice(0, 80));
-      }
-    } catch {
-      // The application remains usable when session storage is unavailable.
-    }
     if (authError === "google-account-not-found") {
       setMessage(l(
         "등록된 계정과 일치하는 Google 이메일이 없습니다. 먼저 이메일로 회원가입해 주세요.",
@@ -190,16 +181,6 @@ export default function LoginPage() {
         setBusy(false);
         return;
       }
-      if (accountRole === "tutor" && !isKoreanSchoolEmail(identifier)) {
-        setMessage(l(".ac.kr로 끝나는 학교 이메일을 입력해 주세요.", "Use a university email address ending in .ac.kr."));
-        setBusy(false);
-        return;
-      }
-      if (accountRole === "tutor" && !acceptanceLetter) {
-        setMessage(l("학교 합격통지서를 PDF, JPG 또는 PNG로 첨부해 주세요.", "Attach your university acceptance letter as a PDF, JPG, or PNG."));
-        setBusy(false);
-        return;
-      }
       if (!normalizePhone(phone)) {
         setMessage(l("휴대전화번호를 올바르게 입력해 주세요. 해외 번호는 국가번호를 포함해 주세요.", "Enter a valid mobile number, including the country code when outside Korea."));
         setBusy(false);
@@ -235,15 +216,9 @@ export default function LoginPage() {
         signupForm.set("phone", phone);
         signupForm.set("password", password);
         signupForm.set("accountRole", accountRole);
-        if (accountRole === "tutor" && referralCode.trim()) {
-          signupForm.set("referralCode", referralCode.trim());
-        }
         signupForm.set("privacyAgreed", String(privacyAgreed));
         signupForm.set("termsAgreed", String(termsAgreed));
         signupForm.set("ageConfirmed", String(ageConfirmed));
-        if (accountRole === "tutor" && acceptanceLetter) {
-          signupForm.set("acceptanceLetter", acceptanceLetter);
-        }
       }
       const response = await fetch(endpoint, action === "signup"
         ? { method: "POST", body: signupForm }
@@ -319,8 +294,6 @@ export default function LoginPage() {
     setShowPassword(false);
     setShowConfirmPassword(false);
     setAccountRole("student");
-    setAcceptanceLetter(null);
-    setReferralCode("");
     setPrivacyAgreed(false);
     setTermsAgreed(false);
     setAgeConfirmed(false);
@@ -333,11 +306,8 @@ export default function LoginPage() {
   }
 
   const isSignup = action === "signup";
-  const isTutorSignup = isSignup && accountRole === "tutor";
   const isRecovery = action === "find-id" || action === "reset-password";
-  const activeCopy = isTutorSignup
-    ? { title: l("튜터 가입 심사 신청", "Tutor account application"), description: "", submit: l("심사 신청", "Submit for review") }
-    : locale === "ko" ? actionCopy[action] : {
+  const activeCopy = locale === "ko" ? actionCopy[action] : {
         signin: { title: "Log in", description: "Access your Seonbae portal with your registered account.", submit: "Log in" },
         signup: { title: "Sign up", description: "", submit: "Create account" },
         "find-id": { title: "Find my account", description: "If your details match, we will email you a secure account access link.", submit: "Send account access email" },
@@ -462,10 +432,7 @@ export default function LoginPage() {
                       name="account-role"
                       value="student"
                       checked={accountRole === "student"}
-                      onChange={() => {
-                        setAccountRole("student");
-                        setAcceptanceLetter(null);
-                      }}
+                      onChange={() => setAccountRole("student")}
                     />
                     <span><b>{l("학생 계정", "Student")}</b><small>{l("수업 일정, Zoom, 튜터 채팅", "Lesson calendar, Zoom, and tutor chat")}</small></span>
                   </label>
@@ -475,30 +442,11 @@ export default function LoginPage() {
                       name="account-role"
                       value="parent"
                       checked={accountRole === "parent"}
-                      onChange={() => {
-                        setAccountRole("parent");
-                        setAcceptanceLetter(null);
-                      }}
+                      onChange={() => setAccountRole("parent")}
                     />
                     <span><b>{l("보호자 계정", "Parent")}</b><small>{l("자녀 리포트, 일정, 결제 관리", "Student reports, schedules, and billing")}</small></span>
                   </label>
-                  <label data-selected={accountRole === "tutor"}>
-                    <input
-                      type="radio"
-                      name="account-role"
-                      value="tutor"
-                      checked={accountRole === "tutor"}
-                      onChange={() => setAccountRole("tutor")}
-                    />
-                    <span><b>{l("튜터 계정", "Tutor")}</b><small>{l("학생, 숙제, 자격 검증 관리", "Students, homework, and credential review")}</small></span>
-                  </label>
                 </fieldset>
-                {isTutorSignup && (
-                  <div className={styles.reviewNotice}>
-                    <b>{l("입학 확인 후 계정이 열립니다.", "Your account opens after enrollment is verified.")}</b>
-                    <span>{l("신청 내용은 admissions@seonbae.com으로 전달되며 승인 전까지 심사 중 상태로 유지됩니다.", "Your application is sent to admissions@seonbae.com and stays under review until approved.")}</span>
-                  </div>
-                )}
               </>
             )}
 
@@ -520,11 +468,7 @@ export default function LoginPage() {
             {(action === "signin" || isSignup || action === "reset-password") && (
               <label>
                 <span>
-                  {action === "signin"
-                    ? l("아이디 또는 이메일", "ID or email")
-                    : isSignup && accountRole === "tutor"
-                      ? l("학교 이메일", "University email")
-                      : l("이메일", "Email")}
+                  {action === "signin" ? l("아이디 또는 이메일", "ID or email") : l("이메일", "Email")}
                   {isSignup && <RequiredMark />}
                 </span>
                 <input
@@ -540,33 +484,6 @@ export default function LoginPage() {
               </label>
             )}
 
-            {isTutorSignup && (
-              <>
-                <label className={styles.fileField}>
-                  <span>{l("학교 합격통지서", "University acceptance letter")}<RequiredMark /></span>
-                  <input
-                    type="file"
-                    accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
-                    onChange={(event) => setAcceptanceLetter(event.target.files?.[0] || null)}
-                    required
-                  />
-                  <small className={styles.fieldNote}>
-                    {l("PDF, JPG 또는 PNG · 최대 10MB", "PDF, JPG, or PNG · up to 10 MB")}
-                  </small>
-                </label>
-                <label>
-                  <span>{l("추천인 또는 추천 코드", "Referral code or name")} <small>{l("(선택)", "(optional)")}</small></span>
-                  <input
-                    type="text"
-                    value={referralCode}
-                    onChange={(event) => setReferralCode(event.target.value.slice(0, 80))}
-                    autoComplete="off"
-                    maxLength={80}
-                    placeholder={l("추천인을 입력해 주세요.", "Who referred you?")}
-                  />
-                </label>
-              </>
-            )}
 
             {(isSignup || isRecovery) && (
               <label>
@@ -670,17 +587,13 @@ export default function LoginPage() {
                     <div>
                       <dt>{l("수집 항목", "Information collected")}</dt>
                       <dd>
-                        {isTutorSignup
-                          ? l("이름, 학교 이메일, 휴대전화번호, 합격통지서, 추천인(입력한 경우), 인증·동의 기록", "Name, university email, mobile number, acceptance letter, referral details (if provided), and authentication and consent records")
-                          : l("이름, 이메일, 휴대전화번호, 인증·동의 기록", "Name, email, mobile number, and authentication and consent records")}
+                        {l("이름, 이메일, 휴대전화번호, 인증·동의 기록", "Name, email, mobile number, and authentication and consent records")}
                       </dd>
                     </div>
                     <div>
                       <dt>{l("이용 목적", "Purpose")}</dt>
                       <dd>
-                        {isTutorSignup
-                          ? l("입학 및 계정 유형 심사, 회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정", "Enrollment and role review, account management, portal access, account recovery, and password resets")
-                          : l("회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정", "Account management, portal access, account recovery, and password resets")}
+                        {l("회원 관리, 포털 제공, 계정 복구, 비밀번호 재설정", "Account management, portal access, account recovery, and password resets")}
                       </dd>
                     </div>
                     <div>

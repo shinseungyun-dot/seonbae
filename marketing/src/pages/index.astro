@@ -18,10 +18,10 @@ const steps = [
   { t: { en: 'Learn and see progress', ko: '마음껏 배우고 성장하세요' }, c: { en: 'Lesson materials, feedback, and homework keep every next step clear.', ko: '자료와 피드백으로 든든히 지원해드릴게요.' }, icon: 'rise' },
 ];
 const portalRows = [
-  { tab: { en: 'Billing', ko: '결제' }, title: { en: 'Pay for the month', ko: '월간 수업료 결제' }, copy: { en: 'One invoice, one card.', ko: '한 번의 청구, 한 장의 카드.' } },
-  { tab: { en: 'Progress', ko: '성장' }, title: { en: 'See the progress', ko: '성장 확인하기' }, copy: { en: 'Every check stacked on the last.', ko: '모든 점검 결과가 차곡차곡 쌓입니다.' } },
-  { tab: { en: 'Homework', ko: '과제' }, title: { en: 'Pick up homework', ko: '과제 확인하기' }, copy: { en: 'Set, submitted, and marked in place.', ko: '출제부터 제출과 채점까지 한곳에서.' } },
-  { tab: { en: 'Lessons', ko: '수업' }, title: { en: 'Join the lesson', ko: '수업 참여하기' }, copy: { en: 'The same button every week.', ko: '매주 같은 버튼으로 참여합니다.' } },
+  { tab: { en: 'Progress', ko: '성장' }, title: { en: 'See the progress', ko: '성장 과정' }, copy: { en: 'Every report in the pile is another step you took forward.', ko: '피드백 리포트가 쌓일수록, 과거의 실수와 멀어져요.' } },
+  { tab: { en: 'Homework', ko: '숙제' }, title: { en: 'Homework', ko: '숙제' }, copy: { en: 'Set, submitted and marked in one place.', ko: '과제물 지급부터 제출까지 포털에서 해결해요.' } },
+  { tab: { en: 'Lessons', ko: '수업' }, title: { en: 'Join the lesson', ko: '수업' }, copy: { en: 'The same button every week. No waiting for links.', ko: '버튼 한 번만 누르면 수업이 시작돼요.' } },
+  { tab: { en: 'Shared', ko: '공유' }, title: { en: 'Shared', ko: '공유' }, copy: { en: 'Student accounts and their progress are visible on parent accounts post-verification.', ko: '학생 계정은 인증 후 학부모 계정과 연동 가능해요.' } },
 ];
 const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
 ---
@@ -199,8 +199,8 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
     <div class="container portal-home__grid">
       <div class="portal-home__copy reveal">
         <span class="eyebrow"><T en="One portal" ko="하나의 포털" /></span>
-        <h2 class="dhead"><T en="Everything after the match lives in one place." ko="매칭 이후의 모든 것이 한곳에 있습니다." /></h2>
-        <p class="lead"><T en="Most tutoring runs on scattered messages and a transfer somebody has to remember. We put the whole thing behind one login, for the family and the tutor both." ko="대부분의 과외는 흩어진 메시지와 누군가 기억해야 하는 송금에 기대어 운영됩니다. 선배는 가족과 튜터 모두가 하나의 로그인으로 모든 과정을 확인할 수 있게 했습니다." /></p>
+        <h2 class="dhead"><T en="Your Online Campus" ko="수업부터 숙제까지, 포털에서 진행해요" /></h2>
+        <p class="lead"><T en="Tutoring usually runs through messages and files that are forgotten over time. On our portal, you can traverse through your learning journey at one glance." ko="과외 선생님과 학생이 문자로 소통하는 데에는 한계가 있어요. 옛날에 보냈던 파일이 없어지기도 하고, 연락을 유지하는 자체도 부담돼요. 포털에서는 학습 전반의 과정을 한 눈에 볼 수 있어요." /></p>
 
         <div class="portal-home__rows">
           {portalRows.map((row) => (
@@ -218,10 +218,6 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
           <a href="/portal" class="btn btn--primary btn--lg">
             <span><T en="Open the portal" ko="포털 열기" /></span>
             <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </a>
-          <a href="/how-it-works" class="textlink">
-            <span><T en="See how a term runs" ko="한 학기의 흐름 보기" /></span>
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
       </div>
