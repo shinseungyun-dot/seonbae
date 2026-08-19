@@ -175,6 +175,22 @@ function render(canvasW, canvasH, coverage) {
   return encodePng(canvasW, canvasH, out);
 }
 
+// Google's crawler probes /favicon.ico directly, so ship one. An .ico may wrap
+// a PNG payload whole, which saves writing a second encoder.
+function icoFromPng(png, size) {
+  const header = Buffer.alloc(22);
+  header.writeUInt16LE(0, 0);        // reserved
+  header.writeUInt16LE(1, 2);        // type: icon
+  header.writeUInt16LE(1, 4);        // one image
+  header[6] = size >= 256 ? 0 : size; // width
+  header[7] = size >= 256 ? 0 : size; // height
+  header.writeUInt16LE(1, 10);       // colour planes
+  header.writeUInt16LE(32, 12);      // bits per pixel
+  header.writeUInt32LE(png.length, 14);
+  header.writeUInt32LE(22, 18);      // payload offset
+  return Buffer.concat([header, png]);
+}
+
 const targets = [
   ['favicon.png', 64, 64, 0.84],
   ['icon-192.png', 192, 192, 0.82],
@@ -183,6 +199,11 @@ const targets = [
   ['og-image.png', 1200, 630, 0.52],
 ];
 for (const [name, w, h, coverage] of targets) {
-  writeFileSync(resolve(OUT_DIR, name), render(w, h, coverage));
+  const png = render(w, h, coverage);
+  writeFileSync(resolve(OUT_DIR, name), png);
   console.log(`wrote ${name} ${w}x${h}`);
+  if (name === 'favicon.png') {
+    writeFileSync(resolve(OUT_DIR, 'favicon.ico'), icoFromPng(png, w));
+    console.log(`wrote favicon.ico ${w}x${w}`);
+  }
 }

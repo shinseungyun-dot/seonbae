@@ -56,25 +56,25 @@ const steps = [
     title: 'Choose your test',
     titleKo: '시험 선택하기',
     copy: 'Select the mock exam or level test you need and complete your purchase.',
-    copyKo: '필요한 모의고사나 레벨 테스트를 선택하고 결제를 완료하세요.',
+    copyKo: '필요한 모의고사나 레벨 테스트를 골라 결제하세요.',
   },
   {
     title: 'Find it in your portal',
-    titleKo: '포털에서 바로 확인하기',
+    titleKo: '포털에서 확인하기',
     copy: 'Your test is added directly to your Seonbae Portal, ready whenever you are. Everything you need is already there — just open it when you are ready to begin.',
-    copyKo: '구매한 시험은 선배 포털에 바로 추가되어 언제든 응시할 수 있습니다. 필요한 것은 이미 모두 준비되어 있으니, 시작할 준비가 되면 열기만 하면 됩니다.',
+    copyKo: '구매한 시험은 선배 포털에 바로 등록됩니다. 준비가 되면 열어서 시작하기만 하면 됩니다.',
   },
   {
     title: 'Take it under real exam conditions',
-    titleKo: '실전과 같은 조건에서 응시하기',
+    titleKo: '실전처럼 응시하기',
     copy: 'Answer everything directly in the portal while the timer runs. When time is up, the exam closes and submits automatically, because managing your time is part of the test too.',
-    copyKo: '타이머가 도는 동안 포털에서 바로 답안을 작성하세요. 제한 시간이 끝나면 시험은 자동으로 종료되고 제출됩니다. 시간 관리도 시험의 일부이기 때문입니다.',
+    copyKo: '포털에서 타이머와 함께 답안을 작성합니다. 시간이 다 되면 자동으로 제출되며, 시간 관리도 실력의 일부입니다.',
   },
   {
     title: 'Get feedback you can use',
-    titleKo: '바로 쓸 수 있는 피드백 받기',
+    titleKo: '피드백 받기',
     copy: 'Within 2–4 working days, your results are uploaded directly to your portal with detailed feedback on where you lost marks, why, and how to improve.',
-    copyKo: '영업일 기준 2~4일 안에 결과가 포털에 바로 올라옵니다. 어디에서 점수를 잃었는지, 왜 그랬는지, 어떻게 개선할지 자세한 피드백이 함께 제공됩니다.',
+    copyKo: '영업일 2~4일 안에 결과가 포털에 올라옵니다. 어디서 왜 점수를 잃었고 무엇을 고쳐야 하는지까지 짚어 드립니다.',
   },
 ];
 
@@ -129,8 +129,8 @@ const piles = [
         <Eyebrow label="What it is" labelKo="모의고사란" />
         <h2 class="h2"><T en="A test that tells you what to do next." ko="시험을 발판으로 삼으세요." /></h2>
         <div class="what-copy">
-          <p class="lead"><T en="Test, submit, and improve—all through your Seonbae Portal." ko="응시하고, 제출하고, 실력을 끌어올리세요. 모두 선배 포털에서." /></p>
-          <p class="body"><T en={`You do not need to be taking lessons with Seonbae to use our mock exams or level tests — but if you are currently learning with Seonbae Tutors, you will receive ${discountPercent}% off.`} ko={`모의고사와 레벨 테스트는 선배 수업을 듣지 않아도 이용할 수 있습니다. 다만 현재 선배 튜터와 수업 중이라면 ${discountPercent}% 할인을 받습니다.`} /></p>
+          <p class="lead"><T en="Test, submit, and improve—all through your Seonbae Portal." ko="응시부터 제출, 실력 향상까지 모두 선배 포털에서." /></p>
+          <p class="body"><T en={`You do not need to be taking lessons with Seonbae to use our mock exams or level tests — but if you are currently learning with Seonbae Tutors, you will receive ${discountPercent}% off.`} ko={`모의고사와 레벨 테스트는 선배 수업을 듣지 않아도 이용할 수 있습니다. 선배 튜터와 수업 중이라면 ${discountPercent}% 할인이 적용됩니다.`} /></p>
         </div>
       </div>
       <dl class="facts reveal" data-delay="80ms">
@@ -155,7 +155,7 @@ const piles = [
       <div class="section-head reveal">
         <Eyebrow label="How it runs" labelKo="진행 방식" />
         <h2 class="h2"><T en="Four steps, all from home." ko="집에서 끝내는 네 단계." /></h2>
-        <p class="lead run-lead"><T en="From purchase to feedback, all in one place." ko="구매부터 피드백까지, 한 곳에서." /></p>
+        <p class="lead run-lead"><T en="From purchase to feedback, all in one place." ko="구매부터 피드백까지 한곳에서." /></p>
       </div>
       <div class="run-grid">
         {steps.map((step, index) => (
@@ -168,7 +168,7 @@ const piles = [
           </article>
         ))}
       </div>
-      <p class="delivery-note reveal"><T en="No emails to chase, files to download, or separate platforms to manage. Your exam, answers, results, and feedback all stay inside your Seonbae Portal." ko="챙겨야 할 이메일도, 내려받을 파일도, 따로 관리할 플랫폼도 없습니다. 시험과 답안, 결과와 피드백이 모두 선배 포털 안에 남습니다." /></p>
+      <p class="delivery-note reveal"><T en="No emails to chase, files to download, or separate platforms to manage. Your exam, answers, results, and feedback all stay inside your Seonbae Portal." ko="주고받을 이메일도, 내려받을 파일도, 따로 쓸 플랫폼도 없습니다. 시험과 답안, 결과와 피드백 모두 선배 포털 안에 있습니다." /></p>
     </div>
   </section>
 
