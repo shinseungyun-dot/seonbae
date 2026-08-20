@@ -1,0 +1,67 @@
+import type { MetadataRoute } from "next";
+
+const siteUrl = "https://seonbaetutor.com";
+
+const publicPages: Array<{
+  path: string;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+  priority: number;
+}> = [
+  { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/about", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/how-it-works", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/tutors", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/subjects", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/pricing", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/get-matched", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/become-a-tutor", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/mock-exams", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/resources", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/contact", changeFrequency: "yearly", priority: 0.5 },
+  { path: "/verification", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
+];
+
+const subjectPages = [
+  "a-level",
+  "advanced-placement",
+  "english-writing",
+  "ib-diploma",
+  "igcse",
+  "standardized-tests",
+];
+
+const resourcePages = [
+  "build-study-routine",
+  "first-session",
+  "homework-support",
+  "igcse-to-ib",
+  "sat-reading",
+  "studying-abroad-korean",
+];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+
+  return [
+    ...publicPages.map(({ path, changeFrequency, priority }) => ({
+      url: new URL(path, siteUrl).toString(),
+      lastModified,
+      changeFrequency,
+      priority,
+    })),
+    ...subjectPages.map((slug) => ({
+      url: new URL(`/subjects/${slug}`, siteUrl).toString(),
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...resourcePages.map((slug) => ({
+      url: new URL(`/resources/${slug}`, siteUrl).toString(),
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+}
