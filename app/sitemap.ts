@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://seonbaetutor.com";
+// The apex domain redirects to www in production. Keep every sitemap URL on
+// the canonical host so Search Console does not have to resolve redirects.
+const siteUrl = "https://www.seonbaetutor.com";
 
 const publicPages: Array<{
   path: string;
