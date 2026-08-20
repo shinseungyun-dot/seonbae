@@ -11,7 +11,12 @@ on public.portal_sessions
 for insert
 to authenticated
 with check (
-  tutor_registry_id = (select public.current_tutor_registry_id())
+  -- The registry id is read inline rather than through
+  -- current_tutor_registry_id(): that helper is not present on every
+  -- environment, and the lookup is the same one it performs.
+  tutor_registry_id = (
+    select p.tutor_registry_id from public.profiles p where p.id = (select auth.uid())
+  )
   and (
     exists (
       select 1
