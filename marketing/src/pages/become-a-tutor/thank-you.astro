@@ -1,0 +1,170 @@
+---
+import Base from '../../layouts/Base.astro';
+import T from '../../components/T.astro';
+---
+
+<Base
+  title="Thank you | Seonbae"
+  description="Your tutor application is in. Tell us how you heard about Seonbae."
+  active="/become-a-tutor"
+  showConversion={false}
+>
+  <section class="section bg-cream ty">
+    <div class="container">
+      <div class="ty-card card reveal is-in">
+        <h1 class="h2 ty-title"><T en="Thank you! We hope to see you soon." ko="감사합니다! 곧 만나뵙기를 바랍니다." /></h1>
+        <p class="ty-lead"><T en="Your application is in. We reply within two business days, and the Seonbae team creates your account after review." ko="지원서가 접수되었습니다. 영업일 기준 이틀 안에 연락드리고, 심사 후 선배 팀이 계정을 만들어 드립니다." /></p>
+
+        <form class="ty-form" novalidate>
+          <fieldset class="ty-choices">
+            <legend><T en="How did you hear about us?" ko="선배를 어떻게 알게 되셨나요?" /></legend>
+
+            <label>
+              <input type="radio" name="source" value="online" required />
+              <span><T en="Online" ko="온라인" /></span>
+            </label>
+            <label>
+              <input type="radio" name="source" value="kakao" />
+              <span><T en="A KakaoTalk group" ko="카카오톡 오픈채팅" /></span>
+            </label>
+            <label>
+              <input type="radio" name="source" value="friend" />
+              <span><T en="A friend" ko="친구 소개" /></span>
+            </label>
+            <label>
+              <input type="radio" name="source" value="other" />
+              <span><T en="Somewhere else" ko="그 외" /></span>
+            </label>
+          </fieldset>
+
+          <div class="form-field ty-referrer" hidden data-referrer>
+            <label for="ty-name"><T en="Your friend's name" ko="소개해 주신 분의 이름" /></label>
+            <input id="ty-name" name="referrer" class="form-control" type="text" maxlength="80" autocomplete="off" />
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--lg ty-submit">
+            <span data-submit-label><T en="Send" ko="보내기" /></span>
+            <span class="btn__disc" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+
+          <p class="ty-status" role="status" aria-live="polite" data-status hidden></p>
+        </form>
+
+        <a class="textlink ty-home" href="/"><span><T en="Back to home" ko="홈으로 돌아가기" /></span>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ty { padding-block: clamp(56px, 8vw, 112px); }
+  .ty-card { max-width: 40rem; margin-inline: auto; padding: clamp(28px, 4vw, 52px); box-shadow: var(--shadow-md); }
+  .ty-title { font-size: clamp(1.8rem, 3.2vw, 2.5rem); }
+  .ty-lead { margin-top: 16px; color: var(--muted); line-height: 1.6; }
+
+  .ty-form { margin-top: clamp(28px, 4vw, 40px); display: flex; flex-direction: column; gap: 18px; }
+  .ty-choices { margin: 0; padding: 0; border: 0; display: grid; gap: 10px; }
+  .ty-choices legend { padding: 0 0 12px; font-family: var(--display); font-weight: 750; font-size: 1.08rem; color: var(--ink); }
+  .ty-choices label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--white);
+    cursor: pointer;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .ty-choices label:has(input:checked) { border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-soft); }
+  .ty-choices input { width: 18px; height: 18px; flex: none; accent-color: var(--violet); }
+  .ty-choices span { font-size: 0.98rem; color: var(--ink); }
+
+  .ty-referrer[hidden] { display: none; }
+
+  .ty-submit { align-self: flex-start; }
+  .ty-submit[disabled] { opacity: 0.65; cursor: progress; }
+  .ty-status { margin: 0; padding: 13px 16px; border-radius: var(--r-sm); font-size: 0.94rem; line-height: 1.5; }
+  .ty-status[data-tone='error'] { background: #fbeeea; color: #8f302b; }
+  .ty-status[data-tone='ok'] { background: var(--sage); color: var(--sage-ink); }
+  .ty-home { margin-top: 26px; }
+</style>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const token = params.get('t');
+
+  const form = document.querySelector('.ty-form') as HTMLFormElement | null;
+  const referrerField = document.querySelector('[data-referrer]') as HTMLElement | null;
+  const referrerInput = document.querySelector('#ty-name') as HTMLInputElement | null;
+  const submit = document.querySelector('.ty-submit') as HTMLButtonElement | null;
+  const submitLabel = document.querySelector('[data-submit-label]') as HTMLElement | null;
+  const status = document.querySelector('[data-status]') as HTMLElement | null;
+  const language = () => document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
+  const t = (en: string, ko: string) => language() === 'en' ? en : ko;
+
+  const show = (message: string, tone: 'ok' | 'error') => {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.tone = tone;
+    status.hidden = false;
+  };
+
+  // Naming a friend only makes sense once that option is chosen.
+  const syncReferrer = () => {
+    const chosen = form?.querySelector<HTMLInputElement>('input[name="source"]:checked');
+    const isFriend = chosen?.value === 'friend';
+    if (referrerField) referrerField.hidden = !isFriend;
+    if (referrerInput) referrerInput.required = Boolean(isFriend);
+  };
+  form?.querySelectorAll('input[name="source"]').forEach((input) => {
+    input.addEventListener('change', syncReferrer);
+  });
+  syncReferrer();
+
+  // Arriving without a signed handle means the answer has nowhere to go.
+  if (!id || !token) {
+    form?.setAttribute('hidden', '');
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const chosen = form.querySelector<HTMLInputElement>('input[name="source"]:checked');
+    if (!chosen) return;
+
+    if (submit) submit.disabled = true;
+    if (submitLabel) submitLabel.textContent = t('Sending', '보내는 중');
+    if (status) status.hidden = true;
+
+    try {
+      const response = await fetch('/api/tutor-applications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: Number(id),
+          token,
+          source: chosen.value,
+          referrer: referrerInput?.value || '',
+        }),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || t('That did not send.', '전송하지 못했습니다.'));
+
+      form.querySelectorAll('input, button').forEach((node) => {
+        (node as HTMLInputElement | HTMLButtonElement).disabled = true;
+      });
+      show(t('Thank you, that helps.', '감사합니다. 큰 도움이 됩니다.'), 'ok');
+    } catch (error) {
+      show(error instanceof Error ? error.message : t('Please try again shortly.', '잠시 후 다시 시도해 주세요.'), 'error');
+      if (submit) submit.disabled = false;
+    } finally {
+      if (submitLabel) submitLabel.textContent = t('Send', '보내기');
+    }
+  });
+</script>

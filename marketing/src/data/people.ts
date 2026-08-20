@@ -1,3 +1,7 @@
+// Every tutor card on the marketing site shows this one image. The team page
+// still uses each person's own portrait from the `photo` fields below.
+export const TUTOR_CARD_PHOTO = '/images/ian-bae-placeholder.png';
+
 export const leadership = [
   {
     id: 'raphael-lee',

@@ -175,11 +175,6 @@ const keep = [
         </div>
 
         <div class="form-field">
-          <label for="ap-referral"><T en="Referral code or name" ko="추천인 또는 추천 코드" /> <span class="apply-optional"><T en="optional" ko="선택" /></span></label>
-          <input id="ap-referral" name="referralCode" class="form-control" type="text" maxlength="80" autocomplete="off" />
-        </div>
-
-        <div class="form-field">
           <label for="ap-intro"><T en="Teaching experience" ko="소개 및 수업 경험" /></label>
           <textarea id="ap-intro" name="introduction" class="form-control" required rows="5" maxlength="2000" data-placeholder-en="Why you are applying, what you have taught, and when you are free." data-placeholder-ko="지원 동기와 수업 경험, 가능한 시간대를 적어 주세요."></textarea>
         </div>
@@ -306,14 +301,13 @@ const keep = [
       if (!response.ok) throw new Error(result?.error || t('The application could not be sent.', '지원서를 접수하지 못했습니다.'));
 
       form.reset();
-      refreshLanguage();
-      show(
-        t(
-          'Your application is in. We reply within two business days, and the Seonbae team creates your account after review.',
-          '지원서가 접수되었습니다. 영업일 기준 이틀 안에 연락드리고, 심사 후 선배 팀이 계정을 만들어 드립니다.',
-        ),
-        'ok',
-      );
+      // The thank-you step asks where the applicant heard about us, and needs
+      // the signed handle to attach the answer to this application.
+      const handle = result && result.id && result.token
+        ? `?id=${encodeURIComponent(result.id)}&t=${encodeURIComponent(result.token)}`
+        : '';
+      window.location.assign(`/become-a-tutor/thank-you${handle}`);
+      return;
     } catch (error) {
       show(error instanceof Error ? error.message : t('Please try again shortly.', '잠시 후 다시 시도해 주세요.'), 'error');
     } finally {

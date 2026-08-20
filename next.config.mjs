@@ -23,6 +23,10 @@ const nextConfig = {
           destination: "/marketing/become-a-tutor/index.html",
         },
         {
+          source: "/become-a-tutor/thank-you",
+          destination: "/marketing/become-a-tutor/thank-you/index.html",
+        },
+        {
           source: "/contact",
           destination: "/marketing/contact/index.html",
         },

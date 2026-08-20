@@ -6,10 +6,14 @@ export const dynamic = "force-dynamic";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+// Every tutor card shows the same image for now, so the per-person portraits
+// are not served here.
+const TUTOR_CARD_PHOTO = "/images/ian-bae-placeholder.png";
+
 const publicProfiles: Record<string, { name_en: string; photo_url: string }> = {
-  "P-001": { name_en: "Ian Bae", photo_url: "/images/ian-bae-placeholder.png" },
-  "P-002": { name_en: "Seung-Yun Shin", photo_url: "/images/seung-yun-shin.png" },
-  "P-003": { name_en: "Byeongguk Oh", photo_url: "/images/byeongguk-oh.png" },
+  "P-001": { name_en: "Ian Bae", photo_url: TUTOR_CARD_PHOTO },
+  "P-002": { name_en: "Seung-Yun Shin", photo_url: TUTOR_CARD_PHOTO },
+  "P-003": { name_en: "Byeongguk Oh", photo_url: TUTOR_CARD_PHOTO },
 };
 
 export async function GET() {

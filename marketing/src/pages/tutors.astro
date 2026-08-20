@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import T from '../components/T.astro';
-import { leadership } from '../data/people';
+import { leadership, TUTOR_CARD_PHOTO } from '../data/people';
 
 const ianTutor = {
   name: 'Ian Bae',
@@ -87,7 +87,7 @@ const roster = true;
               <div class="tutor-cell reveal is-in" data-cats={cats.join(' ')} data-registry-id={registryId}>
                 <article class="live-tutor-card card">
                   <div class="live-tutor-card__visual">
-                    <img class="live-tutor-card__photo" src={tutor.photo} alt={tutor.name} width="800" height="800" loading="lazy" decoding="async" />
+                    <img class="live-tutor-card__photo" src={TUTOR_CARD_PHOTO} alt={tutor.name} width="800" height="800" loading="lazy" decoding="async" />
                     <span class="live-tutor-card__verified"><T en="Verified" ko="검증 완료" /></span>
                   </div>
                   <div class="live-tutor-card__body">
@@ -214,14 +214,14 @@ const roster = true;
   .live-tutor-card:hover { transform: translateY(-4px); border-color: rgba(22, 48, 69, .2); box-shadow: 0 22px 48px rgba(22, 48, 69, .13); }
   .live-tutor-card__visual {
     position: relative;
-    min-height: 270px;
-    aspect-ratio: 4 / 3;
-    padding: 18px 18px 0;
+    min-height: 150px;
+    aspect-ratio: 5 / 3;
+    padding: 14px 14px 0;
     overflow: hidden;
     background: linear-gradient(150deg, var(--sage), var(--yellow-soft));
     color: #fff;
   }
-  .live-tutor-card__photo { width: 100%; height: 100%; object-fit: cover; object-position: center 28%; display: grid; place-items: center; border-radius: 20px 20px 0 0; color: var(--violet); font-family: var(--display); font-size: 2.2rem; font-weight: 800; transition: transform .35s ease; }
+  .live-tutor-card__photo { width: 100%; height: 100%; object-fit: contain; display: grid; place-items: center; border-radius: 20px 20px 0 0; color: var(--violet); font-family: var(--display); font-size: 2.2rem; font-weight: 800; transition: transform .35s ease; }
   .live-tutor-card:hover .live-tutor-card__photo { transform: scale(1.012); }
   .live-tutor-card__verified { position: absolute; z-index: 2; top: 14px; right: 14px; padding: 6px 11px; border-radius: var(--r-pill); border: 1px solid var(--line); background: rgba(255,253,247,.94); color: var(--violet); box-shadow: var(--shadow-sm); font-size: .72rem; font-weight: 800; }
   .live-tutor-card__body { display: flex; flex: 1; flex-direction: column; padding: 24px 26px 26px; }
@@ -268,6 +268,7 @@ const roster = true;
 </style>
 
 <script>
+  const cardPhoto = '/images/ian-bae-placeholder.png';
   const buttons = [...document.querySelectorAll('.rail__btn')] as HTMLButtonElement[];
   const noMatch = document.querySelector('.no-match') as HTMLElement | null;
   const countEl = document.getElementById('tutor-count');
@@ -311,11 +312,6 @@ const roster = true;
   const escapeHtml = (value: unknown) => String(value ?? '')
     .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-  const safeAsset = (value: unknown) => {
-    const url = String(value || '');
-    return /^(\/|https:\/\/)/.test(url) ? escapeHtml(url) : '';
-  };
-  const initials = (name: string) => escapeHtml(name.trim().slice(0, 1).toUpperCase() || 'S');
   const language = () => document.documentElement.dataset.lang === 'en' ? 'en' : 'ko';
   const tr = (en: string, ko: string) => language() === 'en' ? en : ko;
 
@@ -347,11 +343,9 @@ const roster = true;
     grid.classList.remove('is-loading');
     grid.removeAttribute('aria-busy');
     grid.innerHTML = tutors.map((tutor) => {
-      const photo = safeAsset(tutor.photo_url);
       const displayName = tr(tutor.name_en || tutor.name, tutor.name);
-      const avatar = photo
-        ? `<img class="live-tutor-card__photo" src="${photo}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(displayName)}" width="800" height="800" loading="lazy" decoding="async" />`
-        : `<span class="live-tutor-card__photo" aria-label="${tr('Photo pending', '사진 준비 중')}">${initials(displayName)}</span>`;
+      // Every card carries the same image, so the row's own photo_url is not read.
+      const avatar = `<img class="live-tutor-card__photo" src="${cardPhoto}" alt="${tr('Portrait of', '프로필 사진')} ${escapeHtml(displayName)}" width="800" height="800" loading="lazy" decoding="async" />`;
       return `<div class="tutor-cell" data-cats="${categoryFor(tutor)}" data-registry-id="${escapeHtml(tutor.registry_id)}">
         <article class="live-tutor-card card">
           <div class="live-tutor-card__visual">${avatar}<span class="live-tutor-card__verified">${tr('Verified', '검증 완료')}</span></div>

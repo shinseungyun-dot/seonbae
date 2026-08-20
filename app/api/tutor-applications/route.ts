@@ -4,6 +4,7 @@ import { normalizePhone } from "../../../utils/auth/phone";
 import { isEmailAddress, isKoreanSchoolEmail } from "../../../utils/auth/school-email";
 import { authRateLimitResponse, consumeAuthRateLimit } from "../../../utils/auth/rate-limit";
 import { createAdminClient } from "../../../utils/supabase/admin";
+import { signApplicationId, verifyApplicationToken } from "../../../utils/auth/application-handle";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,6 @@ export async function POST(request: NextRequest) {
   const phone = normalizePhone(text(form, "phone", 24));
   const university = text(form, "university", 80);
   const subjects = text(form, "subjects", 300);
-  const referralCode = text(form, "referralCode", 80);
   const note = [
     text(form, "major", 120) && `전공/학년: ${text(form, "major", 120)}`,
     text(form, "curriculum", 60) && `지원 커리큘럼: ${text(form, "curriculum", 60)}`,
@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
       credential_name: proofName,
       university,
       subjects,
-      referral_code: referralCode || null,
       applicant_note: note || null,
     })
     .select("id")
@@ -126,6 +125,62 @@ export async function POST(request: NextRequest) {
       .eq("id", data.id);
   }
 
+  // The thank-you page uses these to attach the "how did you hear about us"
+  // answer to this row, and nothing else.
+  return NextResponse.json({ ok: true, id: data.id, token: signApplicationId(data.id) });
+}
+
+const SOURCES = new Set(["online", "kakao", "friend", "other"]);
+
+// Records where the applicant heard about us, once, from the thank-you page.
+export async function PATCH(request: NextRequest) {
+  const rateLimit = await consumeAuthRateLimit(request, "signup");
+  if (!rateLimit.allowed) return authRateLimitResponse(rateLimit.retryAfterSeconds);
+
+  let body: { id?: unknown; token?: unknown; source?: unknown; referrer?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return error("요청 형식이 올바르지 않습니다.", 400);
+  }
+
+  const id = Number(body.id);
+  const token = typeof body.token === "string" ? body.token : "";
+  const source = typeof body.source === "string" ? body.source : "";
+  const referrer = typeof body.referrer === "string" ? body.referrer.trim().slice(0, 80) : "";
+
+  if (!Number.isInteger(id) || !verifyApplicationToken(id, token)) {
+    return error("지원서를 확인하지 못했습니다.", 403);
+  }
+  if (!SOURCES.has(source)) return error("항목을 선택해 주세요.", 400);
+  if (source === "friend" && !referrer) return error("추천인 이름을 입력해 주세요.", 400);
+
+  let admin: ReturnType<typeof createAdminClient>;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return error("지원 시스템이 아직 설정되지 않았습니다.", 503);
+  }
+
+  // Answered once. A second submission for the same application is ignored so
+  // a shared link cannot overwrite the original answer.
+  const { data: row } = await admin
+    .from("account_creation_requests")
+    .select("id,referral_code")
+    .eq("id", id)
+    .single();
+  if (!row) return error("지원서를 확인하지 못했습니다.", 404);
+  if (row.referral_code) return NextResponse.json({ ok: true });
+
+  const { error: updateError } = await admin
+    .from("account_creation_requests")
+    .update({
+      referral_code: source === "friend" ? `friend: ${referrer}` : source,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (updateError) return error("답변을 저장하지 못했습니다.", 500);
   return NextResponse.json({ ok: true });
 }
 

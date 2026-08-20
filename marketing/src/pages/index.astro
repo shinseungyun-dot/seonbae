@@ -6,7 +6,7 @@ import MarkedTitle from '../components/MarkedTitle.astro';
 import T from '../components/T.astro';
 import { home, ui } from '../i18n/home';
 import { subjectCount } from '../data/rates';
-import { leadership } from '../data/people';
+import { leadership, TUTOR_CARD_PHOTO } from '../data/people';
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -26,15 +26,15 @@ const tutorPreview = [
     hangul: '배이안',
     university: 'Korea University',
     universityKo: '고려대학교',
-    photo: '/images/ian-bae-placeholder.png',
+    photo: TUTOR_CARD_PHOTO,
     credentials: [{ en: 'IB 43/45', ko: 'IB 43/45' }],
     tutorCopy: {
       en: 'Sat the IB Diploma recently, so the papers and the marking are still fresh.',
       ko: 'IB 디플로마를 직접 치른 선배가 시험지와 채점 기준을 그대로 알려드립니다.',
     },
   },
-  leadership[1],
-  leadership[2],
+  { ...leadership[1], photo: TUTOR_CARD_PHOTO },
+  { ...leadership[2], photo: TUTOR_CARD_PHOTO },
 ];
 
 const steps = [
@@ -81,7 +81,7 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
       <div class="hero__media reveal is-in" data-delay="90ms">
         <div class="hero__photo">
           {heroFile ? (
-            <img src={`/${heroFile}`} alt="Ducks on the pond in a campus park, seen from under a spreading tree" />
+            <img src={`/${heroFile}`} alt="A laptop, notes and coffee on a study desk in a university library" />
           ) : (
             <div class="hero__photo-ph">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 012-2h1.5L9 4h6l1.5 2H18a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" /><circle cx="12" cy="12" r="3.5" /></svg>
@@ -544,8 +544,8 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
   /* ======= TUTOR PREVIEW ======= */
   .tutor-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); }
   .tcard { background: var(--white); border: 1px solid var(--line-soft); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
-  .tcard__photo { position: relative; aspect-ratio: 4 / 3; padding: 18px 18px 0; background: linear-gradient(150deg, var(--sage), var(--yellow-soft)); overflow: hidden; }
-  .tcard__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 28%; border-radius: 18px 18px 0 0; transition: transform 0.35s ease; }
+  .tcard__photo { position: relative; aspect-ratio: 5 / 3; padding: 14px 14px 0; background: linear-gradient(150deg, var(--sage), var(--yellow-soft)); overflow: hidden; }
+  .tcard__photo img { width: 100%; height: 100%; object-fit: contain; border-radius: 18px 18px 0 0; transition: transform 0.35s ease; }
   .tcard:hover .tcard__photo img { transform: scale(1.015); }
   .tcard__verified { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 5px; background: var(--white); color: var(--violet); font-size: 0.72rem; font-weight: 700; padding: 5px 10px; border-radius: var(--r-pill); box-shadow: var(--shadow-sm); }
   .tcard__body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
