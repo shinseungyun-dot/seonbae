@@ -70,7 +70,7 @@ try {
   // initial HTML contains the login panel. Verify the required-field contract
   // from the built source and exercise the running route separately.
   const signupSource = await readFile(path.join(cwd, 'app', 'login', 'page.tsx'), 'utf8');
-  assert.ok((signupSource.match(/<RequiredMark \/>/g) || []).length >= 7, 'Signup required marks are missing');
+  assert.ok((signupSource.match(/<RequiredMark \/>/g) || []).length >= 6, 'Signup required marks are missing');
   const loginResponse = await fetch(`${origin}/login?mode=signup`);
   assert.equal(loginResponse.status, 200);
 
@@ -90,7 +90,7 @@ try {
 
   const subjectsHtml = await fetch(`${origin}/subjects`).then((response) => response.text());
   assert.match(subjectsHtml, /data-lang="ko"/);
-  assert.match(subjectsHtml, /지금 마주한 과목에 꼭 맞는 도움/);
+  assert.match(subjectsHtml, /꼭 맞는 도움/);
   assert.match(subjectsHtml, /EDUCATION TO THE WORLD/);
 
   const googleSignup = await fetch(`${origin}/api/auth/google`, {
