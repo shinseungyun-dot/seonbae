@@ -11,7 +11,11 @@ import { leadership } from '../data/people';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const hasHero = fs.existsSync(fileURLToPath(new URL('../../public/hero.jpg', import.meta.url)));
+// Drop a file named hero.* into marketing/public and the hero uses it. Any of
+// these extensions works, so the photo does not have to be re-encoded to JPEG.
+const heroFile = ['jpg', 'jpeg', 'png', 'webp', 'avif']
+  .map((extension) => `hero.${extension}`)
+  .find((name) => fs.existsSync(fileURLToPath(new URL(`../../public/${name}`, import.meta.url))));
 
 // The preview shows tutors, not the founding team, so it does not track the
 // leadership list one to one. Ian holds the first slot; the other two entries
@@ -76,8 +80,8 @@ const curriculaIcons = ['book', 'spark', 'globe', 'notes', 'star', 'chat'];
 
       <div class="hero__media reveal is-in" data-delay="90ms">
         <div class="hero__photo">
-          {hasHero ? (
-            <img src="/hero.jpg" alt="A Seonbae lesson in progress" />
+          {heroFile ? (
+            <img src={`/${heroFile}`} alt="Ducks on the pond in a campus park, seen from under a spreading tree" />
           ) : (
             <div class="hero__photo-ph">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 012-2h1.5L9 4h6l1.5 2H18a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" /><circle cx="12" cy="12" r="3.5" /></svg>
